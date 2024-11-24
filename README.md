@@ -1,0 +1,2 @@
+## Cel projektu
+Projekt ma na celu stworzenie aplikacji internetowej wspomagającej zarządzanie zespołami muzycznymi oraz orkiestrami. Użytkownikami aplikacji będą członkowie orkiestr/zespołów oraz ich dyrygenci/kapelmistrzowie/chórmistrzowie (konieczny podział uprawnień użytkowników).
