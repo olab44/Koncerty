@@ -4,4 +4,3 @@ __pycache__/
 .env
 backend.egg-info/
 database/.env
-database/.pgpass
