@@ -1,0 +1,31 @@
+main {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+button {
+    background-color: #CCE7FF;
+    border: solid 5px #000070;
+    border-radius: 75px;
+
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+
+    cursor: pointer;
+
+    color: #000070;
+    font-size: larger;
+    font-weight: bold;
+}
+
+.sign-in-text {
+    padding: 20px;
+
+    text-align: center;
+    font-size: xx-large;
+}
