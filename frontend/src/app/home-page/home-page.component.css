@@ -1,0 +1,8 @@
+main {
+    margin-top: 5vh;
+}
+
+.welcome-text {
+    text-align: center;
+    border-bottom: double 5px #000070;
+}
