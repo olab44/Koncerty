@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TopBarComponent } from '../top-bar/top-bar.component';
+import { TopBarComponent } from '../bars/top-bar.component';
 
 @Component({
   selector: 'app-event-details',

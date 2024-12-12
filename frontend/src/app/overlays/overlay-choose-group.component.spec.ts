@@ -11,7 +11,7 @@ describe('OverlayChooseGroupComponent', () => {
       imports: [OverlayChooseGroupComponent]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(OverlayChooseGroupComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

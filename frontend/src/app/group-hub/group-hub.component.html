@@ -1,2 +1,9 @@
 <app-top-bar></app-top-bar>
-<p>group-hub works!</p>
+<app-side-bar></app-side-bar>
+<main>
+    <div class="welcome-text">WELCOME</div>
+    <button (click)="gotoCatalogue()">MUSIC<br>CATALOGUE</button>
+    <button (click)="gotoCalendar()">EVENTS<br>CALENDAR</button>
+    <button (click)="gotoForum()">MESSAGE<br>FORUM</button>
+    <button [style.visibility]="isAdmin? 'visible' : 'hidden'" (click)="gotoControl()" id="control-button">GROUP<br>CONTROL</button>
+</main>

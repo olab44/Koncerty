@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TopBarComponent } from '../top-bar/top-bar.component';
-import { OverlayChooseGroupComponent } from '../overlay-choose-group/overlay-choose-group.component';
-import { OverlayJoinGroupComponent } from '../overlay-join-group/overlay-join-group.component';
-import { OverlayCreateGroupComponent } from '../overlay-create-group/overlay-create-group.component';
+import { TopBarComponent } from '../bars/top-bar.component';
+import { OverlayChooseGroupComponent } from '../overlays/overlay-choose-group.component';
+import { OverlayJoinGroupComponent } from '../overlays/overlay-join-group.component';
+import { OverlayCreateGroupComponent } from '../overlays/overlay-create-group.component';
 
 @Component({
   selector: 'app-home-page',
