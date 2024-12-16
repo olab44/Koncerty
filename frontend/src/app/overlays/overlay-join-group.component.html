@@ -1,4 +1,6 @@
 <div class="backdrop" (click)="closeOverlay()"></div>
 <main>
-
+    <label>INPUT GROUP CODE</label>
+    <input #codeInput type="text" name="code" autocomplete="off" placeholder="GROUP CODE">
+    <button id="join-button" (click)="joinGroup(codeInput.value)">JOIN</button>
 </main>

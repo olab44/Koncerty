@@ -1,19 +1,26 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-overlay-choose-group',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './overlay-choose-group.component.html',
-  styleUrl: './overlay.component.css'
+  styleUrl: './overlay-choose-group.component.css'
 })
 export class OverlayChooseGroupComponent {
-  @Output() close = new EventEmitter<void>()
-  userGroups = ["HELL", "WHY", "DUM DUM DUM"]
+  constructor(private router: Router) {}
 
-  chooseGroup(e: MouseEvent): void {
-    const chosen = e.target as HTMLElement
+  @Output() close = new EventEmitter<void>()
+  userGroups = [
+    { id: 1, name: 'ORKIESTRA PRUSZKÓW' },
+    { id: 2, name: 'CHÓR UW' },
+    { id: 3, name: 'ZESPÓŁ PIEŚNI I TAŃCA' }
+  ];
+
+  chooseGroup(group: any): void {
+    this.router.navigate(['group'], {state: {group}});
   }
 
   closeOverlay() {

@@ -9,5 +9,9 @@ import { TopBarComponent } from '../bars/top-bar.component';
   styleUrl: './message-forum.component.css'
 })
 export class MessageForumComponent {
+  group: any
 
+  constructor() {
+    this.group = history.state.group;
+  }
 }

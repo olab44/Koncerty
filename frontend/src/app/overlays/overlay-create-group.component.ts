@@ -5,7 +5,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './overlay-create-group.component.html',
-  styleUrl: './overlay.component.css'
+  styleUrl: './overlay-create-group.component.css'
 })
 export class OverlayCreateGroupComponent {
   @Output() close = new EventEmitter<void>()

@@ -9,5 +9,9 @@ import { TopBarComponent } from '../bars/top-bar.component';
   styleUrl: './music-catalogue.component.css'
 })
 export class MusicCatalogueComponent {
+  group: any
 
+  constructor() {
+    this.group = history.state.group;
+  }
 }

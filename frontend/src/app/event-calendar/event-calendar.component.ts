@@ -9,5 +9,9 @@ import { TopBarComponent } from '../bars/top-bar.component';
   styleUrl: './event-calendar.component.css'
 })
 export class EventCalendarComponent {
+  group: any
 
+  constructor() {
+    this.group = history.state.group;
+  }
 }

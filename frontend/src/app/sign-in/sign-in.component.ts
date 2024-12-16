@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+
 import { TopBarComponent } from '../bars/top-bar.component';
-import { AuthService } from '../authorization/auth.service';
+import { AuthService } from '../services/authorization/auth.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -11,12 +13,15 @@ import { AuthService } from '../authorization/auth.service';
 })
 export class SignInComponent {
   constructor(
+    private router: Router,
     public auth: AuthService
   ) {}
 
   userSignIn() {
-    // redirect to googl
-    // set token
+    // redirect to google
+
+    // mock set token and goto home page
     this.auth.setToken('SUPERsecretSECRET_SSS')
+    this.router.navigate(['/home'])
   }
 }

@@ -9,5 +9,9 @@ import { TopBarComponent } from '../bars/top-bar.component';
   styleUrl: './group-control.component.css'
 })
 export class GroupControlComponent {
+  group: any
 
+  constructor() {
+    this.group = history.state.group;
+  }
 }

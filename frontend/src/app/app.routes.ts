@@ -9,16 +9,16 @@ import { MusicCatalogueComponent } from './music-catalogue/music-catalogue.compo
 import { EventDetailsComponent } from './event-details/event-details.component'
 import { GroupControlComponent } from './group-control/group-control.component'
 
-import { authGuard } from './authorization/auth.guard';
+import { authGuard } from './services/authorization/auth.guard';
 
 export const routes: Routes = [
     { path: 'home', component: HomePageComponent, canActivate: [authGuard] },
-    { path: 'group/:group-name', component: GroupHubComponent, canActivate: [authGuard] },
-    { path: 'group/:group-name/catalogue', component: MusicCatalogueComponent, canActivate: [authGuard] },
-    { path: 'group/:group-name/calendar', component: EventCalendarComponent, canActivate: [authGuard] },
-    { path: 'group/:group-name/event/:event-name', component: EventDetailsComponent, canActivate: [authGuard] },
-    { path: 'group/:group-name/forum', component: MessageForumComponent, canActivate: [authGuard] },
-    { path: 'group/:group-name/control', component: GroupControlComponent, canActivate: [authGuard] },
+    { path: 'group', component: GroupHubComponent, canActivate: [authGuard] },
+    { path: 'group/catalogue', component: MusicCatalogueComponent, canActivate: [authGuard] },
+    { path: 'group/calendar', component: EventCalendarComponent, canActivate: [authGuard] },
+    { path: 'group/event/:event-name', component: EventDetailsComponent, canActivate: [authGuard] },
+    { path: 'group/forum', component: MessageForumComponent, canActivate: [authGuard] },
+    { path: 'group/control', component: GroupControlComponent, canActivate: [authGuard] },
     { path: '', component: SignInComponent },
     { path: '**', redirectTo: 'home' }
 ]

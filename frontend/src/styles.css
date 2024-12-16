@@ -14,6 +14,16 @@ body {
     cursor: default;
 }
 
+.backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 10;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
 ul {
     width: 100%;
     overflow-y: scroll;
@@ -42,14 +52,14 @@ li {
 li + li {
     margin-top: 10px;
 }
-li:hover {
-    filter: brightness(120%);
-}
 
 button {
     min-height: fit-content;
     min-width: fit-content;
+
+    cursor: pointer;
 }
-button:hover {
+
+li:hover, button:hover {
     filter: brightness(120%);
 }

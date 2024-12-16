@@ -11,7 +11,7 @@ describe('EventCalendarComponent', () => {
       imports: [EventCalendarComponent]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(EventCalendarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
