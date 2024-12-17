@@ -3,9 +3,8 @@
     <div class="group-name">{{groupName}}</div>
     <div class="interactibles">
         <div *ngIf="isReturnAvailable" onClick="history.go(-1); return false;"> &#8617; </div>
-        <select name="language" id="language">
-            <option value="EN" selected>EN</option>
-            <option value="PL">PL</option>
+        <select name="language" id="language" (change)="changeLanguage($event)">
+            <option *ngFor="let lang of languages" [value]="lang" [selected]="lang === currentLanguage">{{lang.toUpperCase()}}</option>
         </select>
     </div>
 </main>

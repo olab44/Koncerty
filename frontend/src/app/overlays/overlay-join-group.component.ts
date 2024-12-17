@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-overlay-join-group',
   standalone: true,
-  imports: [],
+  imports: [TranslateModule],
   templateUrl: './overlay-join-group.component.html',
   styleUrl: './overlay-join-group.component.css'
 })

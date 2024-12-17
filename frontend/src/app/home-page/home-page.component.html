@@ -1,11 +1,11 @@
 <app-top-bar></app-top-bar>
 
 <main>
-    <div class="welcome-text">WELCOME</div>
-    <button (click)="toggleOverlayChoose()">CHOOSE THE GROUP</button>
+    <div class="welcome-text">{{ "WELCOME" | translate }}</div>
+    <button (click)="toggleOverlayChoose()">{{ "HOME.CHOOSE_GROUP" | translate }}</button>
     <section>
-        <p (click)="toggleOverlayJoin()">JOIN</p>
-        <p (click)="toggleOverlayCreate()">CREATE</p>
+        <p (click)="toggleOverlayJoin()">{{ "HOME.JOIN" | translate }}</p>
+        <p (click)="toggleOverlayCreate()">{{ "HOME.CREATE" | translate }}</p>
     </section>
 </main>
 

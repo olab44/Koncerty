@@ -1,9 +1,9 @@
 <app-top-bar [isReturnAvailable]="true"></app-top-bar>
 <app-side-bar></app-side-bar>
 <main>
-    <div class="welcome-text">WELCOME</div>
-    <button (click)="navigate('catalogue')">MUSIC<br>CATALOGUE</button>
-    <button (click)="navigate('calendar')">EVENTS<br>CALENDAR</button>
-    <button (click)="navigate('forum')">MESSAGE<br>FORUM</button>
-    <button [style.visibility]="isAdmin? 'visible' : 'hidden'" (click)="navigate('control')" id="control-button">GROUP<br>CONTROL</button>
+    <div class="welcome-text">{{ "WELCOME" | translate }}</div>
+    <button (click)="navigate('catalogue')" [innerHTML]="'GROUP_HUB.CATALOGUE' | translate"></button>
+    <button (click)="navigate('calendar')" [innerHTML]="'GROUP_HUB.CALENDAR' | translate"></button>
+    <button (click)="navigate('forum')" [innerHTML]="'GROUP_HUB.FORUM' | translate"></button>
+    <button [style.visibility]="isAdmin? 'visible' : 'hidden'" (click)="navigate('control')" id="control-button" [innerHTML]="'GROUP_HUB.CONTROL' | translate"></button>
 </main>

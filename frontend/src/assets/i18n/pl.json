@@ -1,0 +1,20 @@
+{
+    "SIGN_IN": "ZALOGUJ SIĘ PRZEZ GOOGLE",
+    "WELCOME": "WITAJ",
+    "HOME": {
+        "CHOOSE_GROUP": "WYBIERZ GRUPĘ",
+        "JOIN": "DOŁĄCZ",
+        "CREATE": "UTWÓRZ"
+    },
+    "OVERLAYS" : {
+        "INPUT_CODE": "PODAJ KOD GRUPY",
+        "NAME": "NAZWA",
+        "DESCRIPTION": "OPIS"
+    },
+    "GROUP_HUB": {
+        "CATALOGUE": "KATALOG<br>UTWORÓW",
+        "CALENDAR": "KALENDARZ<br>WYDARZEŃ",
+        "FORUM": "FORUM<br>WIADOMOŚCI",
+        "CONTROL": "USTAWIENIA<br>GRUPY"
+    }
+}

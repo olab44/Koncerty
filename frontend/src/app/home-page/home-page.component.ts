@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 import { TopBarComponent } from '../bars/top-bar.component';
 import { OverlayChooseGroupComponent } from '../overlays/overlay-choose-group.component';
 import { OverlayJoinGroupComponent } from '../overlays/overlay-join-group.component';
@@ -8,7 +9,7 @@ import { OverlayCreateGroupComponent } from '../overlays/overlay-create-group.co
 @Component({
   selector: 'app-home-page',
   standalone: true,
-  imports: [CommonModule, TopBarComponent, OverlayChooseGroupComponent, OverlayJoinGroupComponent, OverlayCreateGroupComponent],
+  imports: [CommonModule, TranslateModule, TopBarComponent, OverlayChooseGroupComponent, OverlayJoinGroupComponent, OverlayCreateGroupComponent],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css'
 })

@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-overlay-create-group',
   standalone: true,
-  imports: [],
+  imports: [TranslateModule],
   templateUrl: './overlay-create-group.component.html',
   styleUrl: './overlay-create-group.component.css'
 })

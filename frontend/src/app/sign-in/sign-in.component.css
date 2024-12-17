@@ -1,13 +1,16 @@
 main {
     height: 100vh;
+    padding-bottom: 15vh;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 20px;
     align-items: center;
     justify-content: center;
 }
 
 button {
+    width: 40vw;
+
     background-color: #CCE7FF;
     border: solid 5px #000070;
     border-radius: 75px;
@@ -15,8 +18,6 @@ button {
     display: grid;
     grid-template-columns: auto 1fr;
     align-items: center;
-
-    cursor: pointer;
 
     color: #000070;
     font-size: larger;

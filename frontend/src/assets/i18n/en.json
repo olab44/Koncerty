@@ -1,0 +1,20 @@
+{
+    "SIGN_IN": "SIGN IN WITH GOOGLE",
+    "WELCOME": "WELCOME",
+    "HOME": {
+        "CHOOSE_GROUP": "CHOOSE THE GROUP",
+        "JOIN": "JOIN",
+        "CREATE": "CREATE"
+    },
+    "OVERLAYS" : {
+        "INPUT_CODE": "INPUT GROUP CODE",
+        "NAME": "NAME",
+        "DESCRIPTION": "DESCRIPTION"
+    },
+    "GROUP_HUB": {
+        "CATALOGUE": "MUSIC<br>CATALOGUE",
+        "CALENDAR": "EVENTS<br>CALENDAR",
+        "FORUM": "MESSAGE<br>FORUM",
+        "CONTROL": "GROUP<br>CONTROL"
+    }
+}
