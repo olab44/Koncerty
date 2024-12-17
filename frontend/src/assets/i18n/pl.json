@@ -16,5 +16,10 @@
         "CALENDAR": "KALENDARZ<br>WYDARZEŃ",
         "FORUM": "FORUM<br>WIADOMOŚCI",
         "CONTROL": "USTAWIENIA<br>GRUPY"
+    },
+    "FORUM": {
+        "MESSAGES": "WIADOMOŚCI",
+        "CONTENT": "TREŚĆ WIADOMOŚCI",
+        "NEW_MESSAGE": "WYŚLIJ NOWĄ WIADOMOŚĆ"
     }
 }

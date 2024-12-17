@@ -16,5 +16,10 @@
         "CALENDAR": "EVENTS<br>CALENDAR",
         "FORUM": "MESSAGE<br>FORUM",
         "CONTROL": "GROUP<br>CONTROL"
+    },
+    "FORUM": {
+        "MESSAGES": "MESSAGES",
+        "CONTENT": "MESSAGE CONTENT",
+        "NEW_MESSAGE": "SEND NEW MESSAGE"
     }
 }

@@ -1,2 +1,17 @@
 <app-top-bar [isReturnAvailable]="true" [groupName]="group.name"></app-top-bar>
-<p>message-forum works!</p>
+<main>
+    <div>
+        <section>
+            <p>{{'FORUM.MESSAGES' | translate}}</p>
+            <button>FILTERS</button>
+        </section>
+        <ul>
+            <li *ngFor="let message of messages" (click)="viewMessage(message.content)">{{message.name}}</li>
+        </ul>
+        <button [style.visibility]="group.role==='admin'||'coord'? 'visible' : 'hidden'" (click)="toggleOverlayMessage()">{{'FORUM.NEW_MESSAGE' | translate}}</button>
+    </div>
+    <div>
+        <p>{{'FORUM.CONTENT' | translate}}</p>
+        <p>{{viewedMessage}}</p>
+    </div>
+</main>

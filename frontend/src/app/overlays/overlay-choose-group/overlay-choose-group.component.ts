@@ -15,9 +15,9 @@ export class OverlayChooseGroupComponent {
 
   @Output() close = new EventEmitter<void>()
   userGroups = [
-    { id: 1, name: 'ORKIESTRA PRUSZKÓW' },
-    { id: 2, name: 'CHÓR UW' },
-    { id: 3, name: 'ZESPÓŁ PIEŚNI I TAŃCA' }
+    { id: 1, name: 'ORKIESTRA PRUSZKÓW', role: 'admin' },
+    { id: 2, name: 'CHÓR UW', role: 'reg' },
+    { id: 3, name: 'ZESPÓŁ PIEŚNI I TAŃCA', isAdmin: 'coord' }
   ];
 
   chooseGroup(group: any): void {

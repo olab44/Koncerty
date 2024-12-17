@@ -5,5 +5,5 @@
     <button (click)="navigate('catalogue')" [innerHTML]="'GROUP_HUB.CATALOGUE' | translate"></button>
     <button (click)="navigate('calendar')" [innerHTML]="'GROUP_HUB.CALENDAR' | translate"></button>
     <button (click)="navigate('forum')" [innerHTML]="'GROUP_HUB.FORUM' | translate"></button>
-    <button [style.visibility]="isAdmin? 'visible' : 'hidden'" (click)="navigate('control')" id="control-button" [innerHTML]="'GROUP_HUB.CONTROL' | translate"></button>
+    <button [style.visibility]="group.role==='admin'? 'visible' : 'hidden'" (click)="navigate('control')" id="control-button" [innerHTML]="'GROUP_HUB.CONTROL' | translate"></button>
 </main>

@@ -12,7 +12,6 @@ import { SideBarComponent } from '../bars/side-bar.component';
   styleUrl: './group-hub.component.css'
 })
 export class GroupHubComponent {
-  isAdmin = true
   group: any
 
   constructor(private router: Router) {
@@ -20,7 +19,7 @@ export class GroupHubComponent {
   }
 
   navigate(path: string) {
-    let group = this.group
+    const group = this.group
     this.router.navigate([this.router.url, path], {state: {group} } )
   }
 }

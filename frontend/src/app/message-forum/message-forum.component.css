@@ -1,0 +1,11 @@
+main {
+    margin-top: 5vh;
+    height: 75vh;
+
+    display: grid;
+    grid-template-columns: 3fr 4fr;
+    gap: 25px;
+    justify-items: center;
+    justify-content: space-evenly;
+    align-items: center;
+}
