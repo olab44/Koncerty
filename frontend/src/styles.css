@@ -63,3 +63,7 @@ button {
 li:hover, button:hover {
     filter: brightness(120%);
 }
+
+input, textarea {
+    color: black;
+}

@@ -6,6 +6,7 @@ main {
     z-index: 20;
     width: 30%;
     height: 50%;
+    padding: 20px;
 
     background-color: #7EB7E9;
     border: solid 5px #000070;
@@ -14,9 +15,6 @@ main {
     display: flex;
 }
 
-ul {
-    margin: 20px;
-}
 li {
     min-height: fit-content;
     font-size: 1em;

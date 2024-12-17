@@ -10,6 +10,12 @@ import { Component, EventEmitter, Output } from '@angular/core';
 export class OverlayCreateGroupComponent {
   @Output() close = new EventEmitter<void>()
 
+  createMessage = "..."
+
+  createGroup(name: string, description: string): void {
+    // TODO: API CALL
+    this.createMessage = "<<create group status>>"
+  }
   closeOverlay() {
     this.close.emit()
 }

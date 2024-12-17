@@ -10,16 +10,15 @@ import { Component, EventEmitter, Output } from '@angular/core';
 export class OverlayJoinGroupComponent {
   @Output() close = new EventEmitter<void>()
 
-  joinMessage: string = ''
+  joinMessage: string = '...'
 
   validateCode(groupCode: string) : boolean {
-    return true
+    return groupCode !== ""
   }
 
   joinGroup(groupCode: string) : void {
-    if (this.validateCode(groupCode)) {
-      // do stuff
-    }
+    // TODO: API CALL
+    this.joinMessage = this.validateCode(groupCode) ? "<<group joining status>>" : "Please, input the valid code."
   }
 
   closeOverlay() {
