@@ -21,5 +21,10 @@
         "MESSAGES": "MESSAGES",
         "CONTENT": "MESSAGE CONTENT",
         "NEW_MESSAGE": "SEND NEW MESSAGE"
+    },
+    "CATALOGUE": {
+        "CATALOGUE": "CATALOGUE",
+        "DETAILS": "COMPOSITION DETAILS",
+        "ADD_COMPOSITION": "ADD COMPOSITION"
     }
 }

@@ -1,2 +1,15 @@
 <app-top-bar [isReturnAvailable]="true" [groupName]="group.name"></app-top-bar>
-<p>music-catalogue works!</p>
+<main>
+    <section>
+        <p>{{'CATALOGUE.CATALOGUE' | translate}}</p>
+        <button class="filters-button">&#8801;<div class="popup-options"></div></button>
+    </section>
+    <p>{{'CATALOGUE.DETAILS' | translate}}</p>
+    <ul>
+        <li *ngFor="let composition of compositions" (click)="viewComposition(composition)">{{composition.title}}</li>
+    </ul>
+    <p id="viewed-composition">{{viewedComposition.title}} {{viewedComposition.author}}</p>
+    <button class="new-button" [style.visibility]="group.role=='admin' ? 'visible' : 'hidden'" (click)="toggleOverlayComposition()">{{'CATALOGUE.ADD_COMPOSITION' | translate}}</button>
+</main>
+
+<app-overlay-add-composition *ngIf="visibleOverlayComposition" (close)="toggleOverlayComposition()"></app-overlay-add-composition>

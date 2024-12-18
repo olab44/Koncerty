@@ -6,10 +6,10 @@
     </section>
     <p>{{'FORUM.CONTENT' | translate}}</p>
     <ul>
-        <li *ngFor="let message of messages" (click)="viewMessage(message.content)">{{message.name}}</li>
+        <li *ngFor="let message of messages" (click)="viewMessage(message)">{{message.name}}</li>
     </ul>
-    <p id="viewed-message">{{viewedMessage}}</p>
-    <button class="new-message-button" [style.visibility]="['admin', 'coord'].includes(group.role) ? 'visible' : 'hidden'" (click)="toggleOverlayMessage()">{{'FORUM.NEW_MESSAGE' | translate}}</button>
+    <p id="viewed-message">{{viewedMessage.content}}</p>
+    <button class="new-button" [style.visibility]="['admin', 'coord'].includes(group.role) ? 'visible' : 'hidden'" (click)="toggleOverlayMessage()">{{'FORUM.NEW_MESSAGE' | translate}}</button>
 </main>
 
 <app-overlay-new-message *ngIf="visibleOverlayMessage" (close)="toggleOverlayMessage()"></app-overlay-new-message>

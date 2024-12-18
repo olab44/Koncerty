@@ -21,5 +21,10 @@
         "MESSAGES": "WIADOMOŚCI",
         "CONTENT": "TREŚĆ WIADOMOŚCI",
         "NEW_MESSAGE": "WYŚLIJ NOWĄ WIADOMOŚĆ"
+    },
+    "CATALOGUE": {
+        "CATALOGUE": "KATALOG",
+        "DETAILS": "SZCZEGÓŁY UTWORU",
+        "ADD_COMPOSITION": "DODAJ UTWÓR"
     }
 }

@@ -13,7 +13,7 @@ import { OverlayNewMessageComponent } from '../overlays/overlay-new-message/over
 })
 export class MessageForumComponent {
   group: any
-  viewedMessage: any
+  viewedMessage = {name: "", content: ""}
   visibleOverlayMessage = false
 
   messages = [
