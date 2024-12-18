@@ -17,7 +17,7 @@ export class OverlayChooseGroupComponent {
   userGroups = [
     { id: 1, name: 'ORKIESTRA PRUSZKÓW', role: 'admin' },
     { id: 2, name: 'CHÓR UW', role: 'reg' },
-    { id: 3, name: 'ZESPÓŁ PIEŚNI I TAŃCA', isAdmin: 'coord' }
+    { id: 3, name: 'ZESPÓŁ PIEŚNI I TAŃCA', role: 'coord' }
   ];
 
   chooseGroup(group: any): void {

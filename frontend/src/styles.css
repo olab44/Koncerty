@@ -42,6 +42,7 @@ ul {
 }
 li {
     height: 5vh;
+    min-height: fit-content;
     background-color: #CCE7FF;
     border-top: solid 3px #000070;
     border-bottom: solid 3px #000070;
@@ -56,6 +57,9 @@ li + li {
 button {
     min-height: fit-content;
     min-width: fit-content;
+
+    background-color: #CCE7FF;
+    border: solid 5px #000070;
 
     cursor: pointer;
 }
