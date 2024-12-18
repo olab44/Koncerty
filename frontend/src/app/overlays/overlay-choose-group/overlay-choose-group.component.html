@@ -1,6 +1,6 @@
 <div class="backdrop" (click)="closeOverlay()"></div>
 <main>
     <ul>
-        <li *ngFor="let group of userGroups" (click)="chooseGroup(group)">{{group.name}}</li>
+        <li *ngFor="let group of userGroups" (click)="gotoGroup(group)">{{group.name}}</li>
     </ul>
 </main>

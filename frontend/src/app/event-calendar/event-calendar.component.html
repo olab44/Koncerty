@@ -1,2 +1,11 @@
 <app-top-bar [isReturnAvailable]="true" [groupName]="group.name"></app-top-bar>
-<p>event-calendar works!</p>
+<main>
+    <div class="calendar"></div>
+    <p>{{'CALENDAR.CHOSEN_DATE' | translate}}:</p>
+    <ul>
+        <li *ngFor="let event of events" (click)="gotoEvent(event)">{{event.name}}</li>
+    </ul>
+    <button class="new-button" [style.visibility]="group.role === 'admin' ? 'visible' : 'hidden'" (click)="toggleOverlayEvent()">{{'CALENDAR.NEW_EVENT' | translate}}</button>
+</main>
+
+<app-overlay-new-event *ngIf="visibleOverlayEvent" (close)="toggleOverlayEvent()"></app-overlay-new-event>

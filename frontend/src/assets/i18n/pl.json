@@ -26,5 +26,9 @@
         "CATALOGUE": "KATALOG",
         "DETAILS": "SZCZEGÓŁY UTWORU",
         "ADD_COMPOSITION": "DODAJ UTWÓR"
+    },
+    "CALENDAR": {
+        "CHOSEN_DATE": "WYDARZENIA W DNIU ",
+        "NEW_EVENT": "ZAPLANUJ NOWE WYDARZENIE"
     }
 }

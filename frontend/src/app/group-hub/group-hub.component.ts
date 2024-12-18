@@ -20,6 +20,6 @@ export class GroupHubComponent {
 
   navigate(path: string) {
     const group = this.group
-    this.router.navigate([this.router.url, path], {state: {group} } )
+    this.router.navigate(["/group", path], {state: {group} } )
   }
 }

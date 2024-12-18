@@ -16,7 +16,7 @@ export const routes: Routes = [
     { path: 'group', component: GroupHubComponent, canActivate: [authGuard] },
     { path: 'group/catalogue', component: MusicCatalogueComponent, canActivate: [authGuard] },
     { path: 'group/calendar', component: EventCalendarComponent, canActivate: [authGuard] },
-    { path: 'group/event/:event-name', component: EventDetailsComponent, canActivate: [authGuard] },
+    { path: 'group/event', component: EventDetailsComponent, canActivate: [authGuard] },
     { path: 'group/forum', component: MessageForumComponent, canActivate: [authGuard] },
     { path: 'group/control', component: GroupControlComponent, canActivate: [authGuard] },
     { path: '', component: SignInComponent },

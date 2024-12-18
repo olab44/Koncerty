@@ -20,7 +20,7 @@ export class OverlayChooseGroupComponent {
     { id: 3, name: 'ZESPÓŁ PIEŚNI I TAŃCA', role: 'coord' }
   ];
 
-  chooseGroup(group: any): void {
+  gotoGroup(group: any): void {
     this.router.navigate(['group'], {state: {group}});
   }
 

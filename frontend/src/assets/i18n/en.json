@@ -26,5 +26,9 @@
         "CATALOGUE": "CATALOGUE",
         "DETAILS": "COMPOSITION DETAILS",
         "ADD_COMPOSITION": "ADD COMPOSITION"
+    },
+    "CALENDAR": {
+        "CHOSEN_DATE": "EVENTS ON ",
+        "NEW_EVENT": "PLAN NEW EVENT"
     }
 }
