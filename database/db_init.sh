@@ -1,8 +1,11 @@
-db_port=$1
-db_name=$2
-db_user=$3
-db_pass=$4  
-# chmod 0600 .pgpass
-# cp .pgpass ~/
+export $(grep -v '^#' .env | xargs)
+
+db_port=$DB_PORT
+db_name=$DB_NAME
+db_user=$DB_USER
+db_pass=$DB_PASSWORD
+
+chmod 600 .env
+
 PGPASSWORD=$db_pass psql -h localhost -U $db_user -d $db_name -p $db_port < init_bd.sql 
-PGPASSWORD=$db_pass psql -h localhost -U $db_user -d $db_name -p $db_port < populate.sql 
+PGPASSWORD=$db_pass psql -h localhost -U $db_user -d $db_name -p $db_port < populate.sql
