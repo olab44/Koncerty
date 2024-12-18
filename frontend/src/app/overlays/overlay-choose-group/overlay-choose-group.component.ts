@@ -3,6 +3,10 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 
+import { BackendService } from '../../services/backend-connection/backend.service';
+
+import { GroupInfo, GroupInfoStructure } from '../../interfaces';
+
 @Component({
   selector: 'app-overlay-choose-group',
   standalone: true,
@@ -11,17 +15,28 @@ import { Router } from '@angular/router';
   styleUrl: './overlay-choose-group.component.css'
 })
 export class OverlayChooseGroupComponent {
-  constructor(private router: Router) {}
-
   @Output() close = new EventEmitter<void>()
-  userGroups = [
-    { id: 1, name: 'ORKIESTRA PRUSZKÓW', role: 'admin' },
-    { id: 2, name: 'CHÓR UW', role: 'reg' },
-    { id: 3, name: 'ZESPÓŁ PIEŚNI I TAŃCA', role: 'coord' }
-  ];
+  userGroups: GroupInfoStructure | undefined;
+
+  constructor(private backend: BackendService, private router: Router) {
+    this.backend.mockGroupInfo()
+    .subscribe({
+      next: res => {
+          this.userGroups = res
+      },
+      error: e => {
+          console.log(e)
+      }
+  })
+  }
 
   gotoGroup(group: any): void {
     this.router.navigate(['group'], {state: {group}});
+  }
+
+  showSubgroupInfo(event: MouseEvent, subgroup: any): void {
+    event.stopPropagation()
+    console.log(subgroup)
   }
 
   closeOverlay() {

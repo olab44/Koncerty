@@ -15,7 +15,28 @@ main {
     display: flex;
 }
 
-li {
-    font-size: 1em;
+.group-list li {
+    font-size: 2em;
     text-align: center;
+
+    flex-direction: column;
+    justify-content: end;
+    gap: 15px;
+
+    padding: 10px 0;
+}
+
+.subgroup-list {
+    width: 90%;
+    margin-left: 10%;
+    z-index: 10;
+    overflow-y: visible;
+    border-top: solid 2px black;
+    border-bottom: solid 2px black;
+}
+.subgroup-list li {
+    height: fit-content;
+    font-size: 0.5em;
+    border: none;
+    color: black;
 }
