@@ -1,3 +1,5 @@
+cp ../.env .
+
 export $(grep -v '^#' .env | xargs)
 
 db_port=$DB_PORT
