@@ -1,0 +1,18 @@
+<div class="calendar-container">
+    <div class="calendar-header">
+        <div class="month-year">{{ 'CALENDAR.' + currentMonth | translate }} {{ currentYear }}</div>
+        <button (click)="gotoPreviousMonth()"> &#8678; </button>
+        <button (click)="gotoNextMonth()"> &#8680; </button>
+    </div>
+
+    <div class="calendar-grid">
+        <div *ngFor="let day of days" class="day-header">{{ 'CALENDAR.' + day | translate }}</div>
+
+      <div *ngFor="let day of daysInMonth"
+           [class.selected]="day === selectedDay"
+           class="day"
+           (click)="day && clickDay(day)">
+        {{ day || '' }}
+      </div>
+    </div>
+</div>

@@ -14,18 +14,28 @@ main {
     font-size: x-large;
 }
 
-.calendar {
+app-calendar {
     grid-row-start: 1;
     grid-row-end: 4;
+    width: 100%;
+    height: 100%;
 }
 
-p {
-    justify-self: start;
+div {
+    width: 100%;
+    display: inline-flex;
+    justify-content: space-between;
+}
+.date-label {
     border-bottom: solid 5px #000070;
+}
+.date {
+    color: black;
 }
 ul {
     height: 100%;
 }
+
 .new-button {
     width: 75%;
     height: 5vh;

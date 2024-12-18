@@ -29,6 +29,25 @@
     },
     "CALENDAR": {
         "CHOSEN_DATE": "EVENTS ON ",
-        "NEW_EVENT": "PLAN NEW EVENT"
+        "NEW_EVENT": "PLAN NEW EVENT",
+        "I": "JANUARY",
+        "II": "FEBRUARY",
+        "III": "MARCH",
+        "IV": "APRIL",
+        "V": "MAY",
+        "VI": "JUNE",
+        "VII": "JULY",
+        "VIII": "AUGUST",
+        "IX": "SEPTEMBER",
+        "X": "OCTOBER",
+        "XI": "NOVEMBER",
+        "XII": "DECEMBER",
+        "SUN": "SUN",
+        "MON": "MON",
+        "TUE": "TUE",
+        "WED": "WED",
+        "THU": "THU",
+        "FRI": "FRI",
+        "SAT": "SAT"
     }
 }

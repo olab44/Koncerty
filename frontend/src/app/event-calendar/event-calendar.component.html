@@ -1,7 +1,10 @@
 <app-top-bar [isReturnAvailable]="true" [groupName]="group.name"></app-top-bar>
 <main>
-    <div class="calendar"></div>
-    <p>{{'CALENDAR.CHOSEN_DATE' | translate}}:</p>
+    <app-calendar (selectDate)="selectDate($event)"></app-calendar>
+    <div>
+        <p class="date-label">{{'CALENDAR.CHOSEN_DATE' | translate}}:</p>
+        <p class="date">{{ selectedDate ? (selectedDate | date: 'dd / MM / yyyy') : '' }}</p>
+    </div>
     <ul>
         <li *ngFor="let event of events" (click)="gotoEvent(event)">{{event.name}}</li>
     </ul>

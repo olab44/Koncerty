@@ -29,6 +29,25 @@
     },
     "CALENDAR": {
         "CHOSEN_DATE": "WYDARZENIA W DNIU ",
-        "NEW_EVENT": "ZAPLANUJ NOWE WYDARZENIE"
+        "NEW_EVENT": "ZAPLANUJ NOWE WYDARZENIE",
+        "I": "STYCZEŃ",
+        "II": "LUTY",
+        "III": "MARZEC",
+        "IV": "KWIECIEŃ",
+        "V": "MAJ",
+        "VI": "CZERWIEC",
+        "VII": "LIPIEC",
+        "VIII": "SIERPIEŃ",
+        "IX": "WRZESIEŃ",
+        "X": "PAŹDZIERNIK",
+        "XI": "LISTOPAD",
+        "XII": "GRUDZIEŃ",
+        "SUN": "NIE",
+        "MON": "PON",
+        "TUE": "WTO",
+        "WED": "ŚRO",
+        "THU": "CZW",
+        "FRI": "PIĄ",
+        "SAT": "SOB"
     }
 }
