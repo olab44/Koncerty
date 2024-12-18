@@ -4,8 +4,8 @@ from fastapi.responses import JSONResponse
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from database import get_session
-from .service import get_user_groups
-from .schemas import UserGroupsResponse
+from .service import get_user_group_structure
+from .schemas import UserGroupStructureSchema
 
 
 router = APIRouter()
@@ -15,10 +15,9 @@ router = APIRouter()
 def test():
     return None
 
-@router.get("/groups/{user}", response_model=UserGroupsResponse)
-def getGroupsByUser(user: str, db: Session = Depends(get_session)):
-    user_data = get_user_groups(db, user)
-    if not user_data:
+@router.get("/groups/{username}", response_model=UserGroupStructureSchema)
+def get_group_structure(username: str, db: Session = Depends(get_session)):
+    result = get_user_group_structure(db, username)
+    if not result:
         raise HTTPException(status_code=404, detail="User not found")
-    return user_data
-
+    return result

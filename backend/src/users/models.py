@@ -16,6 +16,7 @@ class Group(Base):
     __tablename__ = "groups"
 
     id = Column(BigInteger, primary_key=True, index=True)
+    parent_group = Column(BigInteger, nullable=True)
     name = Column(String(30), nullable=False)
     extra_info = Column(String(100))
     invitation_code = Column(String(20), nullable=False)
