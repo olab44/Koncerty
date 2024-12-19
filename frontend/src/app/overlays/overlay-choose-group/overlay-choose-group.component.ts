@@ -2,10 +2,8 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { Router } from '@angular/router';
-
 import { BackendService } from '../../services/backend-connection/backend.service';
-
-import { GroupInfo, GroupInfoStructure } from '../../interfaces';
+import { GroupInfo, GroupInfoStructure, SubgroupInfo } from '../../interfaces';
 
 @Component({
   selector: 'app-overlay-choose-group',
@@ -30,11 +28,11 @@ export class OverlayChooseGroupComponent {
   })
   }
 
-  gotoGroup(group: any): void {
+  gotoGroup(group: GroupInfo): void {
     this.router.navigate(['group'], {state: {group}});
   }
 
-  showSubgroupInfo(event: MouseEvent, subgroup: any): void {
+  showSubgroupInfo(event: MouseEvent, subgroup: SubgroupInfo): void {
     event.stopPropagation()
     console.log(subgroup)
   }

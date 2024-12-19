@@ -12,11 +12,13 @@ import { TranslateModule } from '@ngx-translate/core';
 export class CalendarComponent {
   @Output() selectDate = new EventEmitter<Date | null>()
 
-  currentDate: Date = new Date();
+  selectedDate: Date = new Date();
   daysInMonth: Array<number | null> = [];
   currentMonth: string = '';
   currentYear: number = 0;
   selectedDay: number | null = null;
+
+  events = [{name: "Koncert Wigilijny", date: new Date('2024-12-24')}] //mock
 
   months: string[] = [
     'I', 'II', 'III', 'IV', 'V', 'VI',
@@ -31,8 +33,8 @@ export class CalendarComponent {
   }
 
   updateCalendar(): void {
-    const year = this.currentDate.getFullYear();
-    const month = this.currentDate.getMonth();
+    const year = this.selectedDate.getFullYear();
+    const month = this.selectedDate.getMonth();
     this.currentMonth = this.months[month];
     this.currentYear = year;
 
@@ -50,13 +52,13 @@ export class CalendarComponent {
 
   gotoPreviousMonth(): void {
     this.selectedDay = null;
-    this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() - 1);
+    this.selectedDate = new Date(this.selectedDate.getFullYear(), this.selectedDate.getMonth() - 1);
     this.updateCalendar();
   }
 
   gotoNextMonth(): void {
     this.selectedDay = null;
-    this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1);
+    this.selectedDate = new Date(this.selectedDate.getFullYear(), this.selectedDate.getMonth() + 1);
     this.updateCalendar();
   }
 
@@ -67,9 +69,14 @@ export class CalendarComponent {
     }
     else {
       this.selectedDay = day;
-      const date = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), day);
+      const date = new Date(this.selectedDate.getFullYear(), this.selectedDate.getMonth(), day);
       this.selectDate.emit(date)
     }
   }
-}
 
+  isEventPlanned(day: number | null): boolean {
+    if (!day) return false;
+    const date = new Date(this.selectedDate.getFullYear(), this.selectedDate.getMonth(), day);
+    return this.events.some(event => date.toDateString() === event.date.toDateString())
+  }
+}

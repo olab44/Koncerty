@@ -3,6 +3,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { TopBarComponent } from '../bars/top-bar.component';
 import { SideBarComponent } from '../bars/side-bar.component';
+import { GroupInfo } from '../interfaces';
 
 @Component({
   selector: 'app-group-hub',
@@ -12,7 +13,7 @@ import { SideBarComponent } from '../bars/side-bar.component';
   styleUrl: './group-hub.component.css'
 })
 export class GroupHubComponent {
-  group: any
+  group: GroupInfo
 
   constructor(private router: Router) {
     this.group = history.state.group;

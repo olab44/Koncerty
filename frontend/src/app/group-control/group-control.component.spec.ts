@@ -11,7 +11,7 @@ describe('GroupControlComponent', () => {
       imports: [GroupControlComponent]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(GroupControlComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

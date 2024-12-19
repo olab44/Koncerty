@@ -60,6 +60,10 @@
     font-size: large;
 }
 
+.day.planned-events {
+    background-color: rgb(56, 44, 134, 0.8);
+    color: rgb(255, 197, 61);
+}
 .day.selected {
     background: #000070;
     color: white;

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { TopBarComponent } from '../bars/top-bar.component';
 import { SideBarComponent } from '../bars/side-bar.component';
+import { GroupInfo} from '../interfaces';
 
 @Component({
   selector: 'app-event-details',
@@ -11,7 +12,7 @@ import { SideBarComponent } from '../bars/side-bar.component';
   styleUrl: './event-details.component.css'
 })
 export class EventDetailsComponent {
-  group: any
+  group: GroupInfo
   event: any
 
   constructor() {

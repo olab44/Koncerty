@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { TopBarComponent } from '../bars/top-bar.component';
 import { OverlayAddCompositionComponent } from '../overlays/overlay-add-composition/overlay-add-composition.component';
+import { GroupInfo } from '../interfaces';
 
 @Component({
   selector: 'app-music-catalogue',
@@ -12,7 +13,7 @@ import { OverlayAddCompositionComponent } from '../overlays/overlay-add-composit
   styleUrl: './music-catalogue.component.css'
 })
 export class MusicCatalogueComponent {
-  group: any
+  group: GroupInfo
   viewedComposition = {title: "", author: ""}
   visibleOverlayComposition = false
 

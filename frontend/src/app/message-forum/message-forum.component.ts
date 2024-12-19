@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { TopBarComponent } from '../bars/top-bar.component';
 import { OverlayNewMessageComponent } from '../overlays/overlay-new-message/overlay-new-message.component';
+import { GroupInfo } from '../interfaces';
 
 @Component({
   selector: 'app-message-forum',
@@ -12,7 +13,7 @@ import { OverlayNewMessageComponent } from '../overlays/overlay-new-message/over
   styleUrl: './message-forum.component.css'
 })
 export class MessageForumComponent {
-  group: any
+  group: GroupInfo
   viewedMessage = {name: "", content: ""}
   visibleOverlayMessage = false
 

@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { TopBarComponent } from '../bars/top-bar.component';
 import { CalendarComponent } from '../component/calendar/calendar.component';
 import { OverlayNewEventComponent } from '../overlays/overlay-new-event/overlay-new-event.component';
+import { GroupInfo } from '../interfaces';
 
 @Component({
   selector: 'app-event-calendar',
@@ -14,11 +15,11 @@ import { OverlayNewEventComponent } from '../overlays/overlay-new-event/overlay-
   styleUrl: './event-calendar.component.css'
 })
 export class EventCalendarComponent {
-  group: any
+  group: GroupInfo
   selectedDate: Date | null = null
   visibleOverlayEvent = false
 
-  events = [{name: "Koncert Wigilijny"}]
+  events = [{name: "Koncert Wigilijny", date: new Date('2024-12-24')}] //mock
 
   constructor(private router: Router) {
     this.group = history.state.group;
@@ -35,5 +36,10 @@ export class EventCalendarComponent {
 
   toggleOverlayEvent(): void {
     this.visibleOverlayEvent = !this.visibleOverlayEvent
+  }
+
+  isSameDate(date1: Date | null, date2: Date): boolean {
+    if (!date1) return false;
+    return date1.toDateString() === date2.toDateString();
   }
 }
