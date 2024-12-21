@@ -51,9 +51,6 @@ def manage_loging(token: str, GOOGLE_CLIENT_ID: str, APP_SECRET: str):
             GOOGLE_CLIENT_ID
         )
 
-        if idinfo["aud"] != GOOGLE_CLIENT_ID:
-            raise HTTPException(status_code=400, detail="Unverified Google client")
-
         user_id = idinfo["sub"]
         email = idinfo.get("email")
         name = idinfo.get("name")

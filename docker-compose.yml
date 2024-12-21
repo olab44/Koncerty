@@ -12,7 +12,9 @@ services:
       - DATABASE_USER=${DB_USER}
       - DATABASE_PASSWORD=${DB_PASSWORD}
       - DATABASE_NAME=${DB_NAME}
-      
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - APP_SECRET=${APP_SECRET}
+
     ports:
       - "8000:8000"
     networks:
