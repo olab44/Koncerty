@@ -23,4 +23,14 @@ export class BackendService {
         })
     )
   }
+
+  postToken(token: string) {
+    return this.http
+    .post(`${this.apiURL}/google-sign-in`, { token })
+    .pipe(
+      catchError((error) => {
+      return throwError(() => error)
+      })
+    )
+  }
 }

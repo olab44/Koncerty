@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 from starlette.middleware.cors import CORSMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware
 from users.router import router as users_router
@@ -31,6 +31,14 @@ class CspMiddleware(BaseHTTPMiddleware):
 
 app.add_middleware(CspMiddleware)
 
+class COOPCOEPMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        response = await call_next(request)
+        response.headers['Cross-Origin-Opener-Policy'] = 'same-origin-allow-popups'
+        response.headers['Cross-Origin-Embedder-Policy'] = 'require-corp'
+        return response
+
+app.add_middleware(COOPCOEPMiddleware)
 
 @app.get("/")
 async def read_root():
@@ -39,3 +47,4 @@ async def read_root():
         "default-src 'self'; script-src 'self';"
     )
     return response
+

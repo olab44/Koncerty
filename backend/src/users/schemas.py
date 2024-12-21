@@ -19,3 +19,7 @@ class UserGroupStructureSchema(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class GoogleSignInRequest(BaseModel):
+    token: str

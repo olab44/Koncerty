@@ -8,25 +8,25 @@ main {
     justify-content: center;
 }
 
-button {
+section {
     width: 40vw;
+    min-height: fit-content;
+    min-width: fit-content;
+    padding: 25px;
 
     background-color: #CCE7FF;
     border: solid 5px #000070;
     border-radius: 75px;
 
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: 1fr auto auto;
     align-items: center;
-
-    color: #000070;
-    font-size: larger;
-    font-weight: bold;
+    gap: 15px;
 }
 
 .sign-in-text {
-    padding: 20px;
-
+    color: #000070;
+    font-weight: bold;
     text-align: center;
     font-size: xx-large;
 }

@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from database import get_session
 from .service import get_user_group_structure
-from .schemas import UserGroupStructureSchema
+from .schemas import UserGroupStructureSchema, GoogleSignInRequest
 
 
 router = APIRouter()
@@ -21,3 +21,9 @@ def get_group_structure(username: str, db: Session = Depends(get_session)):
     if not result:
         raise HTTPException(status_code=404, detail="User not found")
     return result
+
+@router.post("/google-sign-in")
+async def login(request: GoogleSignInRequest):
+    # verify token
+    # generate own app-specific token and return
+    return {"message": "User signed up successfully"}
