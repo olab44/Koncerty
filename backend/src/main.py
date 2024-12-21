@@ -13,8 +13,10 @@ app.add_middleware(
     allow_origins=[
         "http://127.0.0.1:8000",
         "http://127.0.0.1:4200",
+        "http://127.0.0.1:4201",
         "http://localhost:8000",
         "http://localhost:4200",
+        "http://localhost:4201"
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -39,6 +41,14 @@ class COOPCOEPMiddleware(BaseHTTPMiddleware):
         return response
 
 app.add_middleware(COOPCOEPMiddleware)
+
+class LoggingMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        print(f"Incoming request: {request.method} {request.url}")
+        response = await call_next(request)
+        return response
+
+app.add_middleware(LoggingMiddleware)
 
 @app.get("/")
 async def read_root():
