@@ -43,7 +43,7 @@ def get_user_group_structure(db: Session, username: str):
         "group_structure": group_structure
     }
 
-def manage_loging(token: str, GOOGLE_CLIENT_ID: str, APP_SECRET: str):
+def manage_loging(db: Session, token: str, GOOGLE_CLIENT_ID: str, APP_SECRET: str):
     try:
         idinfo = id_token.verify_oauth2_token(
             token,
@@ -64,8 +64,25 @@ def manage_loging(token: str, GOOGLE_CLIENT_ID: str, APP_SECRET: str):
             APP_SECRET,
             algorithm="HS256"
         )
-
+        existing_user = db.query(User).filter(User.email == email).first()
+        if existing_user:
+            app_token = (app_token, True)
+        else:
+            app_token = (app_token, False)
         return app_token
 
     except ValueError as e:
         raise HTTPException(status_code=400, detail="Invalid Google token")
+    
+def register_user(db: Session, user_email: str, username: str):
+    # Sprawdź, czy użytkownik już istnieje
+    existing_user = db.query(User).filter(User.email == user_email).first()
+    if existing_user:
+        raise HTTPException(status_code=400, detail="Email already registered")
+
+        # Zapisz użytkownika do bazy danych
+    new_user = User(username=username, email=user_email)
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    return new_user
