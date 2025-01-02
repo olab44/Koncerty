@@ -66,10 +66,13 @@ BEGIN
     INSERT INTO alerts (content, date_sent)
     VALUES ('Super poszlo', (CURRENT_TIMESTAMP - INTERVAL '1 hour')::timestamp)
     RETURNING id INTO alert_id2;
-    -- 1 grupa
+    -- 2 grupy
     INSERT INTO groups (parent_group, name, extra_info, invitation_code)
-    VALUES (NULL, 'Grajkowie', 'Polub nas na instagramie LINK', 'ASD12')
+    VALUES (-1, 'Grajkowie', 'Polub nas na instagramie LINK', 'ASD12')
     RETURNING id INTO group_id1;
+
+    INSERT INTO groups (parent_group, name, extra_info, invitation_code)
+    VALUES (-1, 'Kumple', 'Szukaj nas', '123');
     -- 1 podgrupa
     INSERT INTO groups (parent_group, name, extra_info, invitation_code)
     VALUES (group_id1, 'Grajkowie:Strunowe', 'Polub nas na facebooku LINK', 'ABBA')

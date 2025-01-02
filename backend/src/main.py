@@ -1,12 +1,14 @@
 from fastapi import FastAPI
-from fastapi.responses import JSONResponse, RedirectResponse
+from fastapi.responses import JSONResponse
 from starlette.middleware.cors import CORSMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware
 from users.router import router as users_router
-
+from groups.router import router as group_router
 
 app = FastAPI()
 app.include_router(users_router)
+app.include_router(group_router, prefix="/groups")
+
 
 app.add_middleware(
     CORSMiddleware,

@@ -1,47 +1,82 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
+from typing import List
 from .models import User, Group, Member
+from .schemas import SubgroupSchema
 from google.oauth2 import id_token
 from google.auth.transport import requests
 import jwt
 import datetime
 
+def get_subgroups_recursive(
+    db: Session, parent_group_id: int, visited_groups: set
+) -> List[SubgroupSchema]:
+    """
+    Pobierz wszystkie podgrupy dla grupy nadrzędnej, rekurencyjnie przetwarzając podgrupy,
+    unikając duplikowania grup.
+    """
+    subgroups = (
+        db.query(Group, Member.role)
+        .join(Member, Group.id == Member.group_id, isouter=True)
+        .filter(Group.parent_group == parent_group_id)
+        .all()
+    )
+
+    result = []
+    for subgroup in subgroups:
+        group_id = subgroup[0].id
+
+        if group_id in visited_groups:
+            continue
+
+        visited_groups.add(group_id) 
+        result.append(
+            SubgroupSchema(
+                subgroup_id=group_id,
+                subgroup_name=subgroup[0].name,
+                role=subgroup[1] if subgroup[1] else "Brak roli",
+                subgroups=get_subgroups_recursive(db, group_id, visited_groups)
+            )
+        )
+
+    return result
+
+
 def get_user_group_structure(db: Session, username: str):
+    """
+    Pobierz strukturę grup dla użytkownika, uwzględniając zagnieżdżone podgrupy,
+    unikając duplikowania grup.
+    """
     user = db.query(User).filter(User.username == username).first()
     if not user:
         return None
 
     group_structure = []
+    visited_groups = set()
 
     for member in user.members:
         group = member.group
-        if group.parent_group is None:
-            # Pobierz tylko podgrupy, w których użytkownik jest członkiem
-            subgroups = (
-                db.query(Group, Member.role)
-                .join(Member, Group.id == Member.group_id)
-                .filter(Group.parent_group == group.id, Member.user_id == user.id)
-                .all()
-            )
 
-            group_structure.append({
-                "group_id": group.id,
-                "group_name": group.name,
-                "role": member.role,
-                "subgroups": [
-                    {
-                        "subgroup_id": subgroup[0].id,
-                        "subgroup_name": subgroup[0].name,
-                        "role": subgroup[1]
-                    }
-                    for subgroup in subgroups
-                ]
-            })
+        if group.id in visited_groups:
+            continue
+
+        visited_groups.add(group.id)  # Oznacz grupę jako odwiedzoną
+
+        subgroups = get_subgroups_recursive(db, group.id, visited_groups)
+
+        group_structure.append({
+            "group_id": group.id,
+            "group_name": group.name,
+            "role": member.role,
+            "subgroups": subgroups
+        })
 
     return {
         "username": user.username,
         "group_structure": group_structure
     }
+
+
 
 def manage_loging(db: Session, token: str, GOOGLE_CLIENT_ID: str, APP_SECRET: str):
     try:

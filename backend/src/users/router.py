@@ -1,12 +1,10 @@
 # router.py
 from fastapi import APIRouter
-from fastapi.responses import JSONResponse
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
 from database import get_session
 from .service import get_user_group_structure, manage_loging, register_user
 from .schemas import UserGroupStructureSchema, GoogleSignInRequest, UserCreate
-from .models import User
 from dotenv import load_dotenv
 import os
 
@@ -19,7 +17,7 @@ router = APIRouter()
 def test():
     return {"message": "Test working"}
 
-@router.get("/groups/{username}", response_model=UserGroupStructureSchema)
+@router.get("/findGroups/{username}", response_model=UserGroupStructureSchema)
 def get_group_structure(username: str, db: Session = Depends(get_session)):
     result = get_user_group_structure(db, username)
     if not result:
