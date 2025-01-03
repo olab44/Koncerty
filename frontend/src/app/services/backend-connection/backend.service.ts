@@ -40,7 +40,7 @@ export class BackendService {
   }
 
   postRegisterUser(username: string) {
-    return this.http.post(`${this.apiURL}/createUser`, { username }, { headers: this.getHeaders() })
+    return this.http.post(`${this.apiURL}/createUser`, { username })
     .pipe(
       catchError((error) => {
       return throwError(() => error)

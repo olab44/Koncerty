@@ -45,10 +45,11 @@ export class SignInComponent implements OnInit {
     this.backend.postToken(response.credential).subscribe({
       next: (response: SignUpResponse) => {
         const token = response.app_token
+        this.auth.setPreToken(token)
         this.ngZone.run(() => this.promptUsername = response.new);
-        this.auth.setToken(token)
 
         if (!response.new) {
+          this.auth.setToken(token)
           this.ngZone.run(() => { this.router.navigate(['/home']) })
         }
       },
@@ -61,6 +62,7 @@ export class SignInComponent implements OnInit {
   setUsername(username: string) {
     this.backend.postRegisterUser(username).subscribe({
       next: (response) => {
+        this.auth.setFromPreToken()
         this.ngZone.run(() => { this.promptUsername = false; this.router.navigate(['/home']) })
       },
       error: (error) => {
