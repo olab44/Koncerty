@@ -29,7 +29,7 @@ def get_subgroups_recursive(
         if group_id in visited_groups:
             continue
 
-        visited_groups.add(group_id) 
+        visited_groups.add(group_id)
         result.append(
             SubgroupSchema(
                 subgroup_id=group_id,
@@ -101,14 +101,14 @@ def manage_loging(db: Session, token: str, GOOGLE_CLIENT_ID: str, APP_SECRET: st
         )
         existing_user = db.query(User).filter(User.email == email).first()
         if existing_user:
-            app_token = (app_token, True)
-        else:
             app_token = (app_token, False)
+        else:
+            app_token = (app_token, True)
         return app_token
 
     except ValueError as e:
         raise HTTPException(status_code=400, detail="Invalid Google token")
-    
+
 def register_user(db: Session, user_email: str, username: str):
     # Sprawdź, czy użytkownik już istnieje
     existing_user = db.query(User).filter(User.email == user_email).first()

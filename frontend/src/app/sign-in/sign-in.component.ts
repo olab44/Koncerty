@@ -1,16 +1,18 @@
 import { Component, OnInit, NgZone } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { TranslateModule } from "@ngx-translate/core";
 import { Router } from '@angular/router';
 import { TopBarComponent } from '../bars/top-bar.component';
 import { AuthService } from '../services/authorization/auth.service';
 import { BackendService } from '../services/backend-connection/backend.service';
+import { SignUpResponse } from '../interfaces';
 
-declare const google: any;
+declare var google: any;
 
 @Component({
   selector: 'app-sign-in',
   standalone: true,
-  imports: [ TranslateModule, TopBarComponent ],
+  imports: [ CommonModule, TranslateModule, TopBarComponent ],
   templateUrl: './sign-in.component.html',
   styleUrl: './sign-in.component.css'
 })
@@ -19,8 +21,10 @@ export class SignInComponent implements OnInit {
     private backend: BackendService,
     private router: Router,
     public auth: AuthService,
-    private ngZone: NgZone
+    private ngZone: NgZone,
   ) {}
+
+  promptUsername: boolean = false
 
   ngOnInit(): void {
     // Initialize the Google Sign-In Client
@@ -39,14 +43,28 @@ export class SignInComponent implements OnInit {
 
   handleCredentialsResponse(response: any): void {
     this.backend.postToken(response.credential).subscribe({
-      next: (response) => {
-        console.log('Signed up successfully:', response);
-        // what next? navigate to the next page? save token to use for identification later?
-        this.auth.setToken("MOCKTOKEN")
-        this.ngZone.run(() => { this.router.navigate(['/home']) });
+      next: (response: SignUpResponse) => {
+        const token = response.app_token
+        this.ngZone.run(() => this.promptUsername = response.new);
+        this.auth.setToken(token)
+
+        if (!response.new) {
+          this.ngZone.run(() => { this.router.navigate(['/home']) })
+        }
       },
       error: (error) => {
-        console.error('Error during signup:', error);
+        console.error('Error during signIn:', error);
+      },
+    });
+  }
+
+  setUsername(username: string) {
+    this.backend.postRegisterUser(username).subscribe({
+      next: (response) => {
+        this.ngZone.run(() => { this.promptUsername = false; this.router.navigate(['/home']) })
+      },
+      error: (error) => {
+        console.error('Error during signUp:', error);
       },
     });
   }

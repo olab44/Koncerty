@@ -36,6 +36,7 @@ def login(request: GoogleSignInRequest, db: Session = Depends(get_session)):
     except ValueError as e:
         raise HTTPException(status_code=400, detail="Invalid Google token")
 
+
 @router.post("/createUser", status_code=201)
 def create_user(user: UserCreate, db: Session = Depends(get_session)):
     try:
