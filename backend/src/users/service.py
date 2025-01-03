@@ -5,6 +5,8 @@ from .models import User, Group, Member
 from .schemas import SubgroupSchema
 from google.oauth2 import id_token
 from google.auth.transport import requests
+from dotenv import load_dotenv
+import os
 import jwt
 import datetime
 
@@ -60,7 +62,7 @@ def get_user_group_structure(db: Session, username: str):
         if group.id in visited_groups:
             continue
 
-        visited_groups.add(group.id)  # Oznacz grupę jako odwiedzoną
+        visited_groups.add(group.id) 
 
         subgroups = get_subgroups_recursive(db, group.id, visited_groups)
 
@@ -78,8 +80,12 @@ def get_user_group_structure(db: Session, username: str):
 
 
 
-def manage_loging(db: Session, token: str, GOOGLE_CLIENT_ID: str, APP_SECRET: str):
+def manage_loging(db: Session, token: str):
     try:
+        load_dotenv()
+        GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+        APP_SECRET = os.getenv("APP_SECRET")
+
         idinfo = id_token.verify_oauth2_token(
             token,
             requests.Request(),
@@ -109,6 +115,18 @@ def manage_loging(db: Session, token: str, GOOGLE_CLIENT_ID: str, APP_SECRET: st
     except ValueError as e:
         raise HTTPException(status_code=400, detail="Invalid Google token")
     
+def decode_app_token(app_token: str):
+    try:
+        load_dotenv()
+        APP_SECRET = os.getenv("APP_SECRET")
+        decoded_data = jwt.decode(app_token, APP_SECRET, algorithms=["HS256"])
+        return decoded_data 
+    except jwt.ExpiredSignatureError:
+        return None
+    except jwt.InvalidTokenError:
+        return None
+
+
 def register_user(db: Session, user_email: str, username: str):
     # Sprawdź, czy użytkownik już istnieje
     existing_user = db.query(User).filter(User.email == user_email).first()
