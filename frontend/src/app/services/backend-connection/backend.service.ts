@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
-import { throwError } from 'rxjs';
-
-import { GroupInfoStructure } from "../../interfaces"
+import { Observable, throwError } from 'rxjs';
+import { AuthService } from '../authorization/auth.service';
+import { GroupInfoStructure, SignUpResponse } from "../../interfaces"
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,13 @@ import { GroupInfoStructure } from "../../interfaces"
 export class BackendService {
   private readonly apiURL = "http://localhost:8000"
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private auth: AuthService) {
+  }
+
+  private getHeaders(): HttpHeaders {
+    return new HttpHeaders({
+      'Authorization': `Bearer ${this.auth.getToken()}`,
+    });
   }
 
   mockGroupInfo() {
@@ -24,9 +30,18 @@ export class BackendService {
     )
   }
 
-  postToken(token: string) {
-    return this.http
-    .post(`${this.apiURL}/google-sign-in`, { token })
+  postToken(token: string): Observable<SignUpResponse> {
+    return this.http.post<SignUpResponse>(`${this.apiURL}/google-sign-in`, { token })
+    .pipe(
+      catchError((error) => {
+      return throwError(() => error)
+      })
+    )
+  }
+
+  postRegisterUser(username: string) {
+    const headers = new HttpHeaders({'Authorization': `Bearer ${this.auth.getPreToken()}`});
+    return this.http.post(`${this.apiURL}/createUser`, { username }, {headers: headers})
     .pipe(
       catchError((error) => {
       return throwError(() => error)

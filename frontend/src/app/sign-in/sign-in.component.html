@@ -8,3 +8,13 @@
         </section>
     </div>
 </main>
+
+<div *ngIf="promptUsername" class="backdrop">
+    <div class="username-prompt">
+        <label for="username">{{ 'PROMPT_USERNAME' | translate }}</label>
+        <div>
+            <input #username type="text" id="username-input" name="username" placeholder="username" />
+            <button (click)="setUsername(username.value)">-- &#x2714; --</button>
+        </div>
+    </div>
+</div>

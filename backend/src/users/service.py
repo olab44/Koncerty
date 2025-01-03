@@ -31,7 +31,7 @@ def get_subgroups_recursive(
         if group_id in visited_groups:
             continue
 
-        visited_groups.add(group_id) 
+        visited_groups.add(group_id)
         result.append(
             SubgroupSchema(
                 subgroup_id=group_id,
@@ -107,9 +107,9 @@ def manage_loging(db: Session, token: str):
         )
         existing_user = db.query(User).filter(User.email == email).first()
         if existing_user:
-            app_token = (app_token, True)
-        else:
             app_token = (app_token, False)
+        else:
+            app_token = (app_token, True)
         return app_token
 
     except ValueError as e:
