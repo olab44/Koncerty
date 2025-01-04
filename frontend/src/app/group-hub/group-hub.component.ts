@@ -17,6 +17,7 @@ export class GroupHubComponent {
 
   constructor(private router: Router) {
     this.group = history.state.group;
+    console.log(this.group)
   }
 
   navigate(path: string) {

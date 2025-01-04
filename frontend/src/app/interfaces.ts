@@ -8,6 +8,8 @@ export interface GroupInfo {
     group_id: number;
     group_name: string;
     role: string;
+    extra_info?: string;
+    inv_code?: string;
     subgroups?: SubgroupInfo[];
 }
 
@@ -15,6 +17,8 @@ export interface SubgroupInfo {
     subgroup_id: number;
     subgroup_name: string;
     role: string;
+    extra_info?: string;
+    inv_code?: string;
     subgroups: SubgroupInfo[];
 }
 

@@ -26,6 +26,7 @@ p, textarea {
     font-weight: bold;
 }
 textarea {
+    padding: 10px;
     border-top: solid 2px #000070;
     border-bottom: solid 2px #000070;
 }
