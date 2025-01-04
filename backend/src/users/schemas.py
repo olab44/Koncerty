@@ -8,6 +8,7 @@ class UserCreate(BaseModel):
     username: str
 
 class UserInfo(BaseModel):
+    id: int
     username: str
     email: str
     role: str

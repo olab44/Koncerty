@@ -95,6 +95,7 @@ def get_user_from_group(db: Session, user_email: str, group_id: int):
         user = db.query(User).filter(User.id == member.user_id).first()
         if user:
             user_info = UserInfo(
+                id=user.id,
                 username=user.username,
                 email=user.email,
                 role=member.role
