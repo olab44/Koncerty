@@ -65,7 +65,9 @@ def get_subgroups_recursive(
             SubgroupSchema(
                 subgroup_id=group_id,
                 subgroup_name=subgroup[0].name,
-                role=subgroup[1] if subgroup[1] else "Brak roli",
+                extra_info=subgroup[0].extra_info,
+                role=subgroup[1],
+                inv_code=subgroup[0].invitation_code if subgroup[1] == 'Kapelmistrz' else None,
                 subgroups=get_subgroups_recursive(db, group_id, visited_groups)
             )
         )
@@ -99,6 +101,8 @@ def get_user_group_structure(db: Session, email: str):
             "group_id": group.id,
             "group_name": group.name,
             "role": member.role,
+            "extra_info": group.extra_info,
+            "inv_code": group.invitation_code if member.role == 'Kapelmistrz' else None,
             "subgroups": subgroups
         })
 
