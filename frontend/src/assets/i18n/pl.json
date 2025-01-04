@@ -30,7 +30,7 @@
     },
     "CALENDAR": {
         "CHOSEN_DATE": "WYDARZENIA W DNIU ",
-        "NEW_EVENT": "ZAPLANUJ NOWE WYDARZENIE",
+        "NEW_EVENT": "DODAJ NOWE WYDARZENIE",
         "I": "STYCZEŃ",
         "II": "LUTY",
         "III": "MARZEC",
@@ -53,5 +53,13 @@
     },
     "GROUP": {
         "ROLE": "rola w grupie"
+    },
+    "EVENT": {
+        "NEW": "DODAJ WYDARZENIE",
+        "NAME": "NAZWA WYDARZENIA",
+        "DESCRIPTION": "OPIS",
+        "START": "CZAS ROZPOCZĘCIA",
+        "END": "CZAS ZAKOŃCZENIA",
+        "LOCATION": "MIEJSCE"
     }
 }

@@ -30,7 +30,7 @@
     },
     "CALENDAR": {
         "CHOSEN_DATE": "EVENTS ON ",
-        "NEW_EVENT": "PLAN NEW EVENT",
+        "NEW_EVENT": "ADD NEW EVENT",
         "I": "JANUARY",
         "II": "FEBRUARY",
         "III": "MARCH",
@@ -53,5 +53,13 @@
     },
     "GROUP": {
         "ROLE": "group role"
+    },
+    "EVENT": {
+        "NEW": "ADD EVENT",
+        "NAME": "EVENT NAME",
+        "DESCRIPTION": "DESCRIPTION",
+        "START": "START TIME",
+        "END": "END TIME",
+        "LOCATION": "LOCATION"
     }
 }

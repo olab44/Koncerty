@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { Router } from '@angular/router';
+import { BackendService } from '../services/backend-connection/backend.service';
 import { TopBarComponent } from '../bars/top-bar.component';
 import { CalendarComponent } from '../component/calendar/calendar.component';
 import { OverlayNewEventComponent } from '../overlays/overlay-new-event/overlay-new-event.component';
-import { GroupInfo } from '../interfaces';
+import { EventInfo, GroupInfo } from '../interfaces';
 
 @Component({
   selector: 'app-event-calendar',
@@ -16,13 +17,20 @@ import { GroupInfo } from '../interfaces';
 })
 export class EventCalendarComponent {
   group: GroupInfo
+  events: EventInfo[] = []
   selectedDate: Date | null = null
-  visibleOverlayEvent = false
+  visibleOverlayEvent: boolean = false
 
-  events = [{name: "Koncert Wigilijny", date: new Date('2024-12-24')}] //mock
-
-  constructor(private router: Router) {
+  constructor(private router: Router, private backend: BackendService) {
     this.group = history.state.group;
+    this.backend.getEvents().subscribe({
+      next: (res) => {
+        this.events = res
+      },
+      error: (e) => {
+        console.log(e);
+      },
+    })
   }
 
   selectDate(date: Date | null): void {
@@ -38,8 +46,13 @@ export class EventCalendarComponent {
     this.visibleOverlayEvent = !this.visibleOverlayEvent
   }
 
-  isSameDate(date1: Date | null, date2: Date): boolean {
-    if (!date1) return false;
-    return date1.toDateString() === date2.toDateString();
+  isAtDate(date_selected: Date | null, date_start: string, date_end: string): boolean {
+    if (!date_selected) return false;
+    const start_date = new Date(date_start)
+    const end_date = new Date(date_end)
+    start_date.setHours(0, 0, 0, 0);  end_date.setHours(0, 0, 0, 0);
+    const after_start = start_date <= date_selected
+    const before_end = date_selected <= end_date
+    return after_start && before_end;
   }
 }

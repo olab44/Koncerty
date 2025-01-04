@@ -63,7 +63,7 @@ export class SignInComponent implements OnInit {
 
   setUsername(username: string) {
     this.backend.postRequest('createUser', {username}).subscribe({
-      next: (response) => {
+      next: (res) => {
         this.auth.setLoggedIn(true)
         this.ngZone.run(() => { this.promptUsername = false; this.router.navigate(['/home']) })
       },

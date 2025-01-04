@@ -12,7 +12,8 @@ import { GroupInfo } from '../interfaces';
 })
 export class SideBarComponent {
   @Input() isEditAvailable: boolean = false;
-  @Input() group: GroupInfo = {group_id: -1, group_name: "", role: ""};
+  @Input() group!: GroupInfo;
+
   editMessage = ""
   saveGroupInfo() {
     this.editMessage = "Group info saved."

@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
+import { EventInfo } from '../../interfaces';
 
 @Component({
   selector: 'app-calendar',
@@ -11,14 +12,13 @@ import { TranslateModule } from '@ngx-translate/core';
 })
 export class CalendarComponent {
   @Output() selectDate = new EventEmitter<Date | null>()
+  @Input() events!: EventInfo[];
 
   selectedDate: Date = new Date();
   daysInMonth: Array<number | null> = [];
   currentMonth: string = '';
   currentYear: number = 0;
   selectedDay: number | null = null;
-
-  events = [{name: "Koncert Wigilijny", date: new Date('2024-12-24')}] //mock
 
   months: string[] = [
     'I', 'II', 'III', 'IV', 'V', 'VI',
@@ -77,6 +77,16 @@ export class CalendarComponent {
   isEventPlanned(day: number | null): boolean {
     if (!day) return false;
     const date = new Date(this.selectedDate.getFullYear(), this.selectedDate.getMonth(), day);
-    return this.events.some(event => date.toDateString() === event.date.toDateString())
+    return this.events.some(event =>  this.isAtDate(date, event.date_start, event.date_end))
+  }
+
+  isAtDate(date_selected: Date | null, date_start: string, date_end: string): boolean {
+    if (!date_selected) return false;
+    const start_date = new Date(date_start)
+    const end_date = new Date(date_end)
+    start_date.setHours(0, 0, 0, 0);  end_date.setHours(0, 0, 0, 0);
+    const after_start = start_date <= date_selected
+    const before_end = date_selected <= end_date
+    return after_start && before_end;
   }
 }

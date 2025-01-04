@@ -18,5 +18,48 @@ main {
     flex-direction: column;
     gap: 15px;
     justify-content: space-evenly;
-    align-items: center;
+}
+
+.dates {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+}
+
+button {
+    width: 75%;
+    height: 5vh;
+    border-radius: 25px;
+    font-size: large;
+    align-self: center;
+}
+
+label {
+    display: grid;
+    gap: 5px;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 20px;
+    background-color: #CCE7FF;
+    border: solid 5px #000070;
+    border-radius: 25px;
+}
+input {
+    height: 5vh;
+}
+textarea {
+    height: 15vh;
+    resize: none;
+}
+textarea::-webkit-scrollbar {
+    display: none;
+}
+input, textarea::placeholder {
+    text-align: center;
+}
+span {
+    align-self: center;
 }
