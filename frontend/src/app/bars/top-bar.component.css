@@ -30,6 +30,7 @@ main {
 select {
     background-color: transparent;
     border: none;
+    outline: none;
 
     color: #000070;
     font-size: larger;

@@ -50,5 +50,8 @@
         "THU": "THU",
         "FRI": "FRI",
         "SAT": "SAT"
+    },
+    "GROUP": {
+        "ROLE": "group role"
     }
 }

@@ -80,3 +80,6 @@ button:disabled:hover {
 input, textarea {
     color: black;
 }
+textarea {
+    resize: none;
+}

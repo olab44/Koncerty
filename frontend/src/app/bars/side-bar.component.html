@@ -1,2 +1,6 @@
 <main>
+    <input type="text" [readonly]="!isEditAvailable" [value]="group?.group_name">
+    <textarea [readonly]="!isEditAvailable" [value]=""></textarea>
+    <p>{{"GROUP.ROLE" | translate}}<br>&emsp;{{group?.role}}</p>
+    <p>{{""}}</p>
 </main>

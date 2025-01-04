@@ -50,5 +50,8 @@
         "THU": "CZW",
         "FRI": "PIĄ",
         "SAT": "SOB"
+    },
+    "GROUP": {
+        "ROLE": "rola w grupie"
     }
 }

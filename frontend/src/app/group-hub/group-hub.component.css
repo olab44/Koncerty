@@ -20,10 +20,10 @@ main {
 }
 
 button {
-    width: 50%;
-    height: 10vh;
+    width: 75%;
+    height: 15vh;
     border-radius: 25px;
-    font-size: x-large;
+    font-size: xx-large;
     white-space: pre-line;
 }
 #control-button {

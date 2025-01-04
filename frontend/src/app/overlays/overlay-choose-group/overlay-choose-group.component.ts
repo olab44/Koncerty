@@ -20,12 +20,13 @@ export class OverlayChooseGroupComponent {
     this.backend.getGroups()
     .subscribe({
       next: res => {
-          this.userGroups = res
+        console.log(res)
+        this.userGroups = res
       },
       error: e => {
-          console.log(e)
+        console.log(e)
       }
-  })
+    })
   }
 
   gotoGroup(group: GroupInfo): void {
