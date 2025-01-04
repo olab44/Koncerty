@@ -34,3 +34,7 @@ class CreateGroupRequest(BaseModel):
     parent_group: Optional[int]
     name: str
     extra_info: str
+
+class JoinGroupRequest(BaseModel):
+    inv_code: str
+    

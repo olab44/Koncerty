@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from typing import List
 from users.models import User, Group, Member
-from .schemas import SubgroupSchema, CreateGroupRequest
+from .schemas import SubgroupSchema, CreateGroupRequest, JoinGroupRequest
 
 import string
 import secrets
@@ -110,3 +110,21 @@ def get_user_group_structure(db: Session, email: str):
         "username": user.username,
         "group_structure": group_structure
     }
+
+
+def user_to_group(db: Session, user: User, group: JoinGroupRequest):
+    existing_user = db.query(User).filter(User.email == user.email).first()
+    if not existing_user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    joined_group = db.query(Group).filter(Group.invitation_code == group.inv_code).first()
+
+    new_member = Member(
+        user_id=existing_user.id,
+        group_id=joined_group.id,
+        role="Muzyk"
+    )
+    db.add(new_member)
+    db.commit()
+
+    return joined_group
