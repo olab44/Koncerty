@@ -5,10 +5,10 @@ DECLARE
     user_id2 bigint;
     user_id3 bigint;
     user_id4 bigint;
-    
+
     alert_id1 bigint;
     alert_id2 bigint;
-    
+
     member_id1 bigint;
     member_id2 bigint;
     member_id3 bigint;
@@ -18,7 +18,7 @@ DECLARE
 
     group_id1 bigint;
     group_id2 bigint;
-    
+
     file_id1 bigint;
     file_id2 bigint;
     file_id3 bigint;
@@ -27,19 +27,19 @@ DECLARE
 
     event_id1 bigint;
     event_id2 bigint;
-    
+
     address_id1 bigint;
     address_id2 bigint;
     address_id3 bigint;
-    
+
     composition_id1 bigint;
-    
+
     today_timestamp TIMESTAMP WITHOUT TIME ZONE;
     tommorow_timestamp TIMESTAMP WITHOUT TIME ZONE;
 
 BEGIN
 
-    tommorow_timestamp := (CURRENT_TIMESTAMP + INTERVAL '1 day')::timestamp;       
+    tommorow_timestamp := (CURRENT_TIMESTAMP + INTERVAL '1 day')::timestamp;
     today_timestamp := (CURRENT_TIMESTAMP + INTERVAL '1 hour')::timestamp;
 
     -- 4 uzytkownikow
@@ -119,7 +119,7 @@ BEGIN
 
     INSERT INTO recipients (member_id, alert_id)
     VALUES (member_id6, alert_id2);
-    -- 3 adresy 
+    -- 3 adresy
     INSERT INTO addresses (street, number, city, country)
     VALUES ('Al. Jana Pawla II', 18, 'Warsszawa', 'Polska')
     RETURNING id INTO address_id1;
@@ -139,7 +139,7 @@ BEGIN
     INSERT INTO events (name, address_id, date)
     VALUES ('Playing in the pub', address_id2, tommorow_timestamp)
     RETURNING id INTO event_id2;
-    
+
     INSERT INTO participations (event_id, group_id)
     VALUES (event_id1, group_id2);
 
@@ -149,13 +149,13 @@ BEGIN
     INSERT INTO compositions (name, author)
     VALUES ('Symphony no. 5', 'Ludwig van Beethoven')
     RETURNING id INTO composition_id1;
-    -- taka sama (1 utwor) setlista dla obu eventow 
+    -- taka sama (1 utwor) setlista dla obu eventow
     INSERT INTO set_lists (event_id, composition_id)
     VALUES (event_id1, composition_id1);
-    
+
     INSERT INTO set_lists (event_id, composition_id)
     VALUES (event_id2, composition_id1);
-    -- 2 pliki 
+    -- 2 pliki
     INSERT INTO files (name, google_drive_id, composition_id)
     VALUES ('Symphony no. 5 notes 1', 123, composition_id1)
     RETURNING id INTO file_id1;

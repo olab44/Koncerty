@@ -38,6 +38,7 @@ export interface EventInfo {
 }
 
 export interface EventCreate {
+    group_id: number;
     name: string;
     description?: string;
     date_start: string,

@@ -31,5 +31,6 @@ def get_user_events(db: Session, email: str):
         participants = [])
     return [event]
 
-def create_event(db: Session, user: User, group: CreateEventRequest):
+def create_event(db: Session, event: CreateEventRequest):
+
     return

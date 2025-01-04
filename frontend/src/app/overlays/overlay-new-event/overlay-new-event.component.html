@@ -1,10 +1,10 @@
 <div class="backdrop" (click)="closeOverlay()"></div>
 <main>
     <label for="name"> {{"EVENT.NAME" | translate}}
-        <input type="text" id="name" name="name" [(ngModel)]="event.name" autocomplete="off"/>
+        <input type="text" id="name" name="name" [(ngModel)]="event.name" autocomplete="off" maxlength="30"/>
     </label>
     <label for="description"> {{"EVENT.DESCRIPTION" | translate}}
-        <textarea id="description" name="description" [(ngModel)]="event.description" autocomplete="off" placeholder="optional"></textarea>
+        <textarea id="description" name="description" [(ngModel)]="event.description" autocomplete="off" placeholder="optional" maxlength="100"></textarea>
     </label>
     <div class=dates>
         <label for="start-date"> {{"EVENT.START" | translate}} <br>
@@ -15,8 +15,8 @@
         </label>
     </div>
     <label for="location"> {{"EVENT.LOCATION" | translate}}
-        <input type="text" id="location" name="location" [(ngModel)]="event.location" autocomplete="off" placeholder="optional"/>
+        <input type="text" id="location" name="location" [(ngModel)]="event.location" autocomplete="off" maxlength="50"/>
     </label>
     <span class="event-message"> {{ eventMessage }} </span>
-    <button type="submit" [disabled]="!event.name || !validateDates()">{{ "EVENT.NEW" | translate }}</button>
+    <button (click)="createEvent()" [disabled]="!validDates || !event.name || !event.location">{{ "EVENT.NEW" | translate }}</button>
 </main>

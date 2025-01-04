@@ -57,19 +57,11 @@ CREATE TABLE IF NOT EXISTS public.participations
 CREATE TABLE IF NOT EXISTS public.events
 (
     id bigserial NOT NULL,
-    name character varying(100) NOT NULL,
-    address_id bigint NOT NULL,
-    date timestamp without time zone NOT NULL,
-    PRIMARY KEY (id)
-);
-
-CREATE TABLE IF NOT EXISTS public.addresses
-(
-    id bigserial NOT NULL,
-    street character varying NOT NULL,
-    "number" integer NOT NULL,
-    city character varying NOT NULL,
-    country character varying NOT NULL,
+    name character varying(30) NOT NULL,
+    date_start timestamp without time zone NOT NULL,
+    date_end timestamp without time zone NOT NULL,
+    description character varying(100),
+    location character varying(50) NOT NULL,
     PRIMARY KEY (id)
 );
 
@@ -152,15 +144,6 @@ ALTER TABLE IF EXISTS public.participations
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
-
-
-ALTER TABLE IF EXISTS public.events
-    ADD CONSTRAINT address_to_event_fk FOREIGN KEY (address_id)
-    REFERENCES public.addresses (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
-
 
 ALTER TABLE IF EXISTS public.set_lists
     ADD CONSTRAINT event_set_list_fk FOREIGN KEY (event_id)
