@@ -15,7 +15,6 @@ router = APIRouter()
 def get_events_structure(db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
     user_data = decode_app_token(token)
 
-
     result = get_user_events(db, user_data.get("email"))
     print(result)
     if not result:
