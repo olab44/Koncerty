@@ -2,12 +2,12 @@
 <main>
     <div>
         <label for="name">{{ "OVERLAYS.NAME" | translate }}</label>
-        <input #nameInput type="text" id="name" name="name" autocomplete="off" placeholder="NAME" maxlength="30">
+        <input [(ngModel)]="nameInput" type="text" id="name" name="name" autocomplete="off" placeholder="NAME" maxlength="30">
         <label for="description">{{ "OVERLAYS.DESCRIPTION" | translate }}</label>
         <textarea #descriptionInput type="text" id="description" name="description" autocomplete="off" placeholder="DESCRIPTION (optional)" maxlength="100"></textarea>
     </div>
     <div>
         <p>{{createMessage}}</p>
-        <button id="create-button" (click)="createGroup(nameInput.value, descriptionInput.value)">{{ "HOME.CREATE" | translate }}</button>
+        <button id="create-button" (click)="createGroup(nameInput, descriptionInput.value)" [disabled]="!nameInput">{{ "HOME.CREATE" | translate }}</button>
     </div>
 </main>

@@ -2,10 +2,10 @@
 <main>
     <div>
         <label for="code">{{ "OVERLAYS.INPUT_CODE" | translate }}</label>
-        <input #codeInput type="text" id="code" name="code" autocomplete="off" placeholder="GROUP CODE">
+        <input [(ngModel)]="codeInput" type="text" id="code" name="code" autocomplete="off" placeholder="GROUP CODE">
     </div>
     <div>
         <p>{{joinMessage}}</p>
-        <button id="join-button" (click)="joinGroup(codeInput.value)">{{ "HOME.JOIN" | translate }}</button>
+        <button id="join-button" (click)="joinGroup(codeInput)" [disabled]="!codeInput">{{ "HOME.JOIN" | translate }}</button>
     </div>
 </main>

@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { FormsModule } from '@angular/forms';
 import { OverlayJoinGroupComponent } from './overlay-join-group.component';
 
 describe('OverlayJoinGroupComponent', () => {
@@ -11,7 +11,7 @@ describe('OverlayJoinGroupComponent', () => {
       imports: [OverlayJoinGroupComponent]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(OverlayJoinGroupComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

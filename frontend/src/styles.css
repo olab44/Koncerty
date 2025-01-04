@@ -70,7 +70,8 @@ li:hover, button:hover {
 button:disabled {
     border-color: black;
     color: black;
-    opacity: 0.8;
+    opacity: 0.5;
+    cursor: default;
 }
 button:disabled:hover {
     filter: none;

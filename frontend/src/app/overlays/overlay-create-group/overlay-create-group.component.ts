@@ -1,19 +1,21 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { BackendService } from '../../services/backend-connection/backend.service';
 
 @Component({
   selector: 'app-overlay-create-group',
   standalone: true,
-  imports: [TranslateModule],
+  imports: [FormsModule, TranslateModule],
   templateUrl: './overlay-create-group.component.html',
   styleUrl: './overlay-create-group.component.css'
 })
 export class OverlayCreateGroupComponent {
-  constructor(private backend: BackendService) {}
-
   @Output() close = new EventEmitter<void>()
   createMessage = "..."
+  nameInput: string = ""
+
+  constructor(private backend: BackendService) {}
 
   createGroup(name: string, description: string): void {
     const createGroupData = {
@@ -24,11 +26,11 @@ export class OverlayCreateGroupComponent {
 
     this.backend.postRequest('groups/createGroup', createGroupData).subscribe({
       next: res => {
-        this.createMessage = "group created"
+        this.createMessage = `Group ${name} created successfully.`
       },
       error: e => {
         console.log(e)
-        this.createMessage = e.detail || "unexpected error occured"
+        this.createMessage = e.detail || "Unexpected error occured."
       }
     })
   }

@@ -62,8 +62,6 @@ p {
 button {
     width: 75%;
     height: 5vh;
-    background-color: #CCE7FF;
-    border: solid 5px #000070;
     border-radius: 25px;
     font-size: x-large;
 }
