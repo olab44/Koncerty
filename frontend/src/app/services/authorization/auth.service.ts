@@ -4,16 +4,17 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class AuthService {
-  private loggedIn = false;
   private tokenKey = 'authToken';
+  private loggedInKey = 'loggedIn';
 
   isLoggedIn(): boolean {
     const token = localStorage.getItem(this.tokenKey) || sessionStorage.getItem(this.tokenKey);
-    return (!!token && this.loggedIn);
+    const loggedIn = JSON.parse(sessionStorage.getItem(this.loggedInKey) || 'false');
+    return (!!token && loggedIn);
   }
 
-  setLoggedIn(logggedIn: boolean) {
-    this.loggedIn = logggedIn;
+  setLoggedIn(loggedIn: boolean) {
+    sessionStorage.setItem(this.loggedInKey, JSON.stringify(loggedIn));
   }
 
   getToken(): string | null {
@@ -25,6 +26,7 @@ export class AuthService {
   }
 
   clearToken(): void {
+    sessionStorage.removeItem(this.loggedInKey);
     sessionStorage.removeItem(this.tokenKey);
   }
 

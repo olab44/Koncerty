@@ -20,9 +20,9 @@ export class BackendService {
     });
   }
 
-  mockGroupInfo() {
+  getGroups() {
     return this.http
-      .get<GroupInfoStructure>(`${this.apiURL}/groups/Wik`)
+      .get<GroupInfoStructure>(`${this.apiURL}/groups/findGroups`, { headers: this.getHeaders() })
       .pipe(
         catchError((error) => {
         return throwError(() => error)
@@ -39,12 +39,12 @@ export class BackendService {
     )
   }
 
-  postRegisterUser(username: string) {
-    return this.http.post(`${this.apiURL}/createUser`, { username }, { headers: this.getHeaders() })
-    .pipe(
-      catchError((error) => {
-      return throwError(() => error)
-      })
-    )
+  postRequest<T>(endpoint: string, body: any) {
+    return this.http.post<T>(`${this.apiURL}/${endpoint}`, body, { headers: this.getHeaders() })
+      .pipe(
+        catchError((error) => {
+          return throwError(() => error);
+        })
+      );
   }
 }

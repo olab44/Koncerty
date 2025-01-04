@@ -12,7 +12,7 @@ main {
 
     background-color: #7EB7E9;
     border: solid 5px #000070;
-    border-radius: 25px;
+    border-radius: 15px;
 
     display: flex;
     flex-direction: column;
@@ -38,7 +38,7 @@ input {
     height: 10vh;
     background-color: #CCE7FF;
     border: solid 5px #000070;
-    border-radius: 50px;
+    border-radius: 25px;
     padding: 20px;
     text-align: center;
 }

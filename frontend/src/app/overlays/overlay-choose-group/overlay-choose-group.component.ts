@@ -17,7 +17,7 @@ export class OverlayChooseGroupComponent {
   userGroups: GroupInfoStructure | undefined;
 
   constructor(private backend: BackendService, private router: Router) {
-    this.backend.mockGroupInfo()
+    this.backend.getGroups()
     .subscribe({
       next: res => {
           this.userGroups = res

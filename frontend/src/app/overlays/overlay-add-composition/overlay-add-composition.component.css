@@ -12,7 +12,7 @@ main {
 
     background-color: #7EB7E9;
     border: solid 5px #000070;
-    border-radius: 25px;
+    border-radius: 15px;
 
     display: flex;
     flex-direction: column;

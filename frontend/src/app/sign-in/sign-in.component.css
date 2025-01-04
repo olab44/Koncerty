@@ -54,11 +54,3 @@ section {
 button {
     border-width: 2px;
 }
-button:disabled {
-    border-color: black;
-    color: black;
-    opacity: 0.8;
-}
-button:disabled:hover {
-    filter: none;
-}
