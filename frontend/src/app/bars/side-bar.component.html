@@ -1,6 +1,10 @@
 <main>
-    <input type="text" [readonly]="!isEditAvailable" [value]="group?.group_name">
+    <input [(ngModel)]="group.group_name" type="text" [readonly]="!isEditAvailable" [value]="group.group_name">
     <textarea [readonly]="!isEditAvailable" [value]=""></textarea>
-    <p>{{"GROUP.ROLE" | translate}}<br>&emsp;{{group?.role}}</p>
+    <p>{{"GROUP.ROLE" | translate}}<br>&emsp;{{group.role}}</p>
     <p>{{""}}</p>
-</main>
+    <div>
+        <span>{{editMessage}}</span>
+        <button *ngIf="isEditAvailable" (click)="saveGroupInfo()" [disabled]="">-- &#x2714; --</button>
+    </div>
+    </main>

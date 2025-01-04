@@ -33,3 +33,9 @@ input:read-only, textarea:read-only {
     outline: none;
     cursor: default;
 }
+
+div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

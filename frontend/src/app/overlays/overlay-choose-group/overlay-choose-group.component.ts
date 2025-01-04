@@ -20,7 +20,6 @@ export class OverlayChooseGroupComponent {
     this.backend.getGroups()
     .subscribe({
       next: res => {
-        console.log(res)
         this.userGroups = res
       },
       error: e => {
