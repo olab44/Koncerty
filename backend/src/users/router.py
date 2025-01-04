@@ -3,8 +3,8 @@ from fastapi import APIRouter
 from fastapi import Depends, HTTPException, Header
 from sqlalchemy.orm import Session
 from database import get_session
-from .service import manage_loging, register_user
-from .schemas import GoogleSignInRequest, UserCreate
+from .service import manage_loging, register_user, get_user_from_group
+from .schemas import GoogleSignInRequest, UserCreate, UsersInfoStructure, GroupsUserRequest
 from users.service import decode_app_token
 
 router = APIRouter()
@@ -33,3 +33,11 @@ def create_user(user: UserCreate, db: Session = Depends(get_session), token: str
         return {"id": new_user.id, "username": new_user.username, "email": new_user.email}
     except HTTPException:
         raise HTTPException(status_code=400, detail="Email already registered")
+
+@router.get("/findUsers", response_model=UsersInfoStructure)
+def get_groups_users(group_id: GroupsUserRequest, db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
+    user_data = decode_app_token(token)
+    result = get_user_from_group(db, user_data.get("email"), group_id.group_id)
+    if not result:
+        raise HTTPException(status_code=404, detail="User not found")
+    return result
