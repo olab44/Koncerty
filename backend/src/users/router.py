@@ -1,11 +1,11 @@
 # router.py
 from fastapi import APIRouter
-from fastapi import Depends, HTTPException
+from fastapi import Depends, HTTPException, Header
 from sqlalchemy.orm import Session
 from database import get_session
 from .service import get_user_group_structure, manage_loging, register_user
 from .schemas import UserGroupStructureSchema, GoogleSignInRequest, UserCreate
-
+from users.service import decode_app_token
 
 router = APIRouter()
 
@@ -31,10 +31,12 @@ def login(request: GoogleSignInRequest, db: Session = Depends(get_session)):
 
 
 @router.post("/createUser", status_code=201)
-def create_user(user: UserCreate, db: Session = Depends(get_session)):
+def create_user(user: UserCreate, db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
     try:
-        new_user = register_user(db, user.email, user.username)
+        user_data = decode_app_token(token)
+        user_email = user_data.get("email")
+        new_user = register_user(db, user_email, user.username)
 
         return {"id": new_user.id, "username": new_user.username, "email": new_user.email}
     except HTTPException:
-            raise HTTPException(status_code=400, detail="Email already registered")
+        raise HTTPException(status_code=400, detail="Email already registered")

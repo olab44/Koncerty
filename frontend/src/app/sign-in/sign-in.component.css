@@ -46,3 +46,19 @@ section {
     gap: 15px;
     padding: 25px;
 }
+
+.username-prompt div {
+    display: inline-flex;
+    gap: 2px;
+}
+button {
+    border-width: 2px;
+}
+button:disabled {
+    border-color: black;
+    color: black;
+    opacity: 0.8;
+}
+button:disabled:hover {
+    filter: none;
+}

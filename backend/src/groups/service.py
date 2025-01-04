@@ -30,7 +30,7 @@ def register_group(db: Session, user: User, group: CreateGroupRequest):
     new_member = Member(
         user_id=existing_user.id,
         group_id=new_group.id,
-        role="Kapelmistrz" 
+        role="Kapelmistrz"
     )
     db.add(new_member)
     db.commit()

@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from fastapi import HTTPException
+from fastapi import HTTPException, Header
 from typing import List
 from .models import User, Group, Member
 from .schemas import SubgroupSchema
@@ -62,7 +62,7 @@ def get_user_group_structure(db: Session, username: str):
         if group.id in visited_groups:
             continue
 
-        visited_groups.add(group.id) 
+        visited_groups.add(group.id)
 
         subgroups = get_subgroups_recursive(db, group.id, visited_groups)
 
@@ -114,13 +114,16 @@ def manage_loging(db: Session, token: str):
 
     except ValueError as e:
         raise HTTPException(status_code=400, detail="Invalid Google token")
-    
+
 def decode_app_token(app_token: str):
     try:
+        if app_token.startswith("Bearer "):
+            app_token = app_token[len("Bearer "):]
+
         load_dotenv()
         APP_SECRET = os.getenv("APP_SECRET")
         decoded_data = jwt.decode(app_token, APP_SECRET, algorithms=["HS256"])
-        return decoded_data 
+        return decoded_data
     except jwt.ExpiredSignatureError:
         return None
     except jwt.InvalidTokenError:

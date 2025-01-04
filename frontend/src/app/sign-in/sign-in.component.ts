@@ -1,5 +1,6 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { TranslateModule } from "@ngx-translate/core";
 import { Router } from '@angular/router';
 import { TopBarComponent } from '../bars/top-bar.component';
@@ -12,7 +13,7 @@ declare var google: any;
 @Component({
   selector: 'app-sign-in',
   standalone: true,
-  imports: [ CommonModule, TranslateModule, TopBarComponent ],
+  imports: [ CommonModule, FormsModule, TranslateModule, TopBarComponent ],
   templateUrl: './sign-in.component.html',
   styleUrl: './sign-in.component.css'
 })
@@ -25,6 +26,7 @@ export class SignInComponent implements OnInit {
   ) {}
 
   promptUsername: boolean = false
+  username: string = '';
 
   ngOnInit(): void {
     // Initialize the Google Sign-In Client
@@ -45,11 +47,11 @@ export class SignInComponent implements OnInit {
     this.backend.postToken(response.credential).subscribe({
       next: (response: SignUpResponse) => {
         const token = response.app_token
-        this.auth.setPreToken(token)
+        this.auth.setToken(token)
         this.ngZone.run(() => this.promptUsername = response.new);
 
         if (!response.new) {
-          this.auth.setToken(token)
+          this.auth.setLoggedIn(true)
           this.ngZone.run(() => { this.router.navigate(['/home']) })
         }
       },
@@ -62,7 +64,7 @@ export class SignInComponent implements OnInit {
   setUsername(username: string) {
     this.backend.postRegisterUser(username).subscribe({
       next: (response) => {
-        this.auth.setFromPreToken()
+        this.auth.setLoggedIn(true)
         this.ngZone.run(() => { this.promptUsername = false; this.router.navigate(['/home']) })
       },
       error: (error) => {

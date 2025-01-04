@@ -67,6 +67,14 @@ button {
 li:hover, button:hover {
     filter: brightness(120%);
 }
+button:disabled {
+    border-color: black;
+    color: black;
+    opacity: 0.8;
+}
+button:disabled:hover {
+    filter: none;
+}
 
 input, textarea {
     color: black;

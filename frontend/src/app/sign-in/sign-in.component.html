@@ -13,8 +13,8 @@
     <div class="username-prompt">
         <label for="username">{{ 'PROMPT_USERNAME' | translate }}</label>
         <div>
-            <input #username type="text" id="username-input" name="username" placeholder="username" />
-            <button (click)="setUsername(username.value)">-- &#x2714; --</button>
+            <input [(ngModel)]="username" type="text" id="username-input" id="username" placeholder="username" />
+            <button (click)="setUsername(username)" [disabled]="!username">-- &#x2714; --</button>
         </div>
     </div>
 </div>

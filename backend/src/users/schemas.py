@@ -32,4 +32,3 @@ class GoogleSignInRequest(BaseModel):
 
 class UserCreate(BaseModel):
     username: str
-    email: str

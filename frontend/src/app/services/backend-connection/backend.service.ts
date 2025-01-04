@@ -40,8 +40,7 @@ export class BackendService {
   }
 
   postRegisterUser(username: string) {
-    const headers = new HttpHeaders({'Authorization': `Bearer ${this.auth.getPreToken()}`});
-    return this.http.post(`${this.apiURL}/createUser`, { username }, {headers: headers})
+    return this.http.post(`${this.apiURL}/createUser`, { username }, { headers: this.getHeaders() })
     .pipe(
       catchError((error) => {
       return throwError(() => error)
