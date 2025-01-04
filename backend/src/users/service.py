@@ -1,9 +1,12 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from .models import User
 from google.oauth2 import id_token
 from google.auth.transport import requests
 from dotenv import load_dotenv
+
+from .models import User, Member
+from .schemas import UserInfo, UsersInfoStructure
+
 import os
 import jwt
 import datetime
@@ -60,14 +63,42 @@ def decode_app_token(app_token: str):
 
 
 def register_user(db: Session, user_email: str, username: str):
-    # Sprawdź, czy użytkownik już istnieje
     existing_user = db.query(User).filter(User.email == user_email).first()
     if existing_user:
         raise HTTPException(status_code=400, detail="Email already registered")
 
-        # Zapisz użytkownika do bazy danych
     new_user = User(username=username, email=user_email)
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
     return new_user
+
+def get_user_from_group(db: Session, user_email: str, group_id: int):
+    user = db.query(User).filter(User.email == user_email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    member = db.query(Member).filter(Member.user_id == user.id, Member.group_id == group_id).first()
+    if not member:
+        raise HTTPException(status_code=404, detail="User is not a member of the group")
+
+    if member.role == "Muzyk":
+        raise HTTPException(status_code=403, detail="User must have Kapelmistrz or Koordynator role")
+
+    members = db.query(Member).filter(Member.group_id == group_id).all()
+    
+    if not members:
+        raise HTTPException(status_code=404, detail="Group not found or has no members")
+    
+    user_list = []
+    for member in members:
+        user = db.query(User).filter(User.id == member.user_id).first()
+        if user:
+            user_info = UserInfo(
+                username=user.username,
+                email=user.email,
+                role=member.role
+            )
+            user_list.append(user_info)
+
+    return UsersInfoStructure(user_list=user_list)
