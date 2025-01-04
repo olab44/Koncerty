@@ -5,6 +5,6 @@
     <p>{{""}}</p>
     <div>
         <span>{{editMessage}}</span>
-        <button *ngIf="isEditAvailable" (click)="saveGroupInfo()" [disabled]="">-- &#x2714; --</button>
+        <button [style.visibility]="isEditAvailable? 'visible' : 'hidden'" (click)="saveGroupInfo()" [disabled]="">-- &#x2714; --</button>
     </div>
     </main>
