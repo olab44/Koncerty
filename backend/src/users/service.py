@@ -86,10 +86,10 @@ def get_user_from_group(db: Session, user_email: str, group_id: int):
         raise HTTPException(status_code=403, detail="User must have Kapelmistrz or Koordynator role")
 
     members = db.query(Member).filter(Member.group_id == group_id).all()
-    
+
     if not members:
         raise HTTPException(status_code=404, detail="Group not found or has no members")
-    
+
     user_list = []
     for member in members:
         user = db.query(User).filter(User.id == member.user_id).first()
