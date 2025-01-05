@@ -10,7 +10,7 @@ from googleapiclient.discovery import build
 
 from .schemas import EventInfo, CreateEventRequest, GetEventInfo, Participant, CompositionInfo
 from users.models import User, Member
-from users.models import Event, Participation, Composition
+from users.models import Event, Participation, Composition, SetList
 
 def get_calendar_service(token: str):
     try:
@@ -42,7 +42,7 @@ def get_participants_info(db: Session, participants: List[int]):
         )
     return user_infos
 
-def get_user_events(db: Session, email: str, request: GetEventInfo):
+def get_user_events(db: Session, email: str, group_id: int):
     existing_user = db.query(User).filter(User.email == email).first()
     if not existing_user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -52,7 +52,7 @@ def get_user_events(db: Session, email: str, request: GetEventInfo):
         .join(Participation, Participation.event_id == Event.id)
         .filter(
             Participation.user_id == existing_user.id, 
-            Event.parent_group == request.group_id  
+            Event.parent_group == group_id  
         )
         .all()
     )
@@ -80,7 +80,6 @@ def create_event(db: Session, email: str, request: CreateEventRequest):
         raise HTTPException(status_code=404, detail="User not found")
 
     new_event = Event(
-        id=request.id,
         name = request.name,
         date_start = request.date_start,
         date_end = request.date_end,
@@ -100,7 +99,7 @@ def create_event(db: Session, email: str, request: CreateEventRequest):
     )
     db.add(new_participation)
 
-    unique_user_ids = set(request.user_ids)
+    unique_user_ids = set()
 
     for user_email in request.user_emails:
         user = db.query(User).filter(User.email == user_email).first()
@@ -126,5 +125,14 @@ def create_event(db: Session, email: str, request: CreateEventRequest):
 
     db.commit()
 
-    
+    for composition in request.composition_ids:
+        new_setlist = SetList(
+            event_id = new_event.id,
+            composition_id = composition
+        )
+        
+        db.add(new_setlist)
+
+    db.commit()
+
     return new_event

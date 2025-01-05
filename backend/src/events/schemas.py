@@ -24,9 +24,6 @@ class EventInfo(BaseModel):
     type: str
     participants: List[Participant]
 
-class GetEventInfo(BaseModel):
-    group_id: int
-
 class CreateEventRequest(BaseModel):
     name: str
     date_start: datetime
@@ -37,3 +34,4 @@ class CreateEventRequest(BaseModel):
     type: str
     user_emails: List[str]
     group_ids: List[int]
+    composition_ids: List[int]
