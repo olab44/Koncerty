@@ -116,12 +116,12 @@ BEGIN
     INSERT INTO recipients (member_id, alert_id)
     VALUES (member_id6, alert_id2);
     -- 2 eventy
-    INSERT INTO events (name, date_start, location, date_end, extra_info, parent_group)
-    VALUES ('Charetatywne granie', today_timestamp, 'Mariot', (today_timestamp + INTERVAL '1 hour')::timestamp, 'Badzcie', group_id1)
+    INSERT INTO events (name, date_start, location, date_end, extra_info, parent_group, type)
+    VALUES ('Charetatywne granie', today_timestamp, 'Mariot', (today_timestamp + INTERVAL '1 hour')::timestamp, 'Badzcie', group_id1, 'proba')
     RETURNING id INTO event_id1;
 
-    INSERT INTO events (name, date_start, location, date_end, extra_info, parent_group)
-    VALUES ('Playing in the pub', tommorow_timestamp, 'Bar', (tommorow_timestamp + INTERVAL '1 hour')::timestamp, 'Zapraszamy', group_id2)
+    INSERT INTO events (name, date_start, location, date_end, extra_info, parent_group, type)
+    VALUES ('Playing in the pub', tommorow_timestamp, 'Bar', (tommorow_timestamp + INTERVAL '1 hour')::timestamp, 'Zapraszamy', group_id2, 'koncert')
     RETURNING id INTO event_id2;
 
     INSERT INTO participations (event_id, user_id)
