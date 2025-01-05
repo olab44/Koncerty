@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS public.groups
     parent_group bigint,
     name character varying(30) NOT NULL,
     extra_info character varying(100),
-    invitation_code character varying(20) NOT NULL,
+    invitation_code character varying(20),
     PRIMARY KEY (id)
 );
 

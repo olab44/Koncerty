@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from typing import List
 from users.models import User, Group, Member
-from .schemas import SubgroupSchema, CreateGroupRequest, JoinGroupRequest
+from .schemas import SubgroupSchema, CreateGroupRequest, JoinGroupRequest, CreateSubgroupRequest
 
 import string
 import secrets
@@ -128,3 +128,36 @@ def user_to_group(db: Session, user: User, group: JoinGroupRequest):
     db.commit()
 
     return joined_group
+
+def register_subgroup(db: Session, user: User, request: CreateSubgroupRequest):
+    existing_user = db.query(User).filter(User.email == user.email).first()
+    if not existing_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    existing_member = db.query(Member).filter(Member.user_id == user.id, Member.group_id == request.parent_group).first()
+
+    if not existing_member:
+        raise HTTPException(status_code=404, detail="User is not a member of the group")
+
+    if existing_member.role != "Kapelmistrz":
+        raise HTTPException(status_code=403, detail="User must have Kapelmistrz role")
+
+    new_group = Group(
+        parent_group=request.parent_group,
+        name=request.name,
+        extra_info=request.extra_info,
+        invitation_code=None
+    )
+    db.add(new_group)
+    db.commit()
+    db.refresh(new_group)
+
+    db.add(Member(user_id=existing_user.id, group_id=new_group.id, role="Kapelmistrz"))
+    
+    for id in request.members:
+        duplicated = db.query(Member).filter(Member.user_id == id, Member.group_id == new_group.id).first()
+        if not duplicated:
+            db.add(Member(user_id=id, group_id=new_group.id, role="Muzyk"))
+    
+    db.commit() 
+    return new_group

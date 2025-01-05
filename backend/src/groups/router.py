@@ -3,8 +3,8 @@ from fastapi import Depends, HTTPException, Header
 from sqlalchemy.orm import Session
 
 from database import get_session
-from .service import get_user_group_structure, register_group, user_to_group
-from .schemas import UserGroupStructureSchema, CreateGroupRequest, JoinGroupRequest
+from .service import get_user_group_structure, register_group, user_to_group, register_subgroup
+from .schemas import UserGroupStructureSchema, CreateGroupRequest, JoinGroupRequest, CreateSubgroupRequest
 from users.models import User
 from users.service import decode_app_token
 
@@ -50,4 +50,21 @@ def join_group(request: JoinGroupRequest, db: Session = Depends(get_session), to
         "name": joined_group.name,
         "extra_info": joined_group.extra_info,
         "invitation_code": joined_group.invitation_code
+    }
+
+@router.post("/createSubgroup", status_code=201)
+def create_subgroup(request: CreateSubgroupRequest, db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
+    user_data = decode_app_token(token)
+    user = db.query(User).filter(User.email == user_data.get("email")).first()
+
+    if not user:
+        raise HTTPException(status_code=404, detail=f"User not found {user_data}")
+
+    new_group = register_subgroup(db, user, request)
+    return {
+        "id": new_group.id,
+        "parent": new_group.parent_group,
+        "name": new_group.name,
+        "extra_info": new_group.extra_info,
+        "invitation_code": new_group.invitation_code
     }

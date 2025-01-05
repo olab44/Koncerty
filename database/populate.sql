@@ -79,11 +79,11 @@ BEGIN
     RETURNING id INTO group_id2;
     -- 4 czlonkow grupy 1 i 2 podgrupy 2
     INSERT INTO members (user_id, group_id, role)
-    VALUES (user_id1, group_id1, 'Muzyk')
+    VALUES (user_id1, group_id1, 'Kapelmistrz')
     RETURNING id INTO member_id1;
 
     INSERT INTO members (user_id, group_id, role)
-    VALUES (user_id2, group_id1, 'Kapelmistrz')
+    VALUES (user_id2, group_id1, 'Muzyk')
     RETURNING id INTO member_id2;
 
     INSERT INTO members (user_id, group_id, role)
@@ -95,7 +95,7 @@ BEGIN
     RETURNING id INTO member_id4;
 
     INSERT INTO members (user_id, group_id, role)
-    VALUES (user_id4, group_id2, 'Muzyk')
+    VALUES (user_id4, group_id2, 'Kapelmistrz')
     RETURNING id INTO member_id5;
 
     INSERT INTO members (user_id, group_id, role)

@@ -38,3 +38,8 @@ class CreateGroupRequest(BaseModel):
 class JoinGroupRequest(BaseModel):
     inv_code: str
     
+class CreateSubgroupRequest(BaseModel):
+    parent_group: int
+    name: str
+    extra_info: str
+    members: List[int]
