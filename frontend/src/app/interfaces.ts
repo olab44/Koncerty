@@ -47,5 +47,5 @@ export interface EventCreate {
     parent_group: number
     group_ids: number[]
     user_emails: string[]
-    setlist: number[]
+    composition_ids: number[]
 }

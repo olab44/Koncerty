@@ -28,7 +28,7 @@ export class OverlayNewEventComponent {
     parent_group: -1,
     group_ids: [],
     user_emails: [],
-    setlist: []
+    composition_ids: []
   }
 
   constructor(private backend: BackendService, private state: SessionStateService) {

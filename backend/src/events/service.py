@@ -8,7 +8,7 @@ from typing import List
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 
-from .schemas import EventInfo, CreateEventRequest, GetEventInfo, Participant, CompositionInfo
+from .schemas import EventInfo, CreateEventRequest, Participant, CompositionInfo
 from users.models import User, Member
 from users.models import Event, Participation, Composition, SetList
 
@@ -46,13 +46,13 @@ def get_user_events(db: Session, email: str, group_id: int):
     existing_user = db.query(User).filter(User.email == email).first()
     if not existing_user:
         raise HTTPException(status_code=404, detail="User not found")
-    
+
     group_events = (
         db.query(Event)
         .join(Participation, Participation.event_id == Event.id)
         .filter(
-            Participation.user_id == existing_user.id, 
-            Event.parent_group == group_id  
+            Participation.user_id == existing_user.id,
+            Event.parent_group == group_id
         )
         .all()
     )
@@ -74,7 +74,7 @@ def get_user_events(db: Session, email: str, group_id: int):
     return event_infos
 
 def create_event(db: Session, email: str, request: CreateEventRequest):
-    
+
     existing_user = db.query(User).filter(User.email == email).first()
     if not existing_user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -130,7 +130,7 @@ def create_event(db: Session, email: str, request: CreateEventRequest):
             event_id = new_event.id,
             composition_id = composition
         )
-        
+
         db.add(new_setlist)
 
     db.commit()
