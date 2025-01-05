@@ -1,22 +1,27 @@
 import { Component } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { TopBarComponent } from '../bars/top-bar.component';
-import { SideBarComponent } from '../bars/side-bar.component';
+import { TopBarComponent } from '../bars/top-bar/top-bar.component';
+import { SideBarEventComponent } from '../bars/side-bar-event/side-bar-event.component';
 import { GroupInfo} from '../interfaces';
+import { SessionStateServiceService } from '../services/session-state/session-state-service.service';
 
 @Component({
   selector: 'app-event-details',
   standalone: true,
-  imports: [TranslateModule, TopBarComponent, SideBarComponent],
+  imports: [TranslateModule, TopBarComponent, SideBarEventComponent],
   templateUrl: './event-details.component.html',
   styleUrl: './event-details.component.css'
 })
 export class EventDetailsComponent {
-  group: GroupInfo
+  group!: GroupInfo
   event: any
 
-  constructor() {
-    this.group = history.state.group;
-    this.event = history.state.event;
+  constructor(private state: SessionStateServiceService) {
+    this.state.currentGroup.subscribe((group) => {
+      this.group = group;
+    });
+    this.state.currentEvent.subscribe((event) => {
+      this.event = event;
+    });
   }
 }

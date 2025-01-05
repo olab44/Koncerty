@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
-import { TopBarComponent } from '../bars/top-bar.component';
+import { TopBarComponent } from '../bars/top-bar/top-bar.component';
 import { OverlayChooseGroupComponent } from '../overlays/overlay-choose-group/overlay-choose-group.component';
 import { OverlayJoinGroupComponent } from '../overlays/overlay-join-group/overlay-join-group.component';
 import { OverlayCreateGroupComponent } from '../overlays/overlay-create-group/overlay-create-group.component';

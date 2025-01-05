@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
-import { TopBarComponent } from '../bars/top-bar.component';
+import { TopBarComponent } from '../bars/top-bar/top-bar.component';
 import { OverlayNewMessageComponent } from '../overlays/overlay-new-message/overlay-new-message.component';
 import { GroupInfo } from '../interfaces';
+import { SessionStateServiceService } from '../services/session-state/session-state-service.service';
 
 @Component({
   selector: 'app-message-forum',
@@ -13,7 +14,7 @@ import { GroupInfo } from '../interfaces';
   styleUrl: './message-forum.component.css'
 })
 export class MessageForumComponent {
-  group: GroupInfo
+  group!: GroupInfo
   viewedMessage = {name: "", content: ""}
   visibleOverlayMessage = false
 
@@ -22,8 +23,10 @@ export class MessageForumComponent {
     {name: "WESOŁYCH ŚWIĄT", content: "Wesołych Świąt!"}
   ]
 
-  constructor() {
-    this.group = history.state.group;
+  constructor(private state: SessionStateServiceService) {
+    this.state.currentGroup.subscribe((group) => {
+      this.group = group;
+    });
   }
 
   viewMessage(message: any): void {

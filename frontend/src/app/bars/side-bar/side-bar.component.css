@@ -1,0 +1,42 @@
+main {
+    position: absolute;
+    top: 5vh;
+    left: 0;
+    width: 25vw;
+    height: 95vh;
+    padding: 20px;
+    background-color: #7EB7E9;
+    display: grid;
+    grid-template-rows: 2fr 5fr 1fr 1fr;
+    gap: 20px;
+}
+
+input, textarea {
+    width: 100%;
+    border: none;
+    background-color: transparent;
+    color:#000070;
+}
+input {
+    font-size: xx-large;
+    font-weight: bolder;
+}
+p, textarea {
+    font-size: x-large;
+    font-weight: bold;
+}
+textarea {
+    padding: 10px;
+    border-top: solid 2px #000070;
+    border-bottom: solid 2px #000070;
+}
+input:read-only, textarea:read-only {
+    outline: none;
+    cursor: default;
+}
+
+div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

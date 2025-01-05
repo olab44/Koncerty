@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from "@ngx-translate/core";
 import { Router } from '@angular/router';
-import { TopBarComponent } from '../bars/top-bar.component';
+import { TopBarComponent } from '../bars/top-bar/top-bar.component';
 import { AuthService } from '../services/authorization/auth.service';
 import { BackendService } from '../services/backend-connection/backend.service';
 import { SignUpResponse } from '../interfaces';
