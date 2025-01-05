@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { BackendService } from '../../services/backend-connection/backend.service';
-import { EventCreate } from '../../interfaces';
+import { EventCreate, GroupInfo } from '../../interfaces';
+import { SessionStateService } from '../../services/session-state/session-state.service';
 
 @Component({
   selector: 'app-overlay-new-event',
@@ -14,22 +15,32 @@ import { EventCreate } from '../../interfaces';
 })
 export class OverlayNewEventComponent {
   @Output() close = new EventEmitter<void>()
-  @Input() group_id!: number
+  @Output() refresh = new EventEmitter<void>()
+  group!: GroupInfo
 
   event: EventCreate = {
     name: '',
-    description: '',
+    type: 'Koncert',
+    extra_info: '',
     date_start: '',
     date_end: '',
     location: '',
-    groups_participating: [],
+    parent_group: -1,
+    group_ids: [],
+    user_emails: [],
+    setlist: []
   }
 
-  participant_groups = [{group_id: 2, group_name: "HELLO"}, {group_id: 4, group_name: "HELLOv2"}]
-
-  constructor(private backend: BackendService) {
+  constructor(private backend: BackendService, private state: SessionStateService) {
+    this.state.currentGroup.subscribe((group) => {
+      this.group = group;
+      this.event.parent_group = group.group_id
+    });
   }
 
+  compositions = []
+  added_email = ""
+  allChecked = false
   eventMessage: string = '...'
   validDates: boolean = false
 
@@ -52,12 +63,23 @@ export class OverlayNewEventComponent {
   onGroupCheckboxChange(event: Event, groupId: number): void {
     const checkbox = event.target as HTMLInputElement;
     if (checkbox.checked) {
-      this.event.groups_participating.push(groupId);
+      if (groupId == this.group.group_id) {this.allChecked = true}
+      this.event.group_ids.push(groupId);
     } else {
-      this.event.groups_participating = this.event.groups_participating.filter(
+      if (groupId == this.group.group_id) {this.allChecked = false}
+      this.event.group_ids = this.event.group_ids.filter(
         id => id !== groupId
       );
     }
+  }
+
+  addParticipant(email: string) {
+    if (!this.event.user_emails.includes(email)) {
+      this.event.user_emails.push(email);
+    }
+  }
+  removeParticipant(email: string) {
+    this.event.user_emails = this.event.user_emails.filter(mail => mail !== email)
   }
 
   createEvent() {
@@ -66,9 +88,10 @@ export class OverlayNewEventComponent {
     .subscribe({
         next: res => {
           this.eventMessage = "New event organised!"
+          this.refresh.emit()
         },
         error: e => {
-          this.eventMessage = e.error.detail
+          this.eventMessage = e.message
           console.log(e)
         }
     })

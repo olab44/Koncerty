@@ -7,7 +7,7 @@ import { TopBarComponent } from '../bars/top-bar/top-bar.component';
 import { CalendarComponent } from '../component/calendar/calendar.component';
 import { OverlayNewEventComponent } from '../overlays/overlay-new-event/overlay-new-event.component';
 import { EventInfo, GroupInfo } from '../interfaces';
-import { SessionStateServiceService } from '../services/session-state/session-state-service.service';
+import { SessionStateService } from '../services/session-state/session-state.service';
 
 @Component({
   selector: 'app-event-calendar',
@@ -22,10 +22,14 @@ export class EventCalendarComponent {
   selectedDate: Date | null = null
   visibleOverlayEvent: boolean = false
 
-  constructor(private router: Router, private backend: BackendService, private state: SessionStateServiceService) {
+  constructor(private router: Router, private backend: BackendService, private state: SessionStateService) {
     this.state.currentGroup.subscribe((group) => {
       this.group = group;})
-    this.backend.getEvents().subscribe({
+      this.getEvents()
+  }
+
+  getEvents() {
+    this.backend.getEvents(this.group.group_id).subscribe({
       next: (res) => {
         this.events = res
       },

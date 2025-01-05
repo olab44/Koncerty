@@ -9,6 +9,7 @@ main {
     display: grid;
     grid-template-rows: 2fr 5fr 1fr 1fr;
     gap: 20px;
+    overflow: hidden;
 }
 
 input, textarea {

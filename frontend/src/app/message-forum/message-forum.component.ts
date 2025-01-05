@@ -4,7 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { TopBarComponent } from '../bars/top-bar/top-bar.component';
 import { OverlayNewMessageComponent } from '../overlays/overlay-new-message/overlay-new-message.component';
 import { GroupInfo } from '../interfaces';
-import { SessionStateServiceService } from '../services/session-state/session-state-service.service';
+import { SessionStateService } from '../services/session-state/session-state.service';
 
 @Component({
   selector: 'app-message-forum',
@@ -23,7 +23,7 @@ export class MessageForumComponent {
     {name: "WESOŁYCH ŚWIĄT", content: "Wesołych Świąt!"}
   ]
 
-  constructor(private state: SessionStateServiceService) {
+  constructor(private state: SessionStateService) {
     this.state.currentGroup.subscribe((group) => {
       this.group = group;
     });

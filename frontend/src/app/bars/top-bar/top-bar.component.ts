@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { TranslationService } from '../../services/translation/translation.service';
 import { AuthService } from '../../services/authorization/auth.service';
-import { SessionStateServiceService } from '../../services/session-state/session-state-service.service';
+import { SessionStateService } from '../../services/session-state/session-state.service';
 
 @Component({
   selector: 'app-top-bar',
@@ -20,7 +20,7 @@ export class TopBarComponent {
   languages: string[]
   currentLanguage: string
 
-  constructor(private translationService: TranslationService, private auth: AuthService, private state: SessionStateServiceService) {
+  constructor(private translationService: TranslationService, private auth: AuthService, private state: SessionStateService) {
     this.languages = this.translationService.getLanguages()
     this.currentLanguage = this.translationService.getCurrentLanguage()
   }
