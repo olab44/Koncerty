@@ -60,6 +60,7 @@
         "DESCRIPTION": "OPIS",
         "START": "CZAS ROZPOCZĘCIA",
         "END": "CZAS ZAKOŃCZENIA",
-        "LOCATION": "MIEJSCE"
+        "LOCATION": "MIEJSCE",
+        "PARTICIPANTS": "UCZESTNICY"
     }
 }

@@ -38,10 +38,10 @@ export interface EventInfo {
 }
 
 export interface EventCreate {
-    group_id: number;
     name: string;
     description?: string;
     date_start: string,
     date_end: string,
     location: string
+    groups_participating: number[]
 }

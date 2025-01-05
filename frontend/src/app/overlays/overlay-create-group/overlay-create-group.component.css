@@ -39,7 +39,7 @@ input, textarea {
     padding: 20px;
     background-color: #CCE7FF;
     border: solid 5px #000070;
-    border-radius: 25px;
+    border-radius: 15px;
 }
 input {
     height: 5vh;

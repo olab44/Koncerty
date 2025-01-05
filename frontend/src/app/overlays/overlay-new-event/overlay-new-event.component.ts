@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { BackendService } from '../../services/backend-connection/backend.service';
@@ -7,7 +8,7 @@ import { EventCreate } from '../../interfaces';
 @Component({
   selector: 'app-overlay-new-event',
   standalone: true,
-  imports: [FormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './overlay-new-event.component.html',
   styleUrl: './overlay-new-event.component.css'
 })
@@ -16,19 +17,17 @@ export class OverlayNewEventComponent {
   @Input() group_id!: number
 
   event: EventCreate = {
-    group_id: -1,
     name: '',
     description: '',
     date_start: '',
     date_end: '',
     location: '',
+    groups_participating: [],
   }
+
+  participant_groups = [{group_id: 2, group_name: "HELLO"}, {group_id: 4, group_name: "HELLOv2"}]
 
   constructor(private backend: BackendService) {
-  }
-
-  ngOnInit(): void {
-    this.event.group_id = this.group_id;
   }
 
   eventMessage: string = '...'
@@ -47,6 +46,17 @@ export class OverlayNewEventComponent {
         this.eventMessage = "..."
         this.validDates = true
       }
+    }
+  }
+
+  onGroupCheckboxChange(event: Event, groupId: number): void {
+    const checkbox = event.target as HTMLInputElement;
+    if (checkbox.checked) {
+      this.event.groups_participating.push(groupId);
+    } else {
+      this.event.groups_participating = this.event.groups_participating.filter(
+        id => id !== groupId
+      );
     }
   }
 

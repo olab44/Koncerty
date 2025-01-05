@@ -60,6 +60,7 @@
         "DESCRIPTION": "DESCRIPTION",
         "START": "START TIME",
         "END": "END TIME",
-        "LOCATION": "LOCATION"
+        "LOCATION": "LOCATION",
+        "PARTICIPANTS": "PARTICIPANTS"
     }
 }
