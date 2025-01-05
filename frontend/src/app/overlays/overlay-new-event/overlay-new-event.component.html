@@ -1,22 +1,35 @@
 <div class="backdrop" (click)="closeOverlay()"></div>
 <main>
-    <label for="name"> {{"EVENT.NAME" | translate}}
-        <input type="text" id="name" name="name" [(ngModel)]="event.name" autocomplete="off" maxlength="30"/>
-    </label>
-    <label for="description"> {{"EVENT.DESCRIPTION" | translate}}
-        <textarea id="description" name="description" [(ngModel)]="event.description" autocomplete="off" placeholder="optional" maxlength="100"></textarea>
-    </label>
-    <div class=dates>
-        <label for="start-date"> {{"EVENT.START" | translate}} <br>
-            <input type="datetime-local" id="start-date" name="start-date" [(ngModel)]="event.date_start" autocomplete="off" (ngModelChange)="validateDates()"/>
+    <div class="event-info">
+        <label for="name"> {{"EVENT.NAME" | translate}}
+            <input type="text" id="name" name="name" [(ngModel)]="event.name" autocomplete="off" maxlength="30"/>
         </label>
-        <label for="end-date"> {{"EVENT.END" | translate}} <br>
-            <input type="datetime-local" id="end-date" name="end-date" [(ngModel)]="event.date_end" autocomplete="off" (ngModelChange)="validateDates()"/>
+        <label for="description"> {{"EVENT.DESCRIPTION" | translate}}
+            <textarea id="description" name="description" [(ngModel)]="event.description" autocomplete="off" placeholder="optional" maxlength="100"></textarea>
+        </label>
+        <div class=dates>
+            <label for="start-date"> {{"EVENT.START" | translate}} <br>
+                <input type="datetime-local" id="start-date" name="start-date" [(ngModel)]="event.date_start" autocomplete="off" (ngModelChange)="validateDates()"/>
+            </label>
+            <label for="end-date"> {{"EVENT.END" | translate}} <br>
+                <input type="datetime-local" id="end-date" name="end-date" [(ngModel)]="event.date_end" autocomplete="off" (ngModelChange)="validateDates()"/>
+            </label>
+        </div>
+        <label for="location"> {{"EVENT.LOCATION" | translate}}
+            <input type="text" id="location" name="location" [(ngModel)]="event.location" autocomplete="off" maxlength="50"/>
         </label>
     </div>
-    <label for="location"> {{"EVENT.LOCATION" | translate}}
-        <input type="text" id="location" name="location" [(ngModel)]="event.location" autocomplete="off" maxlength="50"/>
-    </label>
-    <span class="event-message"> {{ eventMessage }} </span>
-    <button (click)="createEvent()" [disabled]="!validDates || !event.name || !event.location">{{ "EVENT.NEW" | translate }}</button>
+    <div class="participant-groups">
+        <p>{{"EVENT.PARTICIPANTS" | translate}}</p>
+        <ul>
+            <li *ngFor="let group of participant_groups">
+                <input type="checkbox" [value]="group.group_id" (change)="onGroupCheckboxChange($event, group.group_id)">
+                <span>{{group.group_name}}</span>
+            </li>
+        </ul>
+    </div>
+    <div class="message-button">
+        <span class="event-message"> {{ eventMessage }} </span>
+        <button (click)="createEvent()" [disabled]="!validDates || !event.name || !event.location">{{ "EVENT.NEW" | translate }}</button>
+    </div>
 </main>

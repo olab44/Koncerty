@@ -7,7 +7,7 @@ main {
     justify-items: center;
 }
 
-p {
+section {
     height: 100%;
     width: 75%;
     padding: 10px;
@@ -17,4 +17,7 @@ p {
 
     word-break: break-all;
     white-space: pre-wrap;
+
+    display: grid;
+    grid-template-rows: 1fr 1fr;
 }
