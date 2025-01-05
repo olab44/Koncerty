@@ -27,7 +27,7 @@ def get_calendar_service(token: str):
 def get_setlist_info(db: Session, setlists: List[int]):
     setlist_infos = []
     for setlist in setlists:
-        composition = db.query(Composition).filter(Composition.id == setlist.id).first()
+        composition = db.query(Composition).filter(Composition.id == setlist.composition_id).first()
         setlist_infos.append(
             CompositionInfo(id=composition.id, name=composition.name, author=composition.author)
         )
@@ -36,7 +36,7 @@ def get_setlist_info(db: Session, setlists: List[int]):
 def get_participants_info(db: Session, participants: List[int]):
     user_infos = []
     for participant in participants:
-        user = db.query(User).filter(User.id == participant.id).first()
+        user = db.query(User).filter(User.id == participant.user_id).first()
         user_infos.append(
             Participant(id=user.id, username=user.username, email=user.email)
         )
