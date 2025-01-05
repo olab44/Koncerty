@@ -28,10 +28,6 @@ DECLARE
     event_id1 bigint;
     event_id2 bigint;
 
-    address_id1 bigint;
-    address_id2 bigint;
-    address_id3 bigint;
-
     composition_id1 bigint;
 
     today_timestamp TIMESTAMP WITHOUT TIME ZONE;
@@ -119,32 +115,26 @@ BEGIN
 
     INSERT INTO recipients (member_id, alert_id)
     VALUES (member_id6, alert_id2);
-    -- 3 adresy
-    INSERT INTO addresses (street, number, city, country)
-    VALUES ('Al. Jana Pawla II', 18, 'Warsszawa', 'Polska')
-    RETURNING id INTO address_id1;
-
-    INSERT INTO addresses (street, number, city, country)
-    VALUES ('Al. Grunwaldzka', 4, 'Gdansk', 'Polska')
-    RETURNING id INTO address_id2;
-
-    INSERT INTO addresses (street, number, city, country)
-    VALUES ('Lowengasse', 6, 'Wieden', 'Austria')
-    RETURNING id INTO address_id3;
     -- 2 eventy
-    INSERT INTO events (name, address_id, date)
-    VALUES ('Charetatywne granie', address_id1, today_timestamp)
+    INSERT INTO events (name, date_start, location, date_end, extra_info, parent_group)
+    VALUES ('Charetatywne granie', today_timestamp, 'Mariot', (today_timestamp + INTERVAL '1 hour')::timestamp, 'Badzcie', group_id1)
     RETURNING id INTO event_id1;
 
-    INSERT INTO events (name, address_id, date)
-    VALUES ('Playing in the pub', address_id2, tommorow_timestamp)
+    INSERT INTO events (name, date_start, location, date_end, extra_info, parent_group)
+    VALUES ('Playing in the pub', tommorow_timestamp, 'Bar', (tommorow_timestamp + INTERVAL '1 hour')::timestamp, 'Zapraszamy', group_id2)
     RETURNING id INTO event_id2;
 
-    INSERT INTO participations (event_id, group_id)
-    VALUES (event_id1, group_id2);
+    INSERT INTO participations (event_id, user_id)
+    VALUES (event_id1, user_id1);
 
-    INSERT INTO participations (event_id, group_id)
-    VALUES (event_id2, group_id1);
+    INSERT INTO participations (event_id, user_id)
+    VALUES (event_id2, user_id1);
+
+    INSERT INTO participations (event_id, user_id)
+    VALUES (event_id1, user_id4);
+    
+    INSERT INTO participations (event_id, user_id)
+    VALUES (event_id1, user_id3);
     -- 1 kompozycja
     INSERT INTO compositions (name, author)
     VALUES ('Symphony no. 5', 'Ludwig van Beethoven')

@@ -46,22 +46,15 @@ CREATE TABLE IF NOT EXISTS public.groups
     PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS public.participations
-(
-    id bigserial NOT NULL,
-    event_id bigint NOT NULL,
-    group_id bigint NOT NULL,
-    PRIMARY KEY (id)
-);
-
 CREATE TABLE IF NOT EXISTS public.events
 (
     id bigserial NOT NULL,
-    name character varying(30) NOT NULL,
+    name character varying(100) NOT NULL,
     date_start timestamp without time zone NOT NULL,
+    location character varying(100) NOT NULL,
     date_end timestamp without time zone NOT NULL,
-    description character varying(100),
-    location character varying(50) NOT NULL,
+    extra_info character varying(100),
+    parent_group bigint NOT NULL,
     PRIMARY KEY (id)
 );
 
@@ -98,6 +91,14 @@ CREATE TABLE IF NOT EXISTS public.file_ownerships
     PRIMARY KEY (id)
 );
 
+CREATE TABLE IF NOT EXISTS public.participations
+(
+    id bigserial NOT NULL,
+    event_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    PRIMARY KEY (id)
+);
+
 ALTER TABLE IF EXISTS public.members
     ADD CONSTRAINT user_member_fk FOREIGN KEY (user_id)
     REFERENCES public.users (id) MATCH SIMPLE
@@ -130,20 +131,13 @@ ALTER TABLE IF EXISTS public.recipients
     NOT VALID;
 
 
-ALTER TABLE IF EXISTS public.participations
-    ADD CONSTRAINT group_participation_fk FOREIGN KEY (group_id)
+ALTER TABLE IF EXISTS public.events
+    ADD CONSTRAINT parent_group_fk FOREIGN KEY (parent_group)
     REFERENCES public.groups (id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
 
-
-ALTER TABLE IF EXISTS public.participations
-    ADD CONSTRAINT event_to_participation_fk FOREIGN KEY (event_id)
-    REFERENCES public.events (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
 
 ALTER TABLE IF EXISTS public.set_lists
     ADD CONSTRAINT event_set_list_fk FOREIGN KEY (event_id)
@@ -180,6 +174,22 @@ ALTER TABLE IF EXISTS public.file_ownerships
 ALTER TABLE IF EXISTS public.file_ownerships
     ADD CONSTRAINT file_to_file_ownership_fk FOREIGN KEY (file_id)
     REFERENCES public.files (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public.participations
+    ADD CONSTRAINT event_participation_fk FOREIGN KEY (event_id)
+    REFERENCES public.events (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public.participations
+    ADD CONSTRAINT user_participation_fk FOREIGN KEY (user_id)
+    REFERENCES public.users (id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
