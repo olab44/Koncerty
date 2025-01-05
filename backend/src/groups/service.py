@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from typing import List
 from users.models import User, Group, Member
-from .schemas import SubgroupSchema, CreateGroupRequest, JoinGroupRequest, CreateSubgroupRequest
+from .schemas import SubgroupSchema, CreateGroupRequest, JoinGroupRequest, CreateSubgroupRequest, EditGroupRequest
 
 import string
 import secrets
@@ -161,3 +161,31 @@ def register_subgroup(db: Session, user: User, request: CreateSubgroupRequest):
     
     db.commit() 
     return new_group
+
+
+def edit_group(db: Session, user: User, request: EditGroupRequest):
+    existing_user = db.query(User).filter(User.email == user.email).first()
+    if not existing_user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    existing_member = db.query(Member).filter(Member.user_id == user.id, Member.group_id == request.group_id).first()
+
+    if not existing_member:
+        raise HTTPException(status_code=404, detail="User is not a member of the group")
+
+    if existing_member.role != "Kapelmistrz":
+        raise HTTPException(status_code=403, detail="User must have Kapelmistrz role")
+
+    group = db.query(Group).filter(Group.id == request.group_id).first()
+
+    group.name = request.name
+    group.extra_info = request.extra_info
+
+    db.commit()
+    db.refresh(group)
+
+    return {
+        "id": group.id,
+        "name": group.name,
+        "extra_info": group.extra_info
+    }

@@ -43,3 +43,8 @@ class CreateSubgroupRequest(BaseModel):
     name: str
     extra_info: str
     members: List[int]
+
+class EditGroupRequest(BaseModel):
+    group_id: int
+    name: str
+    extra_info: str
