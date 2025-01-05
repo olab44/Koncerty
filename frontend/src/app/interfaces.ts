@@ -26,3 +26,22 @@ export interface GroupInfoStructure {
     username: string;
     group_structure: GroupInfo[];
 }
+
+export interface EventInfo {
+    name: string;
+    description?: string;
+    date_start: string,
+    date_end: string,
+    location: string,
+    set_list?: string[]
+    attendees?: string[]
+}
+
+export interface EventCreate {
+    group_id: number;
+    name: string;
+    description?: string;
+    date_start: string,
+    date_end: string,
+    location: string
+}

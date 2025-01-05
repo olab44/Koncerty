@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 import { AuthService } from '../authorization/auth.service';
-import { GroupInfoStructure, SignUpResponse } from "../../interfaces"
+import { GroupInfoStructure, SignUpResponse, EventInfo } from "../../interfaces"
 
 @Injectable({
   providedIn: 'root'
@@ -27,16 +27,26 @@ export class BackendService {
         catchError((error) => {
         return throwError(() => error)
         })
-    )
+      )
+  }
+
+  getEvents() {
+    return this.http
+      .get<EventInfo[]>(`${this.apiURL}/events/findEvents`, { headers: this.getHeaders() })
+      .pipe(
+        catchError((error) => {
+        return throwError(() => error)
+        })
+      )
   }
 
   postToken(token: string): Observable<SignUpResponse> {
     return this.http.post<SignUpResponse>(`${this.apiURL}/google-sign-in`, { token })
-    .pipe(
-      catchError((error) => {
-      return throwError(() => error)
-      })
-    )
+      .pipe(
+        catchError((error) => {
+          return throwError(() => error)
+        })
+      )
   }
 
   postRequest<T>(endpoint: string, body: any) {
@@ -45,6 +55,6 @@ export class BackendService {
         catchError((error) => {
           return throwError(() => error);
         })
-      );
+      )
   }
 }

@@ -1,16 +1,16 @@
 <app-top-bar [isReturnAvailable]="true" [groupName]="group.group_name"></app-top-bar>
 <main>
-    <app-calendar (selectDate)="selectDate($event)"></app-calendar>
+    <app-calendar (selectDate)="selectDate($event)" [events]="events"></app-calendar>
     <div>
         <p class="date-label">{{'CALENDAR.CHOSEN_DATE' | translate}}:</p>
         <p class="date">{{ selectedDate ? (selectedDate | date: 'dd / MM / yyyy') : '' }}</p>
     </div>
     <ul>
         <ng-container *ngFor="let event of events">
-            <li *ngIf="isSameDate(selectedDate, event.date)" (click)="gotoEvent(event)">{{event.name}}</li>
+            <li *ngIf="isAtDate(selectedDate, event.date_start, event.date_end)" (click)="gotoEvent(event)">{{event.name}}</li>
         </ng-container>
     </ul>
-    <button class="new-button" [style.visibility]="group.role === 'admin' ? 'visible' : 'hidden'" (click)="toggleOverlayEvent()">{{'CALENDAR.NEW_EVENT' | translate}}</button>
+    <button class="new-button" [style.visibility]="group.role === 'Kapelmistrz' ? 'visible' : 'hidden'" (click)="toggleOverlayEvent()">{{'CALENDAR.NEW_EVENT' | translate}}</button>
 </main>
 
-<app-overlay-new-event *ngIf="visibleOverlayEvent" (close)="toggleOverlayEvent()"></app-overlay-new-event>
+<app-overlay-new-event *ngIf="visibleOverlayEvent" (close)="toggleOverlayEvent()" [group_id]="group.group_id"></app-overlay-new-event>
