@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms'
 import { TranslateModule } from '@ngx-translate/core';
 import { BackendService } from '../../services/backend-connection/backend.service';
-import { SessionStateServiceService } from '../../services/session-state/session-state-service.service';
+import { SessionStateService } from '../../services/session-state/session-state.service';
 
 @Component({
   selector: 'app-side-bar-event',
@@ -16,7 +16,7 @@ export class SideBarEventComponent {
   event!: any
   editMessage = ""
 
-  constructor(private backend: BackendService,private state: SessionStateServiceService) {
+  constructor(private backend: BackendService,private state: SessionStateService) {
     this.state.currentEvent.subscribe((event) => {
       this.event = event;
     });

@@ -3,7 +3,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { TopBarComponent } from '../bars/top-bar/top-bar.component';
 import { SideBarEventComponent } from '../bars/side-bar-event/side-bar-event.component';
 import { GroupInfo} from '../interfaces';
-import { SessionStateServiceService } from '../services/session-state/session-state-service.service';
+import { SessionStateService } from '../services/session-state/session-state.service';
 
 @Component({
   selector: 'app-event-details',
@@ -16,7 +16,7 @@ export class EventDetailsComponent {
   group!: GroupInfo
   event: any
 
-  constructor(private state: SessionStateServiceService) {
+  constructor(private state: SessionStateService) {
     this.state.currentGroup.subscribe((group) => {
       this.group = group;
     });

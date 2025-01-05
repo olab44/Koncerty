@@ -4,6 +4,12 @@
         <label for="name"> {{"EVENT.NAME" | translate}}
             <input type="text" id="name" name="name" [(ngModel)]="event.name" autocomplete="off" maxlength="30"/>
         </label>
+        <label for="type"> {{"EVENT.TYPE" | translate}}
+            <select id="type" [(ngModel)]="event.type">
+                <option value="Koncert">KONCERT</option>
+                <option value="Próba">PRÓBA</option>
+              </select>
+        </label>
         <label for="description"> {{"EVENT.DESCRIPTION" | translate}}
             <textarea id="description" name="description" [(ngModel)]="event.description" autocomplete="off" placeholder="optional" maxlength="100"></textarea>
         </label>
@@ -19,14 +25,33 @@
             <input type="text" id="location" name="location" [(ngModel)]="event.location" autocomplete="off" maxlength="50"/>
         </label>
     </div>
-    <div class="participant-groups">
+    <div class="participation">
         <p>{{"EVENT.PARTICIPANTS" | translate}}</p>
-        <ul>
-            <li *ngFor="let group of participant_groups">
+        <section>
+            <li>
                 <input type="checkbox" [value]="group.group_id" (change)="onGroupCheckboxChange($event, group.group_id)">
-                <span>{{group.group_name}}</span>
+                <span>{{ "EVENT.ALL" | translate }}</span>
             </li>
-        </ul>
+        </section>
+        <section [class.disabled]="allChecked">
+            <ul>
+                <li *ngFor="let sgroup of group.subgroups">
+                    <input type="checkbox" [value]="sgroup.subgroup_id" (change)="onGroupCheckboxChange($event, sgroup.subgroup_id)">
+                    <span>{{sgroup.subgroup_name}}</span>
+                </li>
+            </ul>
+        </section>
+        <section class="users-participation" [class.disabled]="allChecked">
+            <div>
+                <input [(ngModel)]="added_email" email type="text" placeholder="e-mail"><button [disabled]="!added_email" (click)="addParticipant(added_email)"> + </button>
+            </div>
+            <ul>
+                <li *ngFor="let email of event.users_participating">{{email}}<button (click)="removeParticipant(email)"> - </button></li>
+            </ul>
+        </section>
+    </div>
+    <div class="setlist">
+        <p>{{"EVENT.SETLIST" | translate}}</p>
     </div>
     <div class="message-button">
         <span class="event-message"> {{ eventMessage }} </span>

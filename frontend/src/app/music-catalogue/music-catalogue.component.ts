@@ -4,7 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { TopBarComponent } from '../bars/top-bar/top-bar.component';
 import { OverlayAddCompositionComponent } from '../overlays/overlay-add-composition/overlay-add-composition.component';
 import { GroupInfo } from '../interfaces';
-import { SessionStateServiceService } from '../services/session-state/session-state-service.service';
+import { SessionStateService } from '../services/session-state/session-state.service';
 
 @Component({
   selector: 'app-music-catalogue',
@@ -22,7 +22,7 @@ export class MusicCatalogueComponent {
     {title: "We'll be fine", author: "Jorge Rivera-Herrans"}
   ]
 
-  constructor(private state: SessionStateServiceService) {
+  constructor(private state: SessionStateService) {
     this.state.currentGroup.subscribe((group) => {
       this.group = group;
     });

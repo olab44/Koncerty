@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs'
 @Injectable({
   providedIn: 'root'
 })
-export class SessionStateServiceService {
+export class SessionStateService {
   private groupSource = new BehaviorSubject<any>(this.loadFromStorage('group'));
   private eventSource = new BehaviorSubject<any>(this.loadFromStorage('event'));
   currentGroup = this.groupSource.asObservable()

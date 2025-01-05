@@ -28,20 +28,24 @@ export interface GroupInfoStructure {
 }
 
 export interface EventInfo {
-    name: string;
-    description?: string;
-    date_start: string,
-    date_end: string,
-    location: string,
+    name: string
+    description?: string
+    date_start: string
+    date_end: string
+    location: string
     set_list?: string[]
     attendees?: string[]
 }
 
 export interface EventCreate {
-    name: string;
-    description?: string;
-    date_start: string,
-    date_end: string,
+    name: string
+    type: string
+    description?: string
+    date_start: string
+    date_end: string
     location: string
+    parent_group: number
     groups_participating: number[]
+    users_participating: string[]
+    setlist: number[]
 }

@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { TopBarComponent } from '../bars/top-bar/top-bar.component';
 import { SideBarComponent } from '../bars/side-bar/side-bar.component';
 import { GroupInfo } from '../interfaces';
-import { SessionStateServiceService } from '../services/session-state/session-state-service.service';
+import { SessionStateService } from '../services/session-state/session-state.service';
 
 @Component({
   selector: 'app-group-hub',
@@ -16,7 +16,7 @@ import { SessionStateServiceService } from '../services/session-state/session-st
 export class GroupHubComponent {
   group!: GroupInfo
 
-  constructor(private router: Router, private state: SessionStateServiceService) {
+  constructor(private router: Router, private state: SessionStateService) {
     this.state.currentGroup.subscribe((group) => {
       this.group = group;
     });

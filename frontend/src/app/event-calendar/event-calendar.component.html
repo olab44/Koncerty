@@ -13,4 +13,4 @@
     <button class="new-button" [style.visibility]="group.role === 'Kapelmistrz' ? 'visible' : 'hidden'" (click)="toggleOverlayEvent()">{{'CALENDAR.NEW_EVENT' | translate}}</button>
 </main>
 
-<app-overlay-new-event *ngIf="visibleOverlayEvent" (close)="toggleOverlayEvent()" [group_id]="group.group_id"></app-overlay-new-event>
+<app-overlay-new-event *ngIf="visibleOverlayEvent" (close)="toggleOverlayEvent()" (refresh)="getEvents()"></app-overlay-new-event>

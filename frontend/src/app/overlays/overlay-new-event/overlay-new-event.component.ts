@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { BackendService } from '../../services/backend-connection/backend.service';
-import { EventCreate } from '../../interfaces';
+import { EventCreate, GroupInfo } from '../../interfaces';
+import { SessionStateService } from '../../services/session-state/session-state.service';
 
 @Component({
   selector: 'app-overlay-new-event',
@@ -14,22 +15,32 @@ import { EventCreate } from '../../interfaces';
 })
 export class OverlayNewEventComponent {
   @Output() close = new EventEmitter<void>()
-  @Input() group_id!: number
+  @Output() refresh = new EventEmitter<void>()
+  group!: GroupInfo
 
   event: EventCreate = {
     name: '',
+    type: 'Koncert',
     description: '',
     date_start: '',
     date_end: '',
     location: '',
+    parent_group: -1,
     groups_participating: [],
+    users_participating: [],
+    setlist: []
   }
 
-  participant_groups = [{group_id: 2, group_name: "HELLO"}, {group_id: 4, group_name: "HELLOv2"}]
-
-  constructor(private backend: BackendService) {
+  constructor(private backend: BackendService, private state: SessionStateService) {
+    this.state.currentGroup.subscribe((group) => {
+      this.group = group;
+      this.event.parent_group = group.group_id
+    });
   }
 
+  compositions = []
+  added_email = ""
+  allChecked = false
   eventMessage: string = '...'
   validDates: boolean = false
 
@@ -52,12 +63,27 @@ export class OverlayNewEventComponent {
   onGroupCheckboxChange(event: Event, groupId: number): void {
     const checkbox = event.target as HTMLInputElement;
     if (checkbox.checked) {
+      if (groupId == this.group.group_id) {this.allChecked = true}
       this.event.groups_participating.push(groupId);
     } else {
+      if (groupId == this.group.group_id) {this.allChecked = false}
       this.event.groups_participating = this.event.groups_participating.filter(
         id => id !== groupId
       );
     }
+  }
+
+  allSelected(): boolean {
+    return this.event.groups_participating.includes(this.event.parent_group)
+  }
+
+  addParticipant(email: string) {
+    if (!this.event.users_participating.includes(email)) {
+      this.event.users_participating.push(email);
+    }
+  }
+  removeParticipant(email: string) {
+    this.event.users_participating = this.event.users_participating.filter(mail => mail !== email)
   }
 
   createEvent() {
@@ -66,9 +92,10 @@ export class OverlayNewEventComponent {
     .subscribe({
         next: res => {
           this.eventMessage = "New event organised!"
+          this.refresh.emit()
         },
         error: e => {
-          this.eventMessage = e.error.detail
+          this.eventMessage = e.message
           console.log(e)
         }
     })

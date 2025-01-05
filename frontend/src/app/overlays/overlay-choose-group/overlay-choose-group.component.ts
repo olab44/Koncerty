@@ -4,7 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { BackendService } from '../../services/backend-connection/backend.service';
 import { GroupInfo, GroupInfoStructure, SubgroupInfo } from '../../interfaces';
-import { SessionStateServiceService } from '../../services/session-state/session-state-service.service';
+import { SessionStateService } from '../../services/session-state/session-state.service';
 
 @Component({
   selector: 'app-overlay-choose-group',
@@ -17,7 +17,7 @@ export class OverlayChooseGroupComponent {
   @Output() close = new EventEmitter<void>()
   userGroups: GroupInfoStructure | undefined;
 
-  constructor(private backend: BackendService, private router: Router, private state: SessionStateServiceService) {
+  constructor(private backend: BackendService, private router: Router, private state: SessionStateService) {
     this.backend.getGroups()
     .subscribe({
       next: res => {

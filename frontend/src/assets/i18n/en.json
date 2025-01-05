@@ -57,10 +57,13 @@
     "EVENT": {
         "NEW": "ADD EVENT",
         "NAME": "EVENT NAME",
+        "TYPE": "EVENT TYPE",
         "DESCRIPTION": "DESCRIPTION",
         "START": "START TIME",
         "END": "END TIME",
         "LOCATION": "LOCATION",
-        "PARTICIPANTS": "PARTICIPANTS"
+        "PARTICIPANTS": "PARTICIPANTS",
+        "ALL": "WHOLE GROUP",
+        "SETLIST": "SETLIST"
     }
 }

@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms'
 import { TranslateModule } from '@ngx-translate/core';
 import { GroupInfo } from '../../interfaces';
 import { BackendService } from '../../services/backend-connection/backend.service';
-import { SessionStateServiceService } from '../../services/session-state/session-state-service.service';
+import { SessionStateService } from '../../services/session-state/session-state.service';
 
 @Component({
   selector: 'app-side-bar',
@@ -19,7 +19,7 @@ export class SideBarComponent {
   extra_info: string = ""
   editMessage = ""
 
-  constructor(private backend: BackendService,private state: SessionStateServiceService) {
+  constructor(private backend: BackendService,private state: SessionStateService) {
     this.state.currentGroup.subscribe((group) => {
       this.group = group;
     });
