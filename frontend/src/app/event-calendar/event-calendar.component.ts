@@ -29,7 +29,7 @@ export class EventCalendarComponent {
   }
 
   getEvents() {
-    this.backend.getEvents().subscribe({
+    this.backend.getEvents(this.group.group_id).subscribe({
       next: (res) => {
         this.events = res
       },

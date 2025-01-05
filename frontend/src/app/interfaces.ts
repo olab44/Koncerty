@@ -39,13 +39,13 @@ export interface EventInfo {
 
 export interface EventCreate {
     name: string
-    type: string
-    description?: string
     date_start: string
     date_end: string
     location: string
+    extra_info?: string
+    type: string
     parent_group: number
-    groups_participating: number[]
-    users_participating: string[]
+    group_ids: number[]
+    user_emails: string[]
     setlist: number[]
 }

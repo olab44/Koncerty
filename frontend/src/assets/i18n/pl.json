@@ -58,6 +58,8 @@
         "NEW": "DODAJ WYDARZENIE",
         "NAME": "NAZWA WYDARZENIA",
         "TYPE": "TYP WYDARZENIA",
+        "CONCERT": "KONCERT",
+        "REHEARSAL": "PRÓBA",
         "DESCRIPTION": "OPIS",
         "START": "CZAS ROZPOCZĘCIA",
         "END": "CZAS ZAKOŃCZENIA",

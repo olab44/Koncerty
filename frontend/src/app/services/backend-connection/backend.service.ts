@@ -22,7 +22,7 @@ export class BackendService {
 
   getGroups() {
     return this.http
-      .get<GroupInfoStructure>(`${this.apiURL}/groups/findGroups`, { headers: this.getHeaders() })
+      .get<GroupInfoStructure>(`${this.apiURL}/groups/findGroups`,  { headers: this.getHeaders() })
       .pipe(
         catchError((error) => {
         return throwError(() => error)
@@ -30,9 +30,9 @@ export class BackendService {
       )
   }
 
-  getEvents() {
+  getEvents(group_id: number) {
     return this.http
-      .get<EventInfo[]>(`${this.apiURL}/events/findEvents`, { headers: this.getHeaders() })
+      .get<EventInfo[]>(`${this.apiURL}/events/findEvents?group_id=${group_id}`, { headers: this.getHeaders() })
       .pipe(
         catchError((error) => {
         return throwError(() => error)

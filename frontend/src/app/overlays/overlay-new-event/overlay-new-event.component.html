@@ -6,12 +6,12 @@
         </label>
         <label for="type"> {{"EVENT.TYPE" | translate}}
             <select id="type" [(ngModel)]="event.type">
-                <option value="Koncert">KONCERT</option>
-                <option value="Próba">PRÓBA</option>
+                <option value="Koncert"> {{"EVENT.CONCERT" | translate}} </option>
+                <option value="Próba"> {{"EVENT.REHEARSAL" | translate}} </option>
               </select>
         </label>
         <label for="description"> {{"EVENT.DESCRIPTION" | translate}}
-            <textarea id="description" name="description" [(ngModel)]="event.description" autocomplete="off" placeholder="optional" maxlength="100"></textarea>
+            <textarea id="description" name="description" [(ngModel)]="event.extra_info" autocomplete="off" placeholder="optional" maxlength="100"></textarea>
         </label>
         <div class=dates>
             <label for="start-date"> {{"EVENT.START" | translate}} <br>
@@ -46,7 +46,7 @@
                 <input [(ngModel)]="added_email" email type="text" placeholder="e-mail"><button [disabled]="!added_email" (click)="addParticipant(added_email)"> + </button>
             </div>
             <ul>
-                <li *ngFor="let email of event.users_participating">{{email}}<button (click)="removeParticipant(email)"> - </button></li>
+                <li *ngFor="let email of event.user_emails">{{email}}<button (click)="removeParticipant(email)"> - </button></li>
             </ul>
         </section>
     </div>

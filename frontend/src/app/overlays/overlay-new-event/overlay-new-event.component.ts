@@ -21,13 +21,13 @@ export class OverlayNewEventComponent {
   event: EventCreate = {
     name: '',
     type: 'Koncert',
-    description: '',
+    extra_info: '',
     date_start: '',
     date_end: '',
     location: '',
     parent_group: -1,
-    groups_participating: [],
-    users_participating: [],
+    group_ids: [],
+    user_emails: [],
     setlist: []
   }
 
@@ -64,26 +64,22 @@ export class OverlayNewEventComponent {
     const checkbox = event.target as HTMLInputElement;
     if (checkbox.checked) {
       if (groupId == this.group.group_id) {this.allChecked = true}
-      this.event.groups_participating.push(groupId);
+      this.event.group_ids.push(groupId);
     } else {
       if (groupId == this.group.group_id) {this.allChecked = false}
-      this.event.groups_participating = this.event.groups_participating.filter(
+      this.event.group_ids = this.event.group_ids.filter(
         id => id !== groupId
       );
     }
   }
 
-  allSelected(): boolean {
-    return this.event.groups_participating.includes(this.event.parent_group)
-  }
-
   addParticipant(email: string) {
-    if (!this.event.users_participating.includes(email)) {
-      this.event.users_participating.push(email);
+    if (!this.event.user_emails.includes(email)) {
+      this.event.user_emails.push(email);
     }
   }
   removeParticipant(email: string) {
-    this.event.users_participating = this.event.users_participating.filter(mail => mail !== email)
+    this.event.user_emails = this.event.user_emails.filter(mail => mail !== email)
   }
 
   createEvent() {

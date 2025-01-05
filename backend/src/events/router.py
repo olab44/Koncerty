@@ -23,6 +23,6 @@ def get_events_structure(request: GetEventInfo, db: Session = Depends(get_sessio
 @router.post("/createEvent", status_code=201)
 def create_group(request: CreateEventRequest, db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
     user_data = decode_app_token(token)
-    
+
     new_event = create_event(db, user_data.get("email"), request)
     return new_event
