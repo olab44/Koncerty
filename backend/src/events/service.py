@@ -42,6 +42,14 @@ def get_participants_info(db: Session, participants: List[int]):
         )
     return user_infos
 
+def user_in_parent_group(db: Session, user: User, group_id: int) -> bool:
+    member = db.query(Member).filter(
+        Member.user_id == user.id,
+        Member.group_id == group_id
+    ).first()
+
+    return member is not None    
+
 def get_user_events(db: Session, email: str, group_id: int):
     existing_user = db.query(User).filter(User.email == email).first()
     if not existing_user:
@@ -103,7 +111,8 @@ def create_event(db: Session, email: str, request: CreateEventRequest):
 
     for user_email in request.user_emails:
         user = db.query(User).filter(User.email == user_email).first()
-        unique_user_ids.add(user.id)
+        if user and user_in_parent_group(user, new_event.parent_group):
+            unique_user_ids.add(user.id)
 
     for group_id in request.group_ids:
         members = db.query(Member).filter(Member.group_id == group_id).all()
