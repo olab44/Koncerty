@@ -2,11 +2,38 @@
 <app-side-bar [isEditAvailable]="true"></app-side-bar>
 <main>
     <section>
+        <h2>Group Members</h2>
+        <ul>
+            <li *ngFor="let member of group_members">
+              <span>{{ member.email }}</span>
+              <select [(ngModel)]="member.role" (change)="updateMemberRole(member)">
+                <option value="admin">Admin</option>
+                <option value="editor">Editor</option>
+                <option value="viewer">Viewer</option>
+              </select>
+              <button (click)="removeGroupMember(member.id)">Remove</button>
+            </li>
+        </ul>
         <div>
-            <p>USER CONTROL</p>
+            <input #inviteEmail type="email" placeholder="Invite Email" />
+            <button (click)="inviteMember(inviteEmail.value)">Invite Member</button>
         </div>
-        <div>
-            <p>SUBGROUP CONTROL</p>
+    </section>
+
+    <section>
+    <h2>Subgroups</h2>
+    <div>
+            <input type="text" [(ngModel)]="newSubgroup.name" name="name"/>
+            <textarea [(ngModel)]="newSubgroup.extra_info" name="description" placeholder="optional"></textarea>
+            <button type="submit" [disabled]="!newSubgroup.name">Create Subgroup</button>
         </div>
+
+        <ul>
+            <li *ngFor="let subgroup of group.subgroups">
+                <h3>{{ subgroup.subgroup_name }}</h3>
+                <p>{{ subgroup.extra_info }}</p>
+                <button (click)="deleteSubgroup(subgroup.subgroup_id)">Delete Subgroup</button>
+            </li>
+        </ul>
     </section>
 </main>

@@ -1,10 +1,12 @@
 main {
     margin-top: 5vh;
     margin-left: 25vw;
-    height: 90vh;
-
-    display: grid;
+    height: 95vh;
     justify-items: center;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    gap: 15px;
+    padding: 25px 0px;
 }
 
 section {
@@ -17,7 +19,4 @@ section {
 
     word-break: break-all;
     white-space: pre-wrap;
-
-    display: grid;
-    grid-template-rows: 1fr 1fr;
 }

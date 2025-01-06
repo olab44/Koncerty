@@ -9,6 +9,7 @@ main {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     align-items: center;
+    border-bottom: solid 2px #000070;
 }
 
 .icon {
