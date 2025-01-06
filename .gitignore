@@ -4,5 +4,4 @@ __pycache__/
 .env
 backend.egg-info/
 node_modules
-drive_credentials.json
 service_account.json
