@@ -48,7 +48,7 @@ def user_in_parent_group(db: Session, user: User, group_id: int) -> bool:
         Member.group_id == group_id
     ).first()
 
-    return member is not None    
+    return member is not None
 
 def get_user_events(db: Session, email: str, group_id: int):
     existing_user = db.query(User).filter(User.email == email).first()
@@ -69,7 +69,7 @@ def get_user_events(db: Session, email: str, group_id: int):
         event_infos.append(EventInfo(
             event_id = event.id,
             name = event.name,
-            date_start = event.date_end,
+            date_start = event.date_start,
             date_end = event.date_end,
             location = event.location,
             extra_info = event.extra_info,
