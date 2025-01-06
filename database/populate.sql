@@ -40,7 +40,7 @@ BEGIN
 
     -- 4 uzytkownikow
     INSERT INTO users (username, email)
-    VALUES ('Bilb', 'krzysgolcz@gmail.com')
+    VALUES ('Bilb', 'megalodony.pzsp2@gmail.com')
     RETURNING id INTO user_id1;
 
     INSERT INTO users (username, email)
