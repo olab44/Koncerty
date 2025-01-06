@@ -9,7 +9,8 @@
         <div *ngFor="let day of days" class="day-header">{{ 'CALENDAR.' + day | translate }}</div>
 
       <div *ngFor="let day of daysInMonth"
-          [class.planned-events]="isEventPlanned(day)"
+          [class.rehearsal]="isEventPlanned(day, 'Próba')"
+          [class.concert]="isEventPlanned(day, 'Koncert')"
           [class.selected]="day === selectedDay"
           class="day"
           (click)="day && clickDay(day)">

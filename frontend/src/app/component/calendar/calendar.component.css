@@ -60,9 +60,17 @@
     font-size: large;
 }
 
-.day.planned-events {
-    background-color: rgb(56, 44, 134, 0.8);
-    color: rgb(255, 197, 61);
+.rehearsal, .concert {
+    color: purple;
+}
+.rehearsal {
+    background-color: palegoldenrod;
+}
+.concert {
+    background-color: palegreen;
+}
+.rehearsal.concert {
+    background-color: peachpuff;
 }
 .day.selected {
     background: #000070;

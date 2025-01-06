@@ -27,14 +27,29 @@ export interface GroupInfoStructure {
     group_structure: GroupInfo[];
 }
 
-export interface EventInfo {
+export interface Participant {
+    id: number
+    username: string
+    email: string
+}
+
+export interface CompositionInfo {
+    id: number
     name: string
-    description?: string
+    author: string
+}
+
+export interface EventInfo {
+    event_id: number
+    parent_group: number
+    name: string
+    extra_info?: string
     date_start: string
     date_end: string
     location: string
-    set_list?: string[]
-    attendees?: string[]
+    type: string
+    set_list?: CompositionInfo[]
+    participants: Participant[]
 }
 
 export interface EventCreate {

@@ -74,10 +74,16 @@ export class CalendarComponent {
     }
   }
 
-  isEventPlanned(day: number | null): boolean {
+  isRehearsalPlanned(day: number | null): boolean {
     if (!day) return false;
     const date = new Date(this.selectedDate.getFullYear(), this.selectedDate.getMonth(), day);
-    return this.events.some(event =>  this.isAtDate(date, event.date_start, event.date_end))
+    return this.events.some(event => (event.type == "Próba" && this.isAtDate(date, event.date_start, event.date_end)))
+  }
+
+  isEventPlanned(day: number | null, type: string): boolean {
+    if (!day) return false;
+    const date = new Date(this.selectedDate.getFullYear(), this.selectedDate.getMonth(), day);
+    return this.events.some(event => (event.type == type && this.isAtDate(date, event.date_start, event.date_end)))
   }
 
   isAtDate(date_selected: Date | null, date_start: string, date_end: string): boolean {

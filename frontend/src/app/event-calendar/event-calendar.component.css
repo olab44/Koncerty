@@ -41,3 +41,11 @@ ul {
     height: 5vh;
     border-radius: 25px;
 }
+
+.rehearsal {
+    background-color: palegoldenrod;
+}
+
+.concert {
+    background-color: palegreen;
+}

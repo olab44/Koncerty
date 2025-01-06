@@ -83,7 +83,6 @@ export class OverlayNewEventComponent {
   }
 
   createEvent() {
-    console.log(this.event)
     this.backend.postRequest('events/createEvent', this.event)
     .subscribe({
         next: res => {
