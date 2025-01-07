@@ -3,8 +3,8 @@ from fastapi import APIRouter
 from fastapi import Depends, HTTPException, Header
 from sqlalchemy.orm import Session
 from database import get_session
-from .service import manage_loging, register_user, get_user_from_group, change_user_role
-from .schemas import GoogleSignInRequest, UserCreate, UsersInfoStructure, GroupsUserRequest, ChangeUserRoleRequest
+from .service import manage_loging, register_user, get_user_from_group, change_user_role, remove_member
+from .schemas import GoogleSignInRequest, UserCreate, UsersInfoStructure, GroupsUserRequest, ChangeUserRoleRequest, RemoveMemberRequest
 from users.service import decode_app_token
 
 router = APIRouter()
@@ -46,6 +46,14 @@ def get_groups_users(group_id: GroupsUserRequest, db: Session = Depends(get_sess
 def change_role(request: ChangeUserRoleRequest, db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
     user_data = decode_app_token(token)
     result = change_user_role(db, user_data.get("email"), request)
+    if not result:
+        raise HTTPException(status_code=404, detail="User not found")
+    return result
+
+@router.delete("/removeMember", status_code=200)
+def rm_member(request: RemoveMemberRequest, db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
+    user_data = decode_app_token(token)
+    result = remove_member(db, user_data.get("email"), request)
     if not result:
         raise HTTPException(status_code=404, detail="User not found")
     return result

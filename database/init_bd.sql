@@ -118,7 +118,7 @@ ALTER TABLE IF EXISTS public.recipients
     ADD CONSTRAINT member_recipient_fk FOREIGN KEY (member_id)
     REFERENCES public.members (id) MATCH SIMPLE
     ON UPDATE NO ACTION
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     NOT VALID;
 
 
