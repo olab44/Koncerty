@@ -7,6 +7,7 @@ from googleapiclient.http import MediaIoBaseDownload
 from users.models import User, Member, File, FileOwnership
 from .schemas import UploadFileRequest, DownloadFileRequest, DeleteFileRequest
 from .schemas import FileToUserRequest, FileToSubgroupRequest, FileToCompositionRequest
+from .schemas import DeleteFileToCompositionRequest
 import io
 import os
 
@@ -103,7 +104,7 @@ def delete_from_drive(db: Session, email: str, request: DeleteFileRequest):
 
     verify_user(db, email, request.parent_group)
     
-    file = db.query(File).filter(File.id == request.file_id)
+    file = db.query(File).filter(File.id == request.file_id).first()
     if not file:
         raise HTTPException(status_code=404, detail=f"File {request.file_id} not found")
 
@@ -112,8 +113,6 @@ def delete_from_drive(db: Session, email: str, request: DeleteFileRequest):
 
     db.delete(file)
     db.commit()
-
-    return file
 
 
 def create_file_ownership(db: Session, user_id: int, file_id: int, parent_group: int) -> FileOwnership:
@@ -138,7 +137,8 @@ def assign_file_to_user(db: Session, email: str, request: FileToUserRequest):
     
     new_file_ownership = create_file_ownership(db, request.user_id, request.file_id, request.parent_group)
 
-    if not db.query(FileOwnership).filter(FileOwnership.group_id == request.group_id, FileOwnership.user_id == request.user_id):
+    if not db.query(FileOwnership).filter(FileOwnership.file_id == request.file_id, FileOwnership.user_id == request.user_id).first():
+        print("tutaj\n")
         db.add(new_file_ownership)
         db.commit()
         db.refresh(new_file_ownership)
@@ -153,9 +153,9 @@ def assign_file_to_subgroup(db: Session, email: str, request: FileToSubgroupRequ
     existing_members = db.query(Member).filter(Member.group_id == request.group_id)
     file_ownerships = []
     for member in existing_members:
-        new_file_ownership = create_file_ownership(db, member.id, request.file_id, request.group_id)
-        file_ownerships.append(new_file_ownership)
-        if not db.query(FileOwnership).filter(FileOwnership.group_id == request.group_id, FileOwnership.user_id == request.user_id):
+        if not db.query(FileOwnership).filter(FileOwnership.file_id == request.file_id, FileOwnership.user_id == member.user_id).first():
+            new_file_ownership = create_file_ownership(db, member.user_id, request.file_id, request.group_id)
+            file_ownerships.append(new_file_ownership)
             db.add(new_file_ownership)
 
     db.commit()
@@ -170,14 +170,50 @@ def assign_file_to_composition(db: Session, email: str, request: FileToCompositi
 
     verify_user(db, email, request.parent_group)
     
-    file = db.query(File).filter(File.id == request.file_id)
+    file = db.query(File).filter(File.id == request.file_id).first()
     if not file:
         raise HTTPException(status_code=404, detail=f"File {request.file_id} not found")
     
     file.composition_id = request.composition_id
     db.commit()
-    db.refresh(file)
 
     return file
 
 
+def deprive_user_of_file(db: Session, email: str, request: FileToUserRequest):
+
+    verify_user(db, email, request.parent_group)
+    
+    file_ownership = db.query(FileOwnership).filter(FileOwnership.file_id == request.file_id, FileOwnership.user_id == request.user_id).first()
+    if not file_ownership:
+        raise HTTPException(status_code=404, detail=f"File ownership file_id: {request.file_id}, user_id: {request.user_id} not found")
+    
+    db.delete(file_ownership)
+    db.commit()
+
+
+def deprive_subgroup_of_file(db: Session, email: str, request: FileToSubgroupRequest):
+
+    verify_user(db, email, request.group_id)
+    
+    existing_members = db.query(Member).filter(Member.group_id == request.group_id)
+    for member in existing_members:
+        file_ownership = db.query(FileOwnership).filter(FileOwnership.file_id == request.file_id, FileOwnership.user_id == member.id).first()
+        if file_ownership:
+            db.delete(file_ownership)
+
+    db.commit()
+
+
+def deprive_composition_of_file(db: Session, email: str, request: DeleteFileToCompositionRequest):
+
+    verify_user(db, email, request.parent_group)
+    
+    file = db.query(File).filter(File.id == request.file_id).first()
+    if not file:
+        raise HTTPException(status_code=404, detail=f"File {request.file_id} not found")
+    
+    file.composition_id = None
+    db.commit()
+
+    return file

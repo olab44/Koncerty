@@ -59,3 +59,8 @@ class FileToCompositionRequest(BaseModel):
     file_id: int
     composition_id: int
     parent_group: int
+
+
+class DeleteFileToCompositionRequest(BaseModel):
+    file_id: int
+    parent_group: int
