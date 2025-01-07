@@ -40,7 +40,7 @@ BEGIN
 
     -- 4 uzytkownikow
     INSERT INTO users (username, email)
-    VALUES ('Bilb', 'krzysgolcz@gmail.com')
+    VALUES ('Bilb', 'megalodony.pzsp2@gmail.com')
     RETURNING id INTO user_id1;
 
     INSERT INTO users (username, email)
@@ -91,11 +91,11 @@ BEGIN
     RETURNING id INTO member_id4;
 
     INSERT INTO members (user_id, group_id, role)
-    VALUES (user_id4, group_id2, 'Kapelmistrz')
+    VALUES (user_id1, group_id2, 'Kapelmistrz')
     RETURNING id INTO member_id5;
 
     INSERT INTO members (user_id, group_id, role)
-    VALUES (user_id1, group_id2, 'Muzyk')
+    VALUES (user_id4, group_id2, 'Muzyk')
     RETURNING id INTO member_id6;
     -- widomosc 1 do grupy 1, wiadomosc 2 do grupy 2
     INSERT INTO recipients (member_id, alert_id)
@@ -154,10 +154,10 @@ BEGIN
     VALUES ('Symphony no. 5 notes 2', 1234, composition_id1)
     RETURNING id INTO file_id2;
 
-    INSERT INTO file_ownerships (group_id, file_id)
-    VALUES (group_id2, file_id1);
+    INSERT INTO file_ownerships (user_id, file_id)
+    VALUES (user_id1, file_id1);
 
-    INSERT INTO file_ownerships (group_id, file_id)
-    VALUES (group_id2, file_id2);
+    INSERT INTO file_ownerships (user_id, file_id)
+    VALUES (user_id2, file_id2);
 END $$;
 

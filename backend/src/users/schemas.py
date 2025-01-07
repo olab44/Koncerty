@@ -12,3 +12,15 @@ class UserInfo(BaseModel):
     username: str
     email: str
     role: str
+
+class GroupsUserRequest(BaseModel):
+    group_id: int
+
+class ChangeUserRoleRequest(BaseModel):
+    group_id: int
+    user_email: str
+    new_role: str
+
+class RemoveMemberRequest(BaseModel):
+    group_id: int
+    user_email:str

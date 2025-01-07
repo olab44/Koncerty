@@ -5,7 +5,7 @@ from google.auth.transport import requests
 from dotenv import load_dotenv
 
 from .models import User, Member
-from .schemas import UserInfo
+from .schemas import UserInfo, ChangeUserRoleRequest, RemoveMemberRequest
 
 import os
 import jwt
@@ -61,6 +61,24 @@ def decode_app_token(app_token: str):
     except jwt.InvalidTokenError:
         return None
 
+def find_user_by_email(db: Session, user_email: str):
+    user = db.query(User).filter(User.email == user_email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
+
+def check_num_of_admins(db, changed_member, group_id):
+    kapelmistrz_count = db.query(Member).filter(
+        Member.group_id == group_id,
+        Member.role == "Kapelmistrz"
+    ).count()
+
+    if kapelmistrz_count <= 1:
+        raise HTTPException(
+            status_code=400,
+            detail="Cannot change role. At least one 'Kapelmistrz' roles must remain in the group."
+        )
+
 
 def register_user(db: Session, user_email: str, username: str):
     existing_user = db.query(User).filter(User.email == user_email).first()
@@ -103,3 +121,56 @@ def get_user_from_group(db: Session, user_email: str, group_id: int):
             user_list.append(user_info)
 
     return user_list
+
+
+def change_user_role(db: Session, user_email: str, request: ChangeUserRoleRequest):
+    requesting_user = find_user_by_email(db, user_email)
+
+    member = db.query(Member).filter(Member.user_id == requesting_user.id, Member.group_id == request.group_id).first()
+    if not member:
+        raise HTTPException(status_code=404, detail="User is not a member of the group")
+
+    if member.role != "Kapelmistrz":
+        raise HTTPException(status_code=403, detail="User must have Kapelmistrz role")
+
+    changed_user = find_user_by_email(db, request.user_email)
+    changed_member = db.query(Member).filter(Member.user_id == changed_user.id, Member.group_id == request.group_id).first()
+    if not changed_member:
+        raise HTTPException(status_code=404, detail="User must be a member of the group")
+
+    if request.new_role != "Kapelmistrz" and changed_member.role == "Kapelmistrz":
+        check_num_of_admins(db, changed_member, request.group_id)
+    
+    changed_member.role = request.new_role
+    db.commit()
+    db.refresh(changed_member)
+
+    return {
+        "user_id": changed_user.id,
+        "group_id": request.group_id,
+        "new_role": changed_member.role
+    }
+
+def remove_member(db: Session, user_email: str, request: RemoveMemberRequest):
+    requesting_user = find_user_by_email(db, user_email)
+
+    member = db.query(Member).filter(Member.user_id == requesting_user.id, Member.group_id == request.group_id).first()
+    if not member:
+        raise HTTPException(status_code=404, detail="User is not a member of the group")
+
+    if member.role != "Kapelmistrz":
+        raise HTTPException(status_code=403, detail="User must have Kapelmistrz role")
+
+    removed_user = find_user_by_email(db, request.user_email)
+    removed_member = db.query(Member).filter(Member.user_id == removed_user.id, Member.group_id == request.group_id).first()
+
+    if removed_member.role == "Kapelmistrz":
+        check_num_of_admins(db, removed_member, request.group_id)
+
+    db.delete(removed_member)
+    db.commit()
+
+    return {
+        "user_id": removed_user.id,
+        "group_id": request.group_id
+    }
