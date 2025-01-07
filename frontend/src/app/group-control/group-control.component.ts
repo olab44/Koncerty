@@ -86,11 +86,11 @@ export class GroupControlComponent {
     });
   }
 
-  removeGroupMember(user_id: number, group_id: number) {
-    this.backend.postRequest('removeMember', {user_id, group_id}).subscribe({
+  removeGroupMember(group_id: number, user_email: string) {
+    this.backend.deleteRequest('removeMember', {group_id, user_email}).subscribe({
       next: (res) => {
-        if (group_id === this.group.group_id) {this.group_members = this.group_members.filter(member => member.id !== user_id)}
-        else {this.subgroup_members = this.group_members.filter(member => member.id !== user_id)}
+        if (group_id === this.group.group_id) {this.group_members = this.group_members.filter(member => member.email !== user_email)}
+        else {this.subgroup_members = this.group_members.filter(member => member.email !== user_email)}
       },
       error: (e) => {
         console.log(e);
@@ -98,8 +98,15 @@ export class GroupControlComponent {
     });
   }
 
-  updateMemberRole(member: any) {
+  updateMemberRole(member: UserInfo) {
     console.log(`Updated role for ${member.email}: ${member.role}`);
+    this.backend.postRequest('changeRole', {group_id: this.group.group_id, user_email: member.email,  new_role: member.role}).subscribe({
+      next: (res) => {},
+      error: (e) => {
+        if (e.error.detail === "Cannot change role. At least one 'Kapelmistrz' roles must remain in the group.") {member.role = "Kapelmistrz"}
+        console.log(e);
+      },
+    });
   }
 
   inviteMember(email: string) {
