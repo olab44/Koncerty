@@ -16,6 +16,7 @@ section {
     background-color: #CCE7FF;
     border-bottom: solid 5px #000070;
     border-top: solid 5px #000070;
+    overflow-x: auto;
 }
 ul {
     max-height: 365px;
@@ -34,7 +35,9 @@ li {
     border: solid 5px #000070;
     outline: none;
 }
-
+.members-panel li:hover {
+    filter: none;
+}
 .members-inputs {
     margin: 16px 0 16px 10px;
     display: flex;
@@ -95,6 +98,10 @@ li.selected {
     background: #000070;
     color: white;
 }
-li.selected span {
+li.selected p {
     color: white;
+}
+li div {
+    display: flex;
+    flex-wrap: nowrap;
 }

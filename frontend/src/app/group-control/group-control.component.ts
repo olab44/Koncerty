@@ -89,7 +89,8 @@ export class GroupControlComponent {
   removeGroupMember(user_id: number, group_id: number) {
     this.backend.postRequest('removeMember', {user_id, group_id}).subscribe({
       next: (res) => {
-        console.log(res)
+        if (group_id === this.group.group_id) {this.group_members = this.group_members.filter(member => member.id !== user_id)}
+        else {this.subgroup_members = this.group_members.filter(member => member.id !== user_id)}
       },
       error: (e) => {
         console.log(e);
@@ -105,10 +106,12 @@ export class GroupControlComponent {
     // send mail with invitation code
   }
 
-  addMember(user_id: number, group_id: number) {
+  addMember(user: UserInfo, group_id: number) {
+    const user_id = user.id
     this.backend.postRequest('addMember', {user_id, group_id}).subscribe({
       next: (res) => {
-        console.log(res)
+        if (group_id === this.group.group_id) {this.group_members.push(user)}
+        else {this.subgroup_members.push(user)}
       },
       error: (e) => {
         console.log(e);

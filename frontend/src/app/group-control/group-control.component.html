@@ -4,9 +4,9 @@
     <section class="members-panel">
         <ul>
             <li *ngFor="let member of group_members | filterPipe: filterMode: searchPhrase">
-                <span>{{ member.email }}</span>
+                <p>{{ member.email }}</p>
                 <div>
-                    <button (click)="addMember(member.id, viewed_subgroup_id)" [style.visibility]="viewed_subgroup_id? 'visible' : 'hidden'">&#11133;</button>
+                    <button (click)="addMember(member, viewed_subgroup_id)" [style.visibility]="viewed_subgroup_id? 'visible' : 'hidden'">&#11133;</button>
                     <select [(ngModel)]="member.role" (change)="updateMemberRole(member)">
                         <option value="Kapelmistrz">{{ "MEMBER.Kapelmistrz" | translate }}</option>
                         <option value="Koordynator">{{ "MEMBER.Koordynator" | translate }}</option>
@@ -36,7 +36,7 @@
         <ul>
             <li *ngFor="let subgroup of group.subgroups" (click)="selectSubgroup(subgroup.subgroup_id)"
                 [ngClass]="{'selected': viewed_subgroup_id === subgroup.subgroup_id}">
-                <span>{{ subgroup.subgroup_name }}</span>
+                <p>{{ subgroup.subgroup_name }}</p>
                 <button (click)="deleteSubgroup(subgroup.subgroup_id)"> - </button>
             </li>
         </ul>
@@ -44,7 +44,7 @@
         <div class="subgroups-users">
             <ul>
                 <li *ngFor="let smember of subgroup_members">
-                    <span>{{ smember.email }}</span>
+                    <p>{{ smember.email }}</p>
                     <button (click)="removeGroupMember(smember.id, viewed_subgroup_id)"> - </button>
                 </li>
             </ul>
