@@ -10,44 +10,36 @@ from users.service import decode_app_token
 
 router = APIRouter()
 
-@router.post("/uploadFile", response_model=UploadFileRequest)
-def put_file_to_drive(db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
-    file_path = "/files_storage/test_photo.jpg"
+@router.post("/uploadFile", status_code=201)
+def upload_file_to_drive(file_name: str, db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
+    user_data = decode_app_token(token)
     
-    # Nazwa pliku w Google Drive
-    file_target_name = "test.jpg"
+    file_path = "/files_storage/test_photo.jpg"
 
-    uploaded_file_id = upload_to_drive(file_path, file_target_name)
-    if not uploaded_file_id:
+    uploaded_file = upload_to_drive(db, user_data.get("email"), file_path, file_name)
+    if not uploaded_file:
         raise HTTPException(status_code=404, detail="Error uploading file")
-    return {
-        "file_id": uploaded_file_id
-    }
+    return { "created": uploaded_file }
 
 
 @router.get("/downloadFile", response_model=DownloadFileRequest)
-def get_file_from_drive(db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
-    
-    file_id = "13bdCbN3fFyt7pX5k15r2nPl5tkkB03po"
+def get_file_from_drive(file_name: str, db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
+    user_data = decode_app_token(token)
 
-    # Nazwa pliku w kontenerze
-    file_target_name = "test.jpg"
-
-    file_path = download_from_drive(file_id, file_target_name)
+    file_path = download_from_drive(db, user_data.get("email"), file_name)
     if not file_path:
-        raise HTTPException(status_code=404, detail=f"Error downloading file {file_id}")
+        raise HTTPException(status_code=404, detail=f"Error downloading file {file_name}")
     return {
         "file_path": file_path
     }
 
 
 @router.delete("/deleteFile", response_model=DeleteFileRequest)
-def delete_file_from_drive(db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
-    
-    file_id = "13bdCbN3fFyt7pX5k15r2nPl5tkkB03po"
+def delete_file_from_drive(file_name: str, db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
+    user_data = decode_app_token(token)
 
-    delete_from_drive(file_id)
+    delete_from_drive(db, user_data.get("email"), file_name)
 
     return {
-        "file_id": file_id
+        "deleted": file_name
     }

@@ -10,4 +10,4 @@ class DownloadFileRequest(BaseModel):
 
 
 class DeleteFileRequest(BaseModel):
-    file_id: str
+    deleted: str
