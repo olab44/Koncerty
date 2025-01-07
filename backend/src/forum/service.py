@@ -3,7 +3,6 @@ from typing import List
 import dramatiq
 from email.mime.text import MIMEText
 from smtplib import SMTP
-from string import Template
 from .config import settings
 from users.models import Member, User
 from .models import Announcement

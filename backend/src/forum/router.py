@@ -6,7 +6,7 @@ from src.database import get_session
 from users.service import decode_app_token
 from .schemas import AnnouncementCreate, AnnouncementInfo
 from .service import create_announcement, get_announcements
-from users.service import decode_app_token
+
 
 router = APIRouter()
 
