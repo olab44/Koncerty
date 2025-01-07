@@ -154,10 +154,10 @@ BEGIN
     VALUES ('Symphony no. 5 notes 2', 1234, composition_id1)
     RETURNING id INTO file_id2;
 
-    INSERT INTO file_ownerships (group_id, file_id)
-    VALUES (group_id2, file_id1);
+    INSERT INTO file_ownerships (user_id, file_id)
+    VALUES (user_id1, file_id1);
 
-    INSERT INTO file_ownerships (group_id, file_id)
-    VALUES (group_id2, file_id2);
+    INSERT INTO file_ownerships (user_id, file_id)
+    VALUES (user_id2, file_id2);
 END $$;
 
