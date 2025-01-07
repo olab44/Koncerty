@@ -18,3 +18,8 @@ class UsersInfoStructure(BaseModel):
 
 class GroupsUserRequest(BaseModel):
     group_id: int
+
+class ChangeUserRoleRequest(BaseModel):
+    group_id: int
+    user_email: str
+    new_role: str
