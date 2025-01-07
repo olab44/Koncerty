@@ -11,8 +11,8 @@ def generate_invitation_code(length=20):
     return ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(length))
 
 
-def register_group(db: Session, user: User, group: CreateGroupRequest):
-    existing_user = db.query(User).filter(User.email == user.email).first()
+def register_group(db: Session, user_email: User, group: CreateGroupRequest):
+    existing_user = db.query(User).filter(User.email == user_email).first()
     if not existing_user:
         raise HTTPException(status_code=404, detail="User not found")
 
@@ -112,8 +112,8 @@ def get_user_group_structure(db: Session, email: str):
     }
 
 
-def user_to_group(db: Session, user: User, group: JoinGroupRequest):
-    existing_user = db.query(User).filter(User.email == user.email).first()
+def user_to_group(db: Session, user_email: User, group: JoinGroupRequest):
+    existing_user = db.query(User).filter(User.email == user_email).first()
     if not existing_user:
         raise HTTPException(status_code=404, detail="User not found")
 
@@ -129,12 +129,12 @@ def user_to_group(db: Session, user: User, group: JoinGroupRequest):
 
     return joined_group
 
-def register_subgroup(db: Session, user: User, request: CreateSubgroupRequest):
-    existing_user = db.query(User).filter(User.email == user.email).first()
+def register_subgroup(db: Session, user_email: User, request: CreateSubgroupRequest):
+    existing_user = db.query(User).filter(User.email == user_email).first()
     if not existing_user:
         raise HTTPException(status_code=404, detail="User not found")
     
-    existing_member = db.query(Member).filter(Member.user_id == user.id, Member.group_id == request.parent_group).first()
+    existing_member = db.query(Member).filter(Member.user_id == existing_user.id, Member.group_id == request.parent_group).first()
 
     if not existing_member:
         raise HTTPException(status_code=404, detail="User is not a member of the group")
@@ -163,12 +163,12 @@ def register_subgroup(db: Session, user: User, request: CreateSubgroupRequest):
     return new_group
 
 
-def edit_group(db: Session, user: User, request: EditGroupRequest):
-    existing_user = db.query(User).filter(User.email == user.email).first()
+def edit_group(db: Session, user_email: User, request: EditGroupRequest):
+    existing_user = db.query(User).filter(User.email == user_email).first()
     if not existing_user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    existing_member = db.query(Member).filter(Member.user_id == user.id, Member.group_id == request.group_id).first()
+    existing_member = db.query(Member).filter(Member.user_id == existing_user.id, Member.group_id == request.group_id).first()
 
     if not existing_member:
         raise HTTPException(status_code=404, detail="User is not a member of the group")

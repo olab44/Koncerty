@@ -61,6 +61,12 @@ def decode_app_token(app_token: str):
     except jwt.InvalidTokenError:
         return None
 
+def get_user_data(token: str):
+    user_data = decode_app_token(token)
+    if not user_data:
+        raise HTTPException(status_code=403, detail="Invalid app_token")
+    return user_data
+
 def find_user_by_email(db: Session, user_email: str):
     user = db.query(User).filter(User.email == user_email).first()
     if not user:
