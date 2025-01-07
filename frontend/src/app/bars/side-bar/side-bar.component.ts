@@ -19,7 +19,7 @@ export class SideBarComponent {
   extra_info: string = ""
   editMessage = ""
 
-  constructor(private backend: BackendService,private state: SessionStateService) {
+  constructor(private backend: BackendService, private state: SessionStateService) {
     this.state.currentGroup.subscribe((group) => {
       this.group = group;
     });

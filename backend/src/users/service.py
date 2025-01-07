@@ -5,7 +5,7 @@ from google.auth.transport import requests
 from dotenv import load_dotenv
 
 from .models import User, Member
-from .schemas import UserInfo, UsersInfoStructure, ChangeUserRoleRequest, RemoveMemberRequest
+from .schemas import UserInfo, ChangeUserRoleRequest, RemoveMemberRequest
 
 import os
 import jwt
@@ -120,7 +120,7 @@ def get_user_from_group(db: Session, user_email: str, group_id: int):
             )
             user_list.append(user_info)
 
-    return UsersInfoStructure(user_list=user_list)
+    return user_list
 
 
 def change_user_role(db: Session, user_email: str, request: ChangeUserRoleRequest):
@@ -150,7 +150,6 @@ def change_user_role(db: Session, user_email: str, request: ChangeUserRoleReques
         "group_id": request.group_id,
         "new_role": changed_member.role
     }
-
 
 def remove_member(db: Session, user_email: str, request: RemoveMemberRequest):
     requesting_user = find_user_by_email(db, user_email)

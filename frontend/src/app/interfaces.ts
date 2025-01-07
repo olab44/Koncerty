@@ -22,6 +22,13 @@ export interface SubgroupInfo {
     subgroups: SubgroupInfo[];
 }
 
+export interface UserInfo {
+    id: number
+    username: string
+    email: string
+    role: string
+}
+
 export interface GroupInfoStructure {
     username: string;
     group_structure: GroupInfo[];
