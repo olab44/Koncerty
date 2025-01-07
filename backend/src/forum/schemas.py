@@ -1,20 +1,22 @@
 from pydantic import BaseModel
-from typing import Optional
 from datetime import datetime
+from typing import Optional
 
 
 class AnnouncementBase(BaseModel):
     title: str
     content: str
+    group_id: Optional[int] = None
+    subgroup_id: Optional[int] = None
 
 
 class AnnouncementCreate(AnnouncementBase):
-    group_id: Optional[int] = None
-    user_id: Optional[int] = None
+    pass
 
 
-class Announcement(AnnouncementBase):
+class AnnouncementInfo(AnnouncementBase):
     id: int
+    creator_id: int
     created_at: datetime
 
     class Config:

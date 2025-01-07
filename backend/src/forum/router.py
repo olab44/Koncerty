@@ -1,43 +1,31 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, Header
 from sqlalchemy.orm import Session
-from . import models, schemas
-from src.database import get_db
-from users import models as user_models
-from service import send_email_notification
-from datetime import datetime
+from typing import List
+
+from src.database import get_session
+from users.service import decode_app_token
+from .schemas import AnnouncementCreate, AnnouncementInfo
+from .service import create_announcement, get_announcements
 
 router = APIRouter()
 
 
-@router.post("/announcements/", response_model=schemas.Announcement)
-def create_announcement(
-    announcement: schemas.AnnouncementCreate, db: Session = Depends(get_db)
+@router.post("/createAnnouncement", status_code=201, response_model=AnnouncementInfo)
+def post_announcement(
+    request: AnnouncementCreate,
+    db: Session = Depends(get_session),
+    token: str = Header(..., alias="Authorization"),
 ):
-    db_announcement = models.Alert(
-        content=announcement.content,
-        date_sent=datetime.utcnow()
-    )
-    db.add(db_announcement)
-    db.commit()
-    db.refresh(db_announcement)
+    user_data = decode_app_token(token)
+    if user_data["role"] not in ["admin", "moderator"]:
+        raise HTTPException(status_code=403, detail="Access denied")
+    return create_announcement(db, user_data["id"], request)
 
-    if announcement.group_id:
-        group_members = db.query(user_models.Member).filter(
-            user_models.Member.group_id == announcement.group_id
-        ).all()
 
-        for member in group_members:
-            user = db.query(user_models.User).filter(user_models.User.id == member.user_id).first()
-            if user:
-                send_email_notification(user.email, db_announcement)
-                db.add(models.Recipient(member_id=member.id, alert_id=db_announcement.id))
-                db.commit()
-
-    if announcement.user_id:
-        user = db.query(user_models.User).filter(user_models.User.id == announcement.user_id).first()
-        if user:
-            send_email_notification(user.email, db_announcement)
-            db.add(models.Recipient(member_id=announcement.user_id, alert_id=db_announcement.id))
-            db.commit()
-
-    return db_announcement
+@router.get("/announcements", response_model=List[AnnouncementInfo])
+def fetch_announcements(
+    group_id: int = None,
+    subgroup_id: int = None,
+    db: Session = Depends(get_session),
+):
+    return get_announcements(db, group_id, subgroup_id)
