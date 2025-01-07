@@ -31,9 +31,6 @@ div {
 }
 
 button {
-    width: 75%;
-    height: 5vh;
-    border-radius: 25px;
     font-size: large;
     align-self: center;
 }
@@ -72,7 +69,6 @@ li {
 }
 .users-participation li button {
     height: min-content;
-    border-width: 2px;
 }
 
 input, textarea, select {
@@ -80,7 +76,8 @@ input, textarea, select {
     padding: 10px 20px;
     background-color: #CCE7FF;
     border: solid 5px #000070;
-    border-radius: 25px;
+    border-radius: 15px;
+    outline: none;
 }
 select, .event-info input {
     height: 5vh;
@@ -123,7 +120,9 @@ section + section {
 }
 .message-button button {
     width: fit-content;
+    height: 5vh;
     padding: 0px 15px;
+    border-radius: 25px;
 }
 
 .disabled {

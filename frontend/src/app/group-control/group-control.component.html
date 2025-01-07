@@ -1,39 +1,61 @@
 <app-top-bar [isReturnAvailable]="true"></app-top-bar>
 <app-side-bar [isEditAvailable]="true"></app-side-bar>
 <main>
-    <section>
-        <h2>Group Members</h2>
+    <section class="members-panel">
         <ul>
-            <li *ngFor="let member of group_members">
-              <span>{{ member.email }}</span>
-              <select [(ngModel)]="member.role" (change)="updateMemberRole(member)">
-                <option value="admin">Admin</option>
-                <option value="editor">Editor</option>
-                <option value="viewer">Viewer</option>
-              </select>
-              <button (click)="removeGroupMember(member.id)">Remove</button>
+            <li *ngFor="let member of group_members | filterPipe: filterMode: searchPhrase">
+                <span>{{ member.email }}</span>
+                <div>
+                    <button (click)="addMember(member.id, viewed_subgroup_id)" [style.visibility]="viewed_subgroup_id? 'visible' : 'hidden'">&#11133;</button>
+                    <select [(ngModel)]="member.role" (change)="updateMemberRole(member)">
+                        <option value="Kapelmistrz">{{ "MEMBER.Kapelmistrz" | translate }}</option>
+                        <option value="Koordynator">{{ "MEMBER.Koordynator" | translate }}</option>
+                        <option value="Muzyk">{{ "MEMBER.Muzyk" | translate }}</option>
+                    </select>
+                    <button (click)="removeGroupMember(member.id, group.group_id)"> - </button>
+                </div>
             </li>
         </ul>
-        <div>
-            <input #inviteEmail type="email" placeholder="Invite Email" />
-            <button (click)="inviteMember(inviteEmail.value)">Invite Member</button>
+        <div class="members-inputs">
+            <div>
+                <input type="text" [(ngModel)]="searchPhrase" id="searchPhrase" autocomplete="off">
+                <select [(ngModel)]="filterMode">
+                    <option value="email">{{ "FILTER.EMAIL" | translate }}</option>
+                    <option value="role">{{ "FILTER.ROLE" | translate }}</option>
+                </select>
+                <label for="searchPhrase">&#8981;</label>
+            </div>
+            <div>
+                <input [(ngModel)]="inviteEmail" type="email" placeholder="email" name="email" autocomplete="off"/>
+                <button (click)="inviteMember(inviteEmail)" [disabled]="!inviteEmail">{{ "GROUP.INVITE" | translate }}</button>
+            </div>
         </div>
     </section>
 
-    <section>
-    <h2>Subgroups</h2>
-    <div>
-            <input type="text" [(ngModel)]="newSubgroup.name" name="name"/>
-            <textarea [(ngModel)]="newSubgroup.extra_info" name="description" placeholder="optional"></textarea>
-            <button type="submit" [disabled]="!newSubgroup.name">Create Subgroup</button>
-        </div>
-
+    <section class="subgroups-panel">
         <ul>
-            <li *ngFor="let subgroup of group.subgroups">
-                <h3>{{ subgroup.subgroup_name }}</h3>
-                <p>{{ subgroup.extra_info }}</p>
-                <button (click)="deleteSubgroup(subgroup.subgroup_id)">Delete Subgroup</button>
+            <li *ngFor="let subgroup of group.subgroups" (click)="selectSubgroup(subgroup.subgroup_id)"
+                [ngClass]="{'selected': viewed_subgroup_id === subgroup.subgroup_id}">
+                <span>{{ subgroup.subgroup_name }}</span>
+                <button (click)="deleteSubgroup(subgroup.subgroup_id)"> - </button>
             </li>
         </ul>
+
+        <div class="subgroups-users">
+            <ul>
+                <li *ngFor="let smember of subgroup_members">
+                    <span>{{ smember.email }}</span>
+                    <button (click)="removeGroupMember(smember.id, viewed_subgroup_id)"> - </button>
+                </li>
+            </ul>
+        </div>
+
+        <div class="subgroups-inputs">
+            <label for="name">{{ "OVERLAYS.NAME" | translate }}</label>
+            <input type="text" [(ngModel)]="newSubgroup.name" name="name" id="name" autocomplete="off"/>
+            <label for="description"> {{"EVENT.DESCRIPTION" | translate}}</label>
+            <textarea [(ngModel)]="newSubgroup.extra_info" name="description" placeholder="optional" id="description" maxlength="100"></textarea>
+            <button (click)="createSubgroup()" [disabled]="!newSubgroup.name">{{ "GROUP.SCREATE" | translate }}</button>
+        </div>
     </section>
 </main>

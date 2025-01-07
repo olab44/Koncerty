@@ -11,12 +11,90 @@ main {
 
 section {
     height: 100%;
-    width: 75%;
-    padding: 10px;
+    width: 90%;
+    padding: 0 10px;
     background-color: #CCE7FF;
     border-bottom: solid 5px #000070;
     border-top: solid 5px #000070;
+}
+ul {
+    max-height: 365px;
+}
+li {
+    padding: 0 10px;
+    justify-content: space-between;
+}
+.members-panel {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+}
+.members-panel select {
+    margin: 0 10px;
+    background-color: #CCE7FF;
+    border: solid 5px #000070;
+    outline: none;
+}
 
-    word-break: break-all;
-    white-space: pre-wrap;
+.members-inputs {
+    margin: 16px 0 16px 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+input, textarea {
+    width: 100%;
+    padding: 10px 20px;
+    background-color: #CCE7FF;
+    border: solid 5px #000070;
+    border-radius: 15px;
+    outline: none;
+}
+textarea {
+    flex: 1;
+}
+.members-inputs div {
+    display: flex;
+    gap: 5px;
+}
+.members-inputs select {
+    border-radius: 15px;
+}
+.members-inputs label {
+    font-size: larger;
+    align-self: center;
+}
+
+.subgroups-panel {
+    display: grid;
+    grid-template-columns: 2fr 2fr 1fr;
+}
+.subgroups-users {
+    display: flex;
+    flex-direction: column;
+}
+.subgroups-users ul {
+    flex: 1;
+}
+.subgroups-inputs {
+    margin: 16px 0px 16px 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 10px;
+}
+.subgroups-inputs button {
+    border-radius: 15px;
+    width: fit-content;
+    align-self: center;
+}
+
+input, textarea::placeholder {
+    text-align: center;
+}
+li.selected {
+    background: #000070;
+    color: white;
+}
+li.selected span {
+    color: white;
 }

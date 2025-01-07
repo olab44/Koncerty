@@ -52,7 +52,18 @@
         "SAT": "SOB"
     },
     "GROUP": {
-        "ROLE": "rola w grupie"
+        "ROLE": "rola w grupie",
+        "INVITE": "ZAPROŚ",
+        "SCREATE": "UTWÓRZ PODGRUPĘ"
+    },
+    "MEMBER": {
+        "Kapelmistrz": "KAPELMISTRZ",
+        "Koordynator": "KOORDYNATOR",
+        "Muzyk": "MUZYK"
+    },
+    "FILTER": {
+        "EMAIL": "E-MAIL",
+        "ROLE": "ROLA"
     },
     "EVENT": {
         "NEW": "DODAJ WYDARZENIE",

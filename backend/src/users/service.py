@@ -5,7 +5,7 @@ from google.auth.transport import requests
 from dotenv import load_dotenv
 
 from .models import User, Member
-from .schemas import UserInfo, UsersInfoStructure
+from .schemas import UserInfo
 
 import os
 import jwt
@@ -102,4 +102,4 @@ def get_user_from_group(db: Session, user_email: str, group_id: int):
             )
             user_list.append(user_info)
 
-    return UsersInfoStructure(user_list=user_list)
+    return user_list

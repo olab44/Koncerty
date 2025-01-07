@@ -9,7 +9,7 @@ export class TranslationService {
   private defaultLanguage = 'en'
   private currentLanguage = ''
 
-  constructor(private translate: TranslateService) {
+  constructor(public translate: TranslateService) {
     this.initializeLanguage();
   }
 

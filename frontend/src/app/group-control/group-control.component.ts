@@ -4,14 +4,15 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { TopBarComponent } from '../bars/top-bar/top-bar.component';
 import { SideBarComponent } from '../bars/side-bar/side-bar.component';
-import { GroupInfo, UserInfo } from '../interfaces';
+import { GroupInfo, SubgroupInfo, UserInfo } from '../interfaces';
 import { SessionStateService } from '../services/session-state/session-state.service';
 import { BackendService } from '../services/backend-connection/backend.service';
+import { FilterPipe } from '../pipe/filter.pipe';
 
 @Component({
   selector: 'app-group-control',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule, TopBarComponent, SideBarComponent],
+  imports: [CommonModule, FormsModule, TranslateModule, TopBarComponent, SideBarComponent, FilterPipe],
   templateUrl: './group-control.component.html',
   styleUrl: './group-control.component.css'
 })
@@ -19,24 +20,47 @@ export class GroupControlComponent {
   group!: GroupInfo
   newSubgroup = {parent_group: -1, name: '', extra_info: '', members: []}
   group_members: UserInfo[] = []
+  subgroup_members: UserInfo[] = []
+  viewed_subgroup_id: number = 0
+  searchPhrase: string = ""
+  filterMode: string = "email"
+  inviteEmail: string = ""
+  addEmail: string = ""
 
   constructor(private backend: BackendService, private state: SessionStateService) {
     this.state.currentGroup.subscribe((group) => {
       this.group = group;
       this.newSubgroup.parent_group = group.group_id
-    });
-    this.getUsers()
+    })
+    this.getGroupUsers()
   }
 
-  getUsers() {
+  getGroupUsers() {
     this.backend.getUsers(this.group.group_id).subscribe({
       next: (res) => {
-        console.log(res)
+        this.group_members = res
       },
       error: (e) => {
         console.log(e);
       },
     })
+  }
+  selectSubgroup(group_id: number) {
+    if (this.viewed_subgroup_id === group_id) {
+      this.viewed_subgroup_id = 0
+      this.subgroup_members = []
+    }
+    else {
+      this.viewed_subgroup_id = group_id
+      this.backend.getUsers(group_id).subscribe({
+        next: (res) => {
+          this.subgroup_members = res
+        },
+        error: (e) => {
+          console.log(e);
+        },
+      })
+    }
   }
 
   createSubgroup() {
@@ -62,16 +86,33 @@ export class GroupControlComponent {
     });
   }
 
-  inviteMember(email: string) {
-    // send mail with invitation code
-  }
-
-  removeGroupMember(id: number) {
-    this.group_members = this.group_members.filter((member) => member.id !== id);
-    this.getUsers()
+  removeGroupMember(user_id: number, group_id: number) {
+    this.backend.postRequest('removeMember', {user_id, group_id}).subscribe({
+      next: (res) => {
+        console.log(res)
+      },
+      error: (e) => {
+        console.log(e);
+      },
+    });
   }
 
   updateMemberRole(member: any) {
     console.log(`Updated role for ${member.email}: ${member.role}`);
+  }
+
+  inviteMember(email: string) {
+    // send mail with invitation code
+  }
+
+  addMember(user_id: number, group_id: number) {
+    this.backend.postRequest('addMember', {user_id, group_id}).subscribe({
+      next: (res) => {
+        console.log(res)
+      },
+      error: (e) => {
+        console.log(e);
+      },
+    });
   }
 }

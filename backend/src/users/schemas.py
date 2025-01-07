@@ -12,9 +12,3 @@ class UserInfo(BaseModel):
     username: str
     email: str
     role: str
-
-class UsersInfoStructure(BaseModel):
-    user_list: List[UserInfo]
-
-class GroupsUserRequest(BaseModel):
-    group_id: int
