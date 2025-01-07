@@ -5,8 +5,7 @@ from sqlalchemy.orm import Session
 from database import get_session
 from typing import List
 from .service import manage_loging, register_user, get_user_from_group, change_user_role, remove_member
-from .schemas import GoogleSignInRequest, UserCreate, GroupsUserRequest, ChangeUserRoleRequest, RemoveMemberRequest
->>>>>>> backend/src/users/router.py
+from .schemas import GoogleSignInRequest, UserCreate, UserInfo, GroupsUserRequest, ChangeUserRoleRequest, RemoveMemberRequest
 from users.service import decode_app_token
 
 router = APIRouter()
