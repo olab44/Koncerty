@@ -5,6 +5,7 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
 from users.models import User, Member, File, FileOwnership
+from .schemas import UploadFileRequest, DownloadFileRequest, DeleteFileRequest
 import io
 import os
 
@@ -24,32 +25,31 @@ def establish_drive_connection():
     return service
 
 
-def verify_user_kapelmistrz_role():
-    # TODO sprawdzić uprawnienia usera w grupie
-    # existing_member = db.query(Member).filter(Member.user_id == user.id, Member.group_id == request.parent_group).first()
-
-    # if not existing_member:
-    #     raise HTTPException(status_code=404, detail="User is not a member of the group")
-
-    # if existing_member.role != "Kapelmistrz":
-    #     raise HTTPException(status_code=403, detail="User must have Kapelmistrz role")
-    pass
-
-
-def upload_to_drive(db: Session, email: str, file_path: str, file_name: str):
-    
+def verify_user(db: Session, email: str, parent_group: int) -> User:
     existing_user = db.query(User).filter(User.email == email).first()
     if not existing_user:
         raise HTTPException(status_code=404, detail="User not found")
+    
+    existing_member = db.query(Member).filter(Member.user_id == existing_user.id, Member.group_id == parent_group).first()
+    if not existing_member:
+        raise HTTPException(status_code=404, detail="User is not a member of the group")
 
-    verify_user_kapelmistrz_role()
+    if existing_member.role != "Kapelmistrz":
+        raise HTTPException(status_code=403, detail="User must have Kapelmistrz role")
+    
+    return existing_user
 
-    if db.query(File).filter(File.name == file_name).first():
-        raise HTTPException(status_code=404, detail=f"File {file_name} already exists")
+
+def upload_to_drive(db: Session, email: str, file_path: str, request: UploadFileRequest):
+    
+    user = verify_user(db, email, request.parent_group)
+
+    if db.query(File).filter(File.name == request.file_name).first():
+        raise HTTPException(status_code=404, detail=f"File {request.file_name} already exists")
 
     service = establish_drive_connection()
     file_metadata = {
-        'name': file_name,
+        'name': request.file_name,
         'parents': [FOLDER_ID]
     }
 
@@ -60,7 +60,7 @@ def upload_to_drive(db: Session, email: str, file_path: str, file_name: str):
     ).execute()
 
     new_file = File(
-        name = file_name,
+        name = request.file_name,
         google_drive_id = file['id']
     )
 
@@ -68,19 +68,16 @@ def upload_to_drive(db: Session, email: str, file_path: str, file_name: str):
     db.commit()
     db.refresh(new_file)
 
-    # print(f"Uploaded file: {file_name} File ID: {file['id']}")
     return new_file
 
 
-def download_from_drive(db: Session, email: str, file_name: str):
+def download_from_drive(db: Session, email: str, request: DownloadFileRequest):
 
-    existing_user = db.query(User).filter(User.email == email).first()
-    if not existing_user:
-        raise HTTPException(status_code=404, detail="User not found")
+    verify_user(db, email, request.parent_group)
     
-    file = db.query(File).filter(File.name == file_name).first()
+    file = db.query(File).filter(File.id == request.file_id).first()
     if not file:
-        raise HTTPException(status_code=404, detail=f"File {file_name} not found")
+        raise HTTPException(status_code=404, detail=f"File {request.file_id} not found")
 
     service = establish_drive_connection()
     request = service.files().get_media(fileId=file.google_drive_id)
@@ -92,24 +89,22 @@ def download_from_drive(db: Session, email: str, file_name: str):
         status, done = downloader.next_chunk()
     
     fh.seek(0)
-    file_path = os.path.join('/files_storage', file_name)
+    file_path = os.path.join('/files_storage', file.name)
 
     with open(file_path, 'wb') as f:
         f.write(fh.read())
         f.close()
 
-    return file_path
+    return file, file_path
 
 
-def delete_from_drive(db: Session, email: str, file_name: str):
+def delete_from_drive(db: Session, email: str, request: DeleteFileRequest):
 
-    existing_user = db.query(User).filter(User.email == email).first()
-    if not existing_user:
-        raise HTTPException(status_code=404, detail="User not found")
+    verify_user(db, email, request.parent_group)
     
-    file = db.query(File).filter(File.name == file_name).first()
+    file = db.query(File).filter(File.id == request.file_id).first()
     if not file:
-        raise HTTPException(status_code=404, detail=f"File {file_name} not found")
+        raise HTTPException(status_code=404, detail=f"File {request.file_id} not found")
 
     service = establish_drive_connection()
     service.files().delete(fileId=file.google_drive_id).execute()
@@ -117,4 +112,4 @@ def delete_from_drive(db: Session, email: str, file_name: str):
     db.delete(file)
     db.commit()
 
-
+    return file

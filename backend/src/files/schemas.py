@@ -1,13 +1,36 @@
 from pydantic import BaseModel
 from typing import List, Optional
 
+
+class FileModel(BaseModel):
+    id: int
+    name: str
+    google_drive_id: Optional[str]
+    composition_id: Optional[int]
+
+    class Config:
+        from_attributes = True
+
+
 class UploadFileRequest(BaseModel):
-    file_id: str
+    file_name: str
+    parent_group: int
 
 
 class DownloadFileRequest(BaseModel):
-    file_path: str
+    file_id: int
+    parent_group: int
 
 
 class DeleteFileRequest(BaseModel):
-    deleted: str
+    file_id: int
+    parent_group: int
+
+
+class DownloadFileResponse(BaseModel):
+    downloaded_file: FileModel
+    file_path: str
+
+    class Config:
+        arbitrary_types_allowed = True
+
