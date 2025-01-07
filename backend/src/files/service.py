@@ -6,6 +6,7 @@ from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
 from users.models import User, Member, File, FileOwnership
 from .schemas import UploadFileRequest, DownloadFileRequest, DeleteFileRequest
+from .schemas import FileToUserRequest, FileToSubgroupRequest, FileToCompositionRequest
 import io
 import os
 
@@ -102,7 +103,7 @@ def delete_from_drive(db: Session, email: str, request: DeleteFileRequest):
 
     verify_user(db, email, request.parent_group)
     
-    file = db.query(File).filter(File.id == request.file_id).first()
+    file = db.query(File).filter(File.id == request.file_id)
     if not file:
         raise HTTPException(status_code=404, detail=f"File {request.file_id} not found")
 
@@ -113,3 +114,70 @@ def delete_from_drive(db: Session, email: str, request: DeleteFileRequest):
     db.commit()
 
     return file
+
+
+def create_file_ownership(db: Session, user_id: int, file_id: int, parent_group: int) -> FileOwnership:
+    if not db.query(File).filter(File.id == file_id).first():
+        raise HTTPException(status_code=404, detail=f"File {file_id} not found")
+
+    existing_member = db.query(Member).filter(Member.user_id == user_id, Member.group_id == parent_group).first()
+    if not existing_member:
+        raise HTTPException(status_code=404, detail="User is not a member of the group")
+
+    new_file_ownership = FileOwnership(
+        user_id = user_id,
+        file_id = file_id
+    )
+
+    return new_file_ownership
+
+
+def assign_file_to_user(db: Session, email: str, request: FileToUserRequest):
+
+    verify_user(db, email, request.parent_group)
+    
+    new_file_ownership = create_file_ownership(db, request.user_id, request.file_id, request.parent_group)
+
+    if not db.query(FileOwnership).filter(FileOwnership.group_id == request.group_id, FileOwnership.user_id == request.user_id):
+        db.add(new_file_ownership)
+        db.commit()
+        db.refresh(new_file_ownership)
+
+    return new_file_ownership
+
+
+def assign_file_to_subgroup(db: Session, email: str, request: FileToSubgroupRequest):
+
+    verify_user(db, email, request.group_id)
+    
+    existing_members = db.query(Member).filter(Member.group_id == request.group_id)
+    file_ownerships = []
+    for member in existing_members:
+        new_file_ownership = create_file_ownership(db, member.id, request.file_id, request.group_id)
+        file_ownerships.append(new_file_ownership)
+        if not db.query(FileOwnership).filter(FileOwnership.group_id == request.group_id, FileOwnership.user_id == request.user_id):
+            db.add(new_file_ownership)
+
+    db.commit()
+
+    for ownership in file_ownerships:
+        db.refresh(ownership)
+
+    return file_ownerships
+
+
+def assign_file_to_composition(db: Session, email: str, request: FileToCompositionRequest):
+
+    verify_user(db, email, request.parent_group)
+    
+    file = db.query(File).filter(File.id == request.file_id)
+    if not file:
+        raise HTTPException(status_code=404, detail=f"File {request.file_id} not found")
+    
+    file.composition_id = request.composition_id
+    db.commit()
+    db.refresh(file)
+
+    return file
+
+

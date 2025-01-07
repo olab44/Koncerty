@@ -3,7 +3,8 @@ from fastapi import Depends, HTTPException, Header
 from sqlalchemy.orm import Session
 
 from database import get_session
-from .service import upload_to_drive, download_from_drive, delete_from_drive
+from .service import upload_to_drive, download_from_drive, delete_from_drive, assign_file_to_user
+from .service import assign_file_to_subgroup, assign_file_to_composition
 from .schemas import * 
 from users.models import User
 from users.service import decode_app_token
@@ -47,29 +48,42 @@ def delete_file_from_drive(request: DeleteFileRequest, db: Session = Depends(get
     return { "deleted_file": file }
 
 
-# @router.post("/assignFileToUser", status_code=201)
-# def assign_to_user(file_name: str, user_id: int, db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
-#     user_data = decode_app_token(token)
+@router.post("/assignFileToUser", status_code=201)
+def assign_to_user(request: FileToUserRequest, db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
+    user_data = decode_app_token(token)
 
-#     assign_file_to_user(db, user_data.get("email"), file_name, user_id)
+    file_ownership = assign_file_to_user(db, user_data.get("email"), request)
 
-#     return {
-#         "deleted": file_name
-#     }
-
-
-# @router.post("/assignFileToSubgroup", status_code=201)
-# def assign_file_to_subgroup(file_name: str, group_id: int, db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
-#     user_data = decode_app_token(token)
-
-#     delete_from_drive(db, user_data.get("email"), file_name)
-
-#     return {
-#         "deleted": file_name
-#     }
+    return {
+        "assigned": file_ownership
+    }
 
 
-# assign file to composition
+@router.post("/assignFileToSubgroup", status_code=201)
+def assign_to_subgroup(request: FileToSubgroupRequest, db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
+    user_data = decode_app_token(token)
+
+    file_ownerships = assign_file_to_subgroup(db, user_data.get("email"), request)
+
+    response_data = [FileOwnershipModel.from_orm(ownership) for ownership in file_ownerships]
+
+    return {
+        "assigned": response_data
+    }
+
+
+@router.post("/assignFileToComposition", status_code=201)
+def assign_to_user(request: FileToUserRequest, db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
+    user_data = decode_app_token(token)
+
+    file = assign_file_to_composition(db, user_data.get("email"), request)
+
+    return {
+        "assigned": file
+    }
+
+
+
 
 # get user files
 

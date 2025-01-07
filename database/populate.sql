@@ -91,11 +91,11 @@ BEGIN
     RETURNING id INTO member_id4;
 
     INSERT INTO members (user_id, group_id, role)
-    VALUES (user_id4, group_id2, 'Kapelmistrz')
+    VALUES (user_id1, group_id2, 'Kapelmistrz')
     RETURNING id INTO member_id5;
 
     INSERT INTO members (user_id, group_id, role)
-    VALUES (user_id1, group_id2, 'Muzyk')
+    VALUES (user_id4, group_id2, 'Muzyk')
     RETURNING id INTO member_id6;
     -- widomosc 1 do grupy 1, wiadomosc 2 do grupy 2
     INSERT INTO recipients (member_id, alert_id)
