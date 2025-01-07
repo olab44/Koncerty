@@ -8,7 +8,9 @@ class User(Base):
     id = Column(BigInteger, primary_key=True, index=True)
     username = Column(String(50), unique=True, nullable=False)
     email = Column(String(50), nullable=False)
+
     members = relationship("Member", back_populates="user")
+    file_ownerships = relationship("FileOwnership", back_populates="user")
 
 
 class Group(Base):
@@ -87,4 +89,27 @@ class Composition(Base):
     author = Column(String(40), nullable=True)
 
     set_lists = relationship("SetList", back_populates="composition")
+    files = relationship("File", back_populates="composition")
 
+
+class File(Base):
+    __tablename__ = "files"
+
+    id = Column(BigInteger, primary_key=True, index=True)
+    name = Column(String(50), nullable=False)
+    google_drive_id = Column(String(50), nullable=True)
+    composition_id = Column(BigInteger, ForeignKey("compositions.id"), nullable=True)
+
+    composition = relationship("Composition", back_populates="files", lazy="joined")
+    ownerships = relationship("FileOwnership", back_populates="file")
+
+
+class FileOwnership(Base):
+    __tablename__ = "file_ownerships"
+
+    id = Column(BigInteger, primary_key=True, index=True)
+    user_id = Column(BigInteger, ForeignKey("users.id"), nullable=False)
+    file_id = Column(BigInteger, ForeignKey("files.id"), nullable=False)
+
+    user = relationship("User", back_populates="file_ownerships")
+    file = relationship("File", back_populates="ownerships")
