@@ -101,7 +101,9 @@ export class GroupControlComponent {
   updateMemberRole(member: UserInfo) {
     console.log(`Updated role for ${member.email}: ${member.role}`);
     this.backend.postRequest('changeRole', {group_id: this.group.group_id, user_email: member.email,  new_role: member.role}).subscribe({
-      next: (res) => {},
+      next: (res) => {
+
+      },
       error: (e) => {
         if (e.error.detail === "Cannot change role. At least one 'Kapelmistrz' roles must remain in the group.") {member.role = "Kapelmistrz"}
         console.log(e);
