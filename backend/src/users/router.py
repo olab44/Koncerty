@@ -11,7 +11,6 @@ from users.service import get_user_data
 router = APIRouter()
 
 
-
 @router.post("/google-sign-in")
 def login(request: GoogleSignInRequest, db: Session = Depends(get_session)):
     try:

@@ -11,8 +11,6 @@ COPY ./tests /code/tests
 
 COPY ./service_account.json .
 
-# COPY ./files_storage /files_storage
-
 # ENV PYTHONPATH=/code/src
 ENV PYTHONPATH=/code/src:$PYTHONPATH
 

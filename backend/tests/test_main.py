@@ -24,10 +24,8 @@ def test_read_root(client):
 
 
 def test_logging_middleware(client, capsys):
-    # Wysyłamy żądanie
     client.get("/")
     
-    # Sprawdzamy, czy logowanie zostało wywołane
     captured = capsys.readouterr()
     assert "Incoming request" in captured.out
 
