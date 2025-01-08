@@ -4,7 +4,7 @@ from google.oauth2 import id_token
 from google.auth.transport import requests
 from dotenv import load_dotenv
 
-from .models import User, Member
+from .models import User, Member, Group
 from .schemas import UserInfo, ChangeUserRoleRequest, RemoveMemberRequest
 
 import os
@@ -73,17 +73,16 @@ def find_user_by_email(db: Session, user_email: str):
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
-def check_num_of_admins(db, changed_member, group_id):
+def enough_admins(db, group_id):
+    """zwroc False dla niemozliwego usuniecia"""
     kapelmistrz_count = db.query(Member).filter(
         Member.group_id == group_id,
         Member.role == "Kapelmistrz"
     ).count()
 
     if kapelmistrz_count <= 1:
-        raise HTTPException(
-            status_code=400,
-            detail="Cannot change role. At least one 'Kapelmistrz' roles must remain in the group."
-        )
+        return False
+    return True
 
 
 def register_user(db: Session, user_email: str, username: str):
@@ -145,8 +144,9 @@ def change_user_role(db: Session, user_email: str, request: ChangeUserRoleReques
         raise HTTPException(status_code=404, detail="User must be a member of the group")
 
     if request.new_role != "Kapelmistrz" and changed_member.role == "Kapelmistrz":
-        check_num_of_admins(db, changed_member, request.group_id)
-    
+        if not enough_admins(db, request.group_id):
+            raise HTTPException(status_code=403, detail="group must have enough Kapelmistrz")
+        
     changed_member.role = request.new_role
     db.commit()
     db.refresh(changed_member)
@@ -157,26 +157,54 @@ def change_user_role(db: Session, user_email: str, request: ChangeUserRoleReques
         "new_role": changed_member.role
     }
 
-def remove_member(db: Session, user_email: str, request: RemoveMemberRequest):
+
+def remove_member_all_subs(db: Session, user_email: str, request: RemoveMemberRequest):
     requesting_user = find_user_by_email(db, user_email)
 
-    member = db.query(Member).filter(Member.user_id == requesting_user.id, Member.group_id == request.group_id).first()
+    member = db.query(Member).filter(
+        Member.user_id == requesting_user.id,
+        Member.group_id == request.group_id
+    ).first()
+
     if not member:
         raise HTTPException(status_code=404, detail="User is not a member of the group")
 
     if member.role != "Kapelmistrz":
         raise HTTPException(status_code=403, detail="User must have Kapelmistrz role")
 
-    removed_user = find_user_by_email(db, request.user_email)
-    removed_member = db.query(Member).filter(Member.user_id == removed_user.id, Member.group_id == request.group_id).first()
+    removed_from = []
+    failed = []
 
-    if removed_member.role == "Kapelmistrz":
-        check_num_of_admins(db, removed_member, request.group_id)
+    main_group = db.query(Group).filter(Group.id == request.group_id).first()
+    subgroups = db.query(Group).filter(Group.parent_group == request.group_id).all()
+    removed_user = db.query(User).filter(User.email == request.user_email).first()
 
-    db.delete(removed_member)
+    if not removed_user:
+        raise HTTPException(status_code=404, detail="User to be removed not found")
+
+    removed_member = db.query(Member).filter(
+        Member.user_id == removed_user.id,
+        Member.group_id == main_group.id
+    ).first()
+
+    if not removed_member or (not enough_admins(db, main_group.id) and removed_member.role == "Kapelmistrz"):
+        failed.append(main_group.id)
+    else:
+        db.delete(removed_member)
+        removed_from.append(main_group.id)
+
+        for sub in subgroups:
+            removed_member = db.query(Member).filter(
+                Member.user_id == removed_user.id,
+                Member.group_id == sub.id
+            ).first()
+
+            if not removed_member:
+                failed.append(sub.id)
+            else:
+                db.delete(removed_member)
+                removed_from.append(sub.id)
+
     db.commit()
 
-    return {
-        "user_id": removed_user.id,
-        "group_id": request.group_id
-    }
+    return {"removed": removed_from, "failed": failed}
