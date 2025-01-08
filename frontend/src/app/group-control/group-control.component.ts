@@ -65,8 +65,15 @@ export class GroupControlComponent {
 
   createSubgroup() {
     this.backend.postRequest('groups/createSubgroup', this.newSubgroup).subscribe({
-      next: (res) => {
-        console.log(res)
+      next: (res: any) => {
+        let new_subgroup: SubgroupInfo = {
+          subgroup_id: res.id,
+          subgroup_name: res.name,
+          extra_info: res.extra_info,
+          inv_code: res.invitation_code,
+          subgroups: []
+        }
+        this.group.subgroups?.push(new_subgroup)
       },
       error: (e) => {
         console.log(e);
@@ -75,10 +82,9 @@ export class GroupControlComponent {
   }
 
   deleteSubgroup(id: number) {
-    this.group.subgroups = this.group.subgroups?.filter((subgroup) => subgroup.subgroup_id !== id)
     this.backend.postRequest('groups/deleteSubgroup', {group_id: id}).subscribe({
       next: (res) => {
-        console.log(res)
+        this.group.subgroups = this.group.subgroups?.filter((subgroup) => subgroup.subgroup_id !== id)
       },
       error: (e) => {
         console.log(e);
@@ -87,10 +93,12 @@ export class GroupControlComponent {
   }
 
   removeGroupMember(group_id: number, user_email: string) {
-    this.backend.deleteRequest('removeMember', {group_id, user_email}).subscribe({
-      next: (res) => {
-        if (group_id === this.group.group_id) {this.group_members = this.group_members.filter(member => member.email !== user_email)}
-        else {this.subgroup_members = this.group_members.filter(member => member.email !== user_email)}
+    this.backend.deleteRequest('removeMember', {group_id, user_email, parent_group: this.group.group_id}).subscribe({
+      next: (res: any) => {
+        if (!res.failed.includes(group_id)) {
+          if (group_id === this.group.group_id) {this.group_members = this.group_members.filter(member => member.email !== user_email)}
+          else {this.subgroup_members = this.group_members.filter(member => member.email !== user_email)}
+        }
       },
       error: (e) => {
         console.log(e);
@@ -99,11 +107,12 @@ export class GroupControlComponent {
   }
 
   updateMemberRole(member: UserInfo) {
-    console.log(`Updated role for ${member.email}: ${member.role}`);
-    this.backend.postRequest('changeRole', {group_id: this.group.group_id, user_email: member.email,  new_role: member.role}).subscribe({
-      next: (res) => {},
+    const request = {group_id: this.group.group_id, user_email: member.email, new_role: member.role, parent_group: this.group.group_id}
+    this.backend.postRequest('changeRole', request).subscribe({
+      next: (res) => {
+      },
       error: (e) => {
-        if (e.error.detail === "Cannot change role. At least one 'Kapelmistrz' roles must remain in the group.") {member.role = "Kapelmistrz"}
+        if (e.error.detail === "group must have enough Kapelmistrz") {member.role = "Kapelmistrz"}
         console.log(e);
       },
     });
@@ -117,8 +126,7 @@ export class GroupControlComponent {
     const user_id = user.id
     this.backend.postRequest('addMember', {user_id, group_id}).subscribe({
       next: (res) => {
-        if (group_id === this.group.group_id) {this.group_members.push(user)}
-        else {this.subgroup_members.push(user)}
+        this.subgroup_members.push(user)
       },
       error: (e) => {
         console.log(e);

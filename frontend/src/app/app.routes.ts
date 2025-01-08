@@ -18,7 +18,7 @@ export const routes: Routes = [
     { path: 'group/calendar', component: EventCalendarComponent, canActivate: [authGuard] },
     { path: 'group/event', component: EventDetailsComponent, canActivate: [authGuard] },
     { path: 'group/forum', component: MessageForumComponent, canActivate: [authGuard] },
-    { path: 'group/control', component: GroupControlComponent, canActivate: [authGuard] },
+    { path: 'group/control', component: GroupControlComponent, canActivate: [authGuard], data: { role: 'Kapelmistrz' } },
     { path: '', component: SignInComponent },
     { path: '**', redirectTo: 'home' }
 ]
