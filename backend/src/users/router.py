@@ -4,7 +4,7 @@ from fastapi import Depends, HTTPException, Header
 from sqlalchemy.orm import Session
 from database import get_session
 from typing import List
-from .service import manage_loging, register_user, get_user_from_group, change_user_role, remove_member
+from .service import manage_loging, register_user, get_user_from_group, change_user_role, remove_member_all_subs
 from .schemas import GoogleSignInRequest, UserCreate, UserInfo, GroupsUserRequest, ChangeUserRoleRequest, RemoveMemberRequest
 from users.service import get_user_data
 
@@ -48,6 +48,6 @@ def change_role(request: ChangeUserRoleRequest, db: Session = Depends(get_sessio
 @router.delete("/removeMember", status_code=200)
 def rm_member(request: RemoveMemberRequest, db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
     user_data = get_user_data(token)
-    result = remove_member(db, user_data.get("email"), request)
+    result = remove_member_all_subs(db, user_data.get("email"), request)
     
     return result
