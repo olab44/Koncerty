@@ -56,3 +56,12 @@ class GroupInfo(BaseModel):
     name: str
     extra_info: str
     inv_code: Optional[str]
+
+class RemoveGroupRequest(BaseModel):
+    parent_group: int
+    group_id: int
+
+class DeleteGroupResponse(BaseModel):
+    id: int
+    name: str
+    extra_info: str

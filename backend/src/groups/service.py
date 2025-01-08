@@ -2,8 +2,9 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from typing import List
 from users.models import User, Group, Member
-from .schemas import SubgroupSchema, CreateGroupRequest, JoinGroupRequest, CreateSubgroupRequest, EditGroupRequest, GroupInfo
-
+from .schemas import (SubgroupSchema, CreateGroupRequest, JoinGroupRequest, CreateSubgroupRequest,
+                       EditGroupRequest, GroupInfo, RemoveGroupRequest, DeleteGroupResponse
+)
 import string
 import secrets
 
@@ -222,3 +223,39 @@ def get_subgroups(db: Session, user_email: str, group_id: int):
         group_list.append(subgroup)
 
     return group_list
+
+
+def remove_subgroup(db: Session, user_email: str, request: RemoveGroupRequest):
+    user = db.query(User).filter(User.email == user_email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    existing_member = db.query(Member).filter(Member.user_id == user.id, Member.group_id == request.parent_group).first()
+
+    if not existing_member:
+        raise HTTPException(status_code=404, detail="User is not a member of the group")
+
+    if existing_member.role == "Muzyk":
+        raise HTTPException(status_code=403, detail="User must have Kapelmistrz or Koordynator role")
+
+    removed_sub = db.query(Group).filter(Group.id == request.group_id).first()
+    if not removed_sub:
+        raise HTTPException(status_code=404, detail="Subgroup not found")
+    
+    if removed_sub.parent_group != request.parent_group:
+        raise HTTPException(status_code=403, detail="Subgroup has wrong parent group")
+    
+    removed_members = db.query(Member).filter(Member.group_id == request.group_id).all()
+
+    for member in removed_members:
+        db.delete(member)
+    db.commit()
+
+    db.delete(removed_sub)
+    db.commit()
+
+    return DeleteGroupResponse(
+        id=removed_sub.id,
+        name=removed_sub.name,
+        extra_info=removed_sub.extra_info
+    )
