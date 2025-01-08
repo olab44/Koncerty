@@ -103,9 +103,6 @@ def get_user_from_group(db: Session, user_email: str, group_id: int):
 
     members = db.query(Member).filter(Member.group_id == group_id).all()
 
-    if not members:
-        raise HTTPException(status_code=404, detail="Group not found or has no members")
-
     user_list = []
     for member in members:
         user = db.query(User).filter(User.id == member.user_id).first()
@@ -139,7 +136,7 @@ def change_user_role(db: Session, user_email: str, request: ChangeUserRoleReques
     if request.new_role != "Kapelmistrz" and changed_member.role == "Kapelmistrz":
         if not enough_admins(db, request.group_id):
             raise HTTPException(status_code=403, detail="group must have enough Kapelmistrz")
-        
+
     changed_member.role = request.new_role
     db.commit()
     db.refresh(changed_member)

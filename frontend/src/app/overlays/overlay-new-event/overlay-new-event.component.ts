@@ -17,6 +17,7 @@ export class OverlayNewEventComponent {
   @Output() close = new EventEmitter<void>()
   @Output() refresh = new EventEmitter<void>()
   group!: GroupInfo
+  subgroups: any[] = []
 
   event: EventCreate = {
     name: '',
@@ -36,6 +37,10 @@ export class OverlayNewEventComponent {
       this.group = group;
       this.event.parent_group = group.group_id
     });
+    this.backend.getSubgroups(this.group.group_id).subscribe({
+        next: (res) => { this.subgroups = res },
+        error: (e) => { console.log(e) },
+    })
   }
 
   compositions = []

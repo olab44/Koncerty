@@ -34,10 +34,10 @@
 
     <section class="subgroups-panel">
         <ul>
-            <li *ngFor="let subgroup of group.subgroups" (click)="selectSubgroup(subgroup.subgroup_id)"
-                [ngClass]="{'selected': viewed_subgroup_id === subgroup.subgroup_id}">
-                <p>{{ subgroup.subgroup_name }}</p>
-                <button (click)="deleteSubgroup(subgroup.subgroup_id)"> - </button>
+            <li *ngFor="let sgroup of subgroups" (click)="selectSubgroup(sgroup.id)"
+                [ngClass]="{'selected': viewed_subgroup_id === sgroup.id}">
+                <p>{{ sgroup.name }}</p>
+                <button (click)="deleteSubgroup(sgroup.id)"> - </button>
             </li>
         </ul>
 

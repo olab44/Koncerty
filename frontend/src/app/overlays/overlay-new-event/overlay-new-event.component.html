@@ -35,9 +35,9 @@
         </section>
         <section [class.disabled]="allChecked">
             <ul>
-                <li *ngFor="let sgroup of group.subgroups">
-                    <input type="checkbox" [value]="sgroup.subgroup_id" (change)="onGroupCheckboxChange($event, sgroup.subgroup_id)">
-                    <span>{{sgroup.subgroup_name}}</span>
+                <li *ngFor="let sgroup of subgroups">
+                    <input type="checkbox" [value]="sgroup.id" (change)="onGroupCheckboxChange($event, sgroup.id)">
+                    <span>{{sgroup.name}}</span>
                 </li>
             </ul>
         </section>
