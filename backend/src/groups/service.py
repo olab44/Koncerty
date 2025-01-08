@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from typing import List
 from users.models import User, Group, Member
-from .schemas import SubgroupSchema, CreateGroupRequest, JoinGroupRequest, CreateSubgroupRequest, EditGroupRequest
+from .schemas import SubgroupSchema, CreateGroupRequest, JoinGroupRequest, CreateSubgroupRequest, EditGroupRequest, GroupInfo
 
 import string
 import secrets
@@ -189,3 +189,36 @@ def edit_group(db: Session, user_email: User, request: EditGroupRequest):
         "name": group.name,
         "extra_info": group.extra_info
     }
+
+
+def get_subgroups(db: Session, user_email: str, group_id: int):
+    user = db.query(User).filter(User.email == user_email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    existing_member = db.query(Member).filter(Member.user_id == user.id, Member.group_id == group_id).first()
+
+    if not existing_member:
+        raise HTTPException(status_code=404, detail="User is not a member of the group")
+
+    if existing_member.role != "Kapelmistrz":
+        raise HTTPException(status_code=403, detail="User must have Kapelmistrz role")
+
+    subgroups = db.query(Group).filter(Group.parent_group == group_id).all()
+
+    if not subgroups:
+        raise HTTPException(status_code=404, detail="Group not found or has no members")
+
+    group_list = []
+    for sub in subgroups:
+        subgroup = GroupInfo(
+            id=sub.id,
+            parent_group=sub.parent_group,
+            name=sub.name,
+            extra_info=sub.extra_info,
+            inv_code=sub.invitation_code
+        )
+        
+        group_list.append(subgroup)
+
+    return group_list

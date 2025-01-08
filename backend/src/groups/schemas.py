@@ -49,3 +49,10 @@ class EditGroupRequest(BaseModel):
     name: str
     extra_info: str
     parent_group: int
+
+class GroupInfo(BaseModel):
+    id: int
+    parent_group: int
+    name: str
+    extra_info: str
+    inv_code: Optional[str]

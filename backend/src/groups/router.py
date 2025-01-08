@@ -1,10 +1,11 @@
 from fastapi import APIRouter
 from fastapi import Depends, HTTPException, Header
 from sqlalchemy.orm import Session
+from typing import List
 
 from database import get_session
-from .service import get_user_group_structure, register_group, user_to_group, register_subgroup, edit_group
-from .schemas import UserGroupStructureSchema, CreateGroupRequest, JoinGroupRequest, CreateSubgroupRequest, EditGroupRequest
+from .service import get_user_group_structure, register_group, user_to_group, register_subgroup, edit_group, get_subgroups
+from .schemas import UserGroupStructureSchema, CreateGroupRequest, JoinGroupRequest, CreateSubgroupRequest, EditGroupRequest, GroupInfo
 from users.models import User
 from users.service import get_user_data
 
@@ -58,3 +59,9 @@ def change_group(request: EditGroupRequest, db: Session = Depends(get_session), 
     user_data = get_user_data(token)
     edited_group = edit_group(db, user_data.get("email"), request)
     return edited_group
+
+@router.get("/findSubgroups", response_model=List[GroupInfo])
+def get_subs(group_id: int, db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
+    user_data = get_user_data(token)
+    result = get_subgroups(db, user_data.get("email"), group_id)
+    return result
