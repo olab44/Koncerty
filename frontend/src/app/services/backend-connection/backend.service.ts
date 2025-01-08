@@ -67,4 +67,13 @@ export class BackendService {
         })
       )
   }
+
+  deleteRequest(endpoint: string, body: any) {
+    return this.http.request('DELETE', `${this.apiURL}/${endpoint}`, { body: body, headers: this.getHeaders() })
+      .pipe(
+        catchError((error) => {
+          return throwError(() => error);
+        })
+      )
+  }
 }
