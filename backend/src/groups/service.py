@@ -201,8 +201,8 @@ def get_subgroups(db: Session, user_email: str, group_id: int):
     if not existing_member:
         raise HTTPException(status_code=404, detail="User is not a member of the group")
 
-    if existing_member.role != "Kapelmistrz":
-        raise HTTPException(status_code=403, detail="User must have Kapelmistrz role")
+    if existing_member.role == "Muzyk":
+        raise HTTPException(status_code=403, detail="User must have Kapelmistrz or Koordynator role")
 
     subgroups = db.query(Group).filter(Group.parent_group == group_id).all()
 
