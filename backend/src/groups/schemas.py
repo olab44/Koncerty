@@ -48,3 +48,4 @@ class EditGroupRequest(BaseModel):
     group_id: int
     name: str
     extra_info: str
+    parent_group: int

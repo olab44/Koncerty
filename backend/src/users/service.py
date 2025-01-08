@@ -101,13 +101,6 @@ def get_user_from_group(db: Session, user_email: str, group_id: int):
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    member = db.query(Member).filter(Member.user_id == user.id, Member.group_id == group_id).first()
-    if not member:
-        raise HTTPException(status_code=404, detail="User is not a member of the group")
-
-    if member.role == "Muzyk":
-        raise HTTPException(status_code=403, detail="User must have Kapelmistrz or Koordynator role")
-
     members = db.query(Member).filter(Member.group_id == group_id).all()
 
     if not members:
@@ -131,7 +124,7 @@ def get_user_from_group(db: Session, user_email: str, group_id: int):
 def change_user_role(db: Session, user_email: str, request: ChangeUserRoleRequest):
     requesting_user = find_user_by_email(db, user_email)
 
-    member = db.query(Member).filter(Member.user_id == requesting_user.id, Member.group_id == request.group_id).first()
+    member = db.query(Member).filter(Member.user_id == requesting_user.id, Member.group_id == request.parent_group).first()
     if not member:
         raise HTTPException(status_code=404, detail="User is not a member of the group")
 
@@ -163,7 +156,7 @@ def remove_member_all_subs(db: Session, user_email: str, request: RemoveMemberRe
 
     member = db.query(Member).filter(
         Member.user_id == requesting_user.id,
-        Member.group_id == request.group_id
+        Member.group_id == request.parent_group
     ).first()
 
     if not member:

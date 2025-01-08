@@ -152,12 +152,12 @@ def register_subgroup(db: Session, user_email: User, request: CreateSubgroupRequ
     db.commit()
     db.refresh(new_group)
 
-    db.add(Member(user_id=existing_user.id, group_id=new_group.id, role="Kapelmistrz"))
+    db.add(Member(user_id=existing_user.id, group_id=new_group.id, role=None))
     
     for id in request.members:
         duplicated = db.query(Member).filter(Member.user_id == id, Member.group_id == new_group.id).first()
         if not duplicated:
-            db.add(Member(user_id=id, group_id=new_group.id, role="Muzyk"))
+            db.add(Member(user_id=id, group_id=new_group.id, role=None))
     
     db.commit() 
     return new_group
@@ -168,7 +168,7 @@ def edit_group(db: Session, user_email: User, request: EditGroupRequest):
     if not existing_user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    existing_member = db.query(Member).filter(Member.user_id == existing_user.id, Member.group_id == request.group_id).first()
+    existing_member = db.query(Member).filter(Member.user_id == existing_user.id, Member.group_id == request.parent_group).first()
 
     if not existing_member:
         raise HTTPException(status_code=404, detail="User is not a member of the group")
