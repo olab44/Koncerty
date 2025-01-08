@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, File, UploadFile, Form
 from fastapi import Depends, HTTPException, Header
 from sqlalchemy.orm import Session
 
@@ -13,12 +13,24 @@ from users.service import decode_app_token
 router = APIRouter()
 
 @router.post("/uploadFile", status_code=201)
-def upload_file_to_drive(request: UploadFileRequest, db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
+def upload_file_to_drive(
+    file_name: str = Form(...),
+    parent_group: int = Form(...),
+    file: UploadFile = File(...),
+    db: Session = Depends(get_session),
+    token: str = Header(..., alias="Authorization")
+):
     user_data = decode_app_token(token)
     
-    file_path = "/files_storage/test_photo.jpg"
+    # file_path = "/files_storage/test_photo.jpg"
 
-    uploaded_file = upload_to_drive(db, user_data.get("email"), file_path, request)
+    uploaded_file = upload_to_drive(
+        db,
+        user_data.get("email"),
+        file.file,  # Strumień pliku
+        file_name,
+        parent_group
+    )
     if not uploaded_file:
         raise HTTPException(status_code=404, detail="Error uploading file")
     return { "created_file": uploaded_file }

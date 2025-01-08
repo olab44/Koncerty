@@ -3,7 +3,7 @@ from fastapi import HTTPException
 from typing import List
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
-from googleapiclient.http import MediaIoBaseDownload
+from googleapiclient.http import MediaIoBaseDownload, MediaIoBaseUpload
 from users.models import User, Member, File, FileOwnership
 from .schemas import UploadFileRequest, DownloadFileRequest, DeleteFileRequest
 from .schemas import FileToUserRequest, FileToSubgroupRequest, FileToCompositionRequest
@@ -42,33 +42,38 @@ def verify_user(db: Session, email: str, parent_group: int) -> User:
     return existing_user
 
 
-def upload_to_drive(db: Session, email: str, file_path: str, request: UploadFileRequest):
+def upload_to_drive(db: Session, email: str, file_stream, file_name, parent_group):
     
-    user = verify_user(db, email, request.parent_group)
+    user = verify_user(db, email, parent_group)
 
-    if db.query(File).filter(File.name == request.file_name).first():
-        raise HTTPException(status_code=404, detail=f"File {request.file_name} already exists")
+    if db.query(File).filter(File.name == file_name).first():
+        raise HTTPException(status_code=404, detail=f"File {file_name} already exists")
 
     service = establish_drive_connection()
     file_metadata = {
-        'name': request.file_name,
+        'name': file_name,
         'parents': [FOLDER_ID]
     }
 
+    media = MediaIoBaseUpload(file_stream, mimetype="application/octet-stream")
+
+    # Przesłanie pliku do Google Drive
     file = service.files().create(
         body=file_metadata,
-        media_body=file_path,
+        media_body=media,
         fields='id'
     ).execute()
 
     new_file = File(
-        name = request.file_name,
+        name = file_name,
         google_drive_id = file['id']
     )
 
     db.add(new_file)
     db.commit()
     db.refresh(new_file)
+
+    assign_file_to_user(db, email, FileToUserRequest(file_id=new_file.id, user_id=user.id, parent_group=parent_group))
 
     return new_file
 
