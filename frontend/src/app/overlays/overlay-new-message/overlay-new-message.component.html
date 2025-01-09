@@ -1,3 +1,18 @@
 <div class="backdrop" (click)="closeOverlay()"></div>
 <main>
+    <div class="message-info">
+        <label for="subject"> {{"MESSAGE.SUBJECT" | translate}}
+            <input type="text" id="subject" name="subject" [(ngModel)]="message.subject" autocomplete="off" maxlength="50"/>
+        </label>
+        <label for="content"> {{"MESSAGE.CONTENT" | translate}}
+            <textarea id="content" name="content" [(ngModel)]="message.content" autocomplete="off" placeholder="optional" maxlength="200"></textarea>
+        </label>
+        <label for="recipient"> {{"MESSAGE.RECIPIENT" | translate}}
+            <input type="email" id="recipient" name="recipient" [(ngModel)]="message.recipient" autocomplete="off" maxlength="100"/>
+        </label>
+    </div>
+    <div class="message-button">
+        <span class="message-status"> {{ messageStatus }} </span>
+        <button (click)="sendMessage()" [disabled]="!message.subject || !message.content || !message.recipient">{{ "MESSAGE.SEND" | translate }}</button>
+    </div>
 </main>
