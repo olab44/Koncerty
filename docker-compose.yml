@@ -14,6 +14,9 @@ services:
       - DATABASE_NAME=${DB_NAME}
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
       - APP_SECRET=${APP_SECRET}
+      - EMAIL_ADDRESS=${EMAIL_ADDRESS}
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+      - SMTP_SERVER=${SMTP_SERVER}
 
     ports:
       - "8000:8000"
@@ -28,7 +31,7 @@ services:
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=${DB_NAME}
     ports:
-      - "5433:5432"
+      - "5432:5432"
     networks:
       - megalodony_network
 

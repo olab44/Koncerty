@@ -44,8 +44,8 @@ export class EventCalendarComponent {
   }
 
   gotoEvent(event: any) {
-    const group = this.group
-    this.router.navigate(['/group/event'], {state: {group, event}});
+    this.state.setEvent(event)
+    this.router.navigate(['/group/event']);
   }
 
   toggleOverlayEvent(): void {

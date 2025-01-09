@@ -1,42 +1,24 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms'
 import { TranslateModule } from '@ngx-translate/core';
-import { BackendService } from '../../services/backend-connection/backend.service';
 import { SessionStateService } from '../../services/session-state/session-state.service';
+import { EventInfo } from '../../interfaces';
 
 @Component({
   selector: 'app-side-bar-event',
   standalone: true,
-  imports: [FormsModule, TranslateModule],
+  imports: [FormsModule, TranslateModule, DatePipe],
   templateUrl: './side-bar-event.component.html',
   styleUrl: './side-bar-event.component.css'
 })
 export class SideBarEventComponent {
-  @Input() isEditAvailable: boolean = false
-  event!: any
+  event!: EventInfo
   editMessage = ""
 
-  constructor(private backend: BackendService,private state: SessionStateService) {
+  constructor(private state: SessionStateService) {
     this.state.currentEvent.subscribe((event) => {
       this.event = event;
     });
   }
-
-  // saveEventInfo() {
-  //   this.state.setGroup(this.event);
-  //   const request = {group_id: this..group_id, name: this.editGroup.group_name, extra_info: this.editGroup.extra_info}
-  //   console.log(request)
-  //   this.backend.postRequest('groups/editGroup', request).subscribe({
-  //     next: res => {
-  //       this.editMessage = "Group info saved."
-  //       setTimeout(() => {
-  //         this.editMessage = '';
-  //       }, 5000);
-  //     },
-  //     error: e => {
-  //       console.log(e)
-  //     }
-  //   })
-  // }
-
 }

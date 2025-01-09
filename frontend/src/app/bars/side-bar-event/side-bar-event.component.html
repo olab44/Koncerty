@@ -1,10 +1,9 @@
-<!-- <main>
-    <input [(ngModel)]="editGroup.group_name" type="text" [readonly]="!isEditAvailable">
-    <textarea [readonly]="!isEditAvailable" [(ngModel)]="editGroup.extra_info"></textarea>
-    <p>{{"GROUP.ROLE" | translate}}<br>&emsp;{{group.role}}</p>
-    <p class="inv-code">{{group.inv_code}}</p>
+<main>
+    <p>{{event.name}}</p>
+    <textarea [(ngModel)]="event.extra_info" readonly></textarea>
     <div>
-        <span>{{editMessage}}</span>
-        <button [style.visibility]="(isEditAvailable && editGroup.group_name)? 'visible' : 'hidden'" (click)="saveGroupInfo()" [disabled]="">-- &#x2714; --</button>
+        <p>{{event.date_start | date: 'yyyy-MM-dd HH:mm:ss'}}</p>
+        <p>{{event.date_end | date: 'yyyy-MM-dd HH:mm:ss'}}</p>
     </div>
-</main> -->
+    <p>{{event.location}}</p>
+</main>
