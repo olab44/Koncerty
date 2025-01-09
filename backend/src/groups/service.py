@@ -134,7 +134,7 @@ def register_subgroup(db: Session, user_email: User, request: CreateSubgroupRequ
     existing_user = db.query(User).filter(User.email == user_email).first()
     if not existing_user:
         raise HTTPException(status_code=404, detail="User not found")
-    
+
     existing_member = db.query(Member).filter(Member.user_id == existing_user.id, Member.group_id == request.parent_group).first()
 
     if not existing_member:
@@ -154,13 +154,13 @@ def register_subgroup(db: Session, user_email: User, request: CreateSubgroupRequ
     db.refresh(new_group)
 
     db.add(Member(user_id=existing_user.id, group_id=new_group.id, role=None))
-    
+
     for id in request.members:
         duplicated = db.query(Member).filter(Member.user_id == id, Member.group_id == new_group.id).first()
         if not duplicated:
             db.add(Member(user_id=id, group_id=new_group.id, role=None))
-    
-    db.commit() 
+
+    db.commit()
     return new_group
 
 
@@ -207,9 +207,6 @@ def get_subgroups(db: Session, user_email: str, group_id: int):
 
     subgroups = db.query(Group).filter(Group.parent_group == group_id).all()
 
-    if not subgroups:
-        raise HTTPException(status_code=404, detail="Group not found or has no members")
-
     group_list = []
     for sub in subgroups:
         subgroup = GroupInfo(
@@ -219,7 +216,7 @@ def get_subgroups(db: Session, user_email: str, group_id: int):
             extra_info=sub.extra_info,
             inv_code=sub.invitation_code
         )
-        
+
         group_list.append(subgroup)
 
     return group_list
@@ -241,10 +238,10 @@ def remove_subgroup(db: Session, user_email: str, request: RemoveGroupRequest):
     removed_sub = db.query(Group).filter(Group.id == request.group_id).first()
     if not removed_sub:
         raise HTTPException(status_code=404, detail="Subgroup not found")
-    
+
     if removed_sub.parent_group != request.parent_group:
         raise HTTPException(status_code=403, detail="Subgroup has wrong parent group")
-    
+
     removed_members = db.query(Member).filter(Member.group_id == request.group_id).all()
 
     for member in removed_members:

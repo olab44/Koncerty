@@ -75,9 +75,10 @@ export class GroupControlComponent {
   }
 
   deleteSubgroup(id: number) {
-    this.backend.postRequest('groups/deleteSubgroup', {group_id: id}).subscribe({
+    this.backend.postRequest('groups/deleteSubgroup', {parent_group: this.group.group_id, group_id: id}).subscribe({
       next: (res) => {
         this.getSubgroups()
+        this.subgroup_members = []
       },
       error: (e) => { console.log(e) },
     });
