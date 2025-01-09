@@ -5,7 +5,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from smtplib import SMTP
 from .config import settings
-from users.models import Member, User, Alert, Recipient
+from users.models import Member, User, Alert, Recipient, Group
 from .schemas import CreateAlertRequest, GetAlertsRequest
 import os
 import base64
@@ -72,8 +72,18 @@ def get_alerts(db: Session, email: str, request: GetAlertsRequest):
     if not existing_member:
         raise HTTPException(status_code=404, detail="User is not a member of the group")
     
-    alerts = db.query(Alert).join(Recipient, Recipient.alert_id == Alert.id).filter(
-        Recipient.member_id == existing_member.id
+    members = db.query(Member.id).join(
+        Group, Member.group_id == Group.id
+    ).filter(
+        Member.user_id == request.user_id,
+        Group.parent_group == request.parent_group
+    ).subquery()
+    
+    alerts = db.query(Alert).join(
+        Recipient, Recipient.alert_id == Alert.id
+    ).filter(
+        (Recipient.member_id == existing_member.id) | 
+        (Recipient.member_id.in_(members))
     ).all()
     return alerts
 
