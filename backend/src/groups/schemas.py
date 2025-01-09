@@ -4,10 +4,7 @@ from typing import List, Optional
 class SubgroupSchema(BaseModel):
     subgroup_id: int
     subgroup_name: str
-    role: Optional[str]
     extra_info: str
-    inv_code: Optional[str]
-    subgroups: List["SubgroupSchema"] = []
 
     class Config:
         orm_mode = True

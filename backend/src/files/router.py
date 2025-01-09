@@ -118,6 +118,6 @@ def deprive_subgroup(request: FileToSubgroupRequest, db: Session = Depends(get_s
 def deprive_composition(request: DeleteFileToCompositionRequest, db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
     user_data = decode_app_token(token)
 
-    deprive_composition_of_file(db, user_data.get("email"), request)
+    file = deprive_composition_of_file(db, user_data.get("email"), request)
 
-    return { "deprived": {"composition_id": request.composition_id, "file_id": request.file_id} }
+    return { "deprived": {"composition_id": file.composition_id, "file_id": request.file_id} }

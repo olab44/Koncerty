@@ -66,9 +66,6 @@ def get_subgroups_recursive(
                 subgroup_id=group_id,
                 subgroup_name=subgroup[0].name,
                 extra_info=subgroup[0].extra_info,
-                role=subgroup[1],
-                inv_code=subgroup[0].invitation_code if subgroup[1] == 'Kapelmistrz' else None,
-                subgroups=get_subgroups_recursive(db, group_id, visited_groups)
             )
         )
 
