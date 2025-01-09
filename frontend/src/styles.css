@@ -63,6 +63,7 @@ button {
     border: solid 5px #000070;
 
     cursor: pointer;
+    user-select: none;
 }
 
 li:hover, button:hover {

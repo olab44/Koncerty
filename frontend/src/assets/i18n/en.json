@@ -52,7 +52,18 @@
         "SAT": "SAT"
     },
     "GROUP": {
-        "ROLE": "group role"
+        "ROLE": "group role",
+        "INVITE": "INVITE",
+        "SCREATE": "CREATE SUBGROUP"
+    },
+    "MEMBER": {
+        "Kapelmistrz": "BANDLEADER",
+        "Koordynator": "COORDINATOR",
+        "Muzyk": "MUSICIAN"
+    },
+    "FILTER": {
+        "EMAIL": "E-MAIL",
+        "ROLE": "ROLE"
     },
     "EVENT": {
         "NEW": "ADD EVENT",

@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 import { AuthService } from '../authorization/auth.service';
-import { GroupInfoStructure, SignUpResponse, EventInfo } from "../../interfaces"
+import { GroupInfoStructure, SignUpResponse, UserInfo, EventInfo } from "../../interfaces"
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +23,16 @@ export class BackendService {
   getGroups() {
     return this.http
       .get<GroupInfoStructure>(`${this.apiURL}/groups/findGroups`,  { headers: this.getHeaders() })
+      .pipe(
+        catchError((error) => {
+        return throwError(() => error)
+        })
+      )
+  }
+
+  getUsers(group_id: number) {
+    return this.http
+      .get<UserInfo[]>(`${this.apiURL}/findUsers?group_id=${group_id}`,  { headers: this.getHeaders() })
       .pipe(
         catchError((error) => {
         return throwError(() => error)

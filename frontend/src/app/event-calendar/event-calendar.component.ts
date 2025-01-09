@@ -32,7 +32,6 @@ export class EventCalendarComponent {
     this.backend.getEvents(this.group.group_id).subscribe({
       next: (res) => {
         this.events = res
-        console.log(res)
       },
       error: (e) => {
         console.log(e);

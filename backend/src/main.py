@@ -6,12 +6,14 @@ from users.router import router as users_router
 from groups.router import router as group_router
 from events.router import router as events_router
 from forum.router import router as forum_router
+from files.router import router as files_router
 
 app = FastAPI()
 app.include_router(users_router)
 app.include_router(group_router, prefix="/groups")
 app.include_router(events_router, prefix="/events")
 app.include_router(forum_router)
+app.include_router(files_router, prefix="/files")
 
 
 app.add_middleware(

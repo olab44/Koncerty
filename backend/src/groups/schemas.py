@@ -33,11 +33,11 @@ class UserGroupStructureSchema(BaseModel):
 class CreateGroupRequest(BaseModel):
     parent_group: Optional[int]
     name: str
-    extra_info: str
+    extra_info: Optional[str]
 
 class JoinGroupRequest(BaseModel):
     inv_code: str
-    
+
 class CreateSubgroupRequest(BaseModel):
     parent_group: int
     name: str

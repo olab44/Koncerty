@@ -111,7 +111,7 @@ def create_event(db: Session, email: str, request: CreateEventRequest):
 
     for user_email in request.user_emails:
         user = db.query(User).filter(User.email == user_email).first()
-        if user and user_in_parent_group(user, new_event.parent_group):
+        if user and user_in_parent_group(db, user, new_event.parent_group):
             unique_user_ids.add(user.id)
 
     for group_id in request.group_ids:

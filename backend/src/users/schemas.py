@@ -13,8 +13,14 @@ class UserInfo(BaseModel):
     email: str
     role: str
 
-class UsersInfoStructure(BaseModel):
-    user_list: List[UserInfo]
-
 class GroupsUserRequest(BaseModel):
     group_id: int
+
+class ChangeUserRoleRequest(BaseModel):
+    group_id: int
+    user_email: str
+    new_role: str
+
+class RemoveMemberRequest(BaseModel):
+    group_id: int
+    user_email:str
