@@ -11,9 +11,7 @@ from .service import create_announcement, get_announcements
 router = APIRouter()
 
 
-from fastapi import HTTPException
-
-@router.post("/createAnnouncement", status_code=201, response_model=AnnouncementInfo)
+@router.post("/announcements/createAnnouncement", status_code=201, response_model=AnnouncementInfo)
 def post_announcement(
     request: AnnouncementCreate,
     db: Session = Depends(get_session),
@@ -44,7 +42,7 @@ def post_announcement(
 
 
 
-@router.get("/announcements", response_model=List[AnnouncementInfo])
+@router.get("/announcements/findAnnouncements", response_model=List[AnnouncementInfo])
 def fetch_announcements(
     group_id: int = None,
     subgroup_id: int = None,

@@ -28,3 +28,4 @@ describe('OverlayNewMessageComponent', () => {
     expect(component.messageStatus).toBe('Message sent successfully!');
   });
 });
+
