@@ -22,7 +22,7 @@ class RecipientModel(BaseModel):
         from_attributes = True
 
 
-class AlertCreate(BaseModel):
+class CreateAlertRequest(BaseModel):
     title: str
     content: str
     parent_group: int
@@ -30,10 +30,21 @@ class AlertCreate(BaseModel):
     group_id: Optional[int] = None
 
 
-class AlertInfo(BaseModel):
+class CreateAlertResponse(BaseModel):
     alert: AlertModel
     recipients: List[RecipientModel]
 
     class Config:
         orm_mode = True
 
+
+class GetAlertsRequest(BaseModel):
+    parent_group: int
+    user_id: int
+
+
+class GetAlertsResponse(BaseModel):
+    alerts: List[AlertModel]
+
+    class Config:
+        orm_mode = True

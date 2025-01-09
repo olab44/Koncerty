@@ -6,7 +6,7 @@ from email.mime.multipart import MIMEMultipart
 from smtplib import SMTP
 from .config import settings
 from users.models import Member, User, Alert, Recipient
-from .schemas import AlertCreate, AlertInfo
+from .schemas import CreateAlertRequest, GetAlertsRequest
 import os
 import base64
 from fastapi import HTTPException
@@ -20,7 +20,7 @@ from forum.sendEmail import send_gmail_email
 
 SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
 
-def create_alert(db: Session, email: str, request: AlertCreate) -> Alert:
+def create_alert(db: Session, email: str, request: CreateAlertRequest) -> Alert:
 
     existing_user = db.query(User).filter(User.email == email).first()
     if not existing_user:
@@ -63,9 +63,19 @@ def create_alert(db: Session, email: str, request: AlertCreate) -> Alert:
     return new_alert, recipients_list
 
 
-def get_alerts(db: Session, group_id: int) -> List[AlertInfo]:
-    query = db.query(Alert).filter(Alert.group_id == group_id)
-    return query.all()
+def get_alerts(db: Session, email: str, request: GetAlertsRequest):
+    existing_user = db.query(User).filter(User.email == email).first()
+    if not existing_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    existing_member = db.query(Member).filter(Member.user_id == existing_user.id, Member.group_id == request.parent_group).first()
+    if not existing_member:
+        raise HTTPException(status_code=404, detail="User is not a member of the group")
+    
+    alerts = db.query(Alert).join(Recipient, Recipient.alert_id == Alert.id).filter(
+        Recipient.member_id == existing_member.id
+    ).all()
+    return alerts
 
 
 def create_recipient(db: Session, user_id: int, alert_id: int) -> Recipient:
