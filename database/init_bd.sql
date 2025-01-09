@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS public.files
 (
     id bigserial NOT NULL,
     name character varying(50) NOT NULL,
-    google_drive_id integer,
+    google_drive_id character varying(50),
     composition_id bigint,
     PRIMARY KEY (id)
 );
@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS public.files
 CREATE TABLE IF NOT EXISTS public.file_ownerships
 (
     id bigserial NOT NULL,
-    group_id bigint NOT NULL,
+    user_id bigint NOT NULL,
     file_id bigint NOT NULL,
     PRIMARY KEY (id)
 );
@@ -118,7 +118,7 @@ ALTER TABLE IF EXISTS public.recipients
     ADD CONSTRAINT member_recipient_fk FOREIGN KEY (member_id)
     REFERENCES public.members (id) MATCH SIMPLE
     ON UPDATE NO ACTION
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     NOT VALID;
 
 
@@ -163,8 +163,8 @@ ALTER TABLE IF EXISTS public.files
 
 
 ALTER TABLE IF EXISTS public.file_ownerships
-    ADD CONSTRAINT group_to_file_ownership_fk FOREIGN KEY (group_id)
-    REFERENCES public.groups (id) MATCH SIMPLE
+    ADD CONSTRAINT user_to_file_ownership_fk FOREIGN KEY (user_id)
+    REFERENCES public.users (id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;

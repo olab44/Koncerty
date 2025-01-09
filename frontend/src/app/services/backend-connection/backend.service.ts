@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 import { AuthService } from '../authorization/auth.service';
-import { GroupInfoStructure, SignUpResponse, EventInfo } from "../../interfaces"
+import { GroupInfoStructure, SignUpResponse, UserInfo, GroupInfo, EventInfo } from "../../interfaces"
 
 @Injectable({
   providedIn: 'root'
@@ -20,9 +20,29 @@ export class BackendService {
     });
   }
 
+  getUsers(group_id: number) {
+    return this.http
+      .get<UserInfo[]>(`${this.apiURL}/findUsers?group_id=${group_id}`,  { headers: this.getHeaders() })
+      .pipe(
+        catchError((error) => {
+        return throwError(() => error)
+        })
+      )
+  }
+
   getGroups() {
     return this.http
       .get<GroupInfoStructure>(`${this.apiURL}/groups/findGroups`,  { headers: this.getHeaders() })
+      .pipe(
+        catchError((error) => {
+        return throwError(() => error)
+        })
+      )
+  }
+
+  getSubgroups(group_id: number) {
+    return this.http
+      .get<GroupInfo[]>(`${this.apiURL}/groups/findSubgroups?group_id=${group_id}`,  { headers: this.getHeaders() })
       .pipe(
         catchError((error) => {
         return throwError(() => error)
@@ -51,6 +71,15 @@ export class BackendService {
 
   postRequest<T>(endpoint: string, body: any) {
     return this.http.post<T>(`${this.apiURL}/${endpoint}`, body, { headers: this.getHeaders() })
+      .pipe(
+        catchError((error) => {
+          return throwError(() => error);
+        })
+      )
+  }
+
+  deleteRequest(endpoint: string, body: any) {
+    return this.http.request('DELETE', `${this.apiURL}/${endpoint}`, { body: body, headers: this.getHeaders() })
       .pipe(
         catchError((error) => {
           return throwError(() => error);

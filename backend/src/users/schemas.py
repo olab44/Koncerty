@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 
 class GoogleSignInRequest(BaseModel):
     token: str
@@ -11,10 +11,18 @@ class UserInfo(BaseModel):
     id: int
     username: str
     email: str
-    role: str
-
-class UsersInfoStructure(BaseModel):
-    user_list: List[UserInfo]
+    role: Optional[str]
 
 class GroupsUserRequest(BaseModel):
     group_id: int
+
+class ChangeUserRoleRequest(BaseModel):
+    group_id: int
+    user_email: str
+    new_role: str
+    parent_group: int
+
+class RemoveMemberRequest(BaseModel):
+    group_id: int
+    user_email:str
+    parent_group: int

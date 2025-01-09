@@ -35,15 +35,15 @@
         </section>
         <section [class.disabled]="allChecked">
             <ul>
-                <li *ngFor="let sgroup of group.subgroups">
-                    <input type="checkbox" [value]="sgroup.subgroup_id" (change)="onGroupCheckboxChange($event, sgroup.subgroup_id)">
-                    <span>{{sgroup.subgroup_name}}</span>
+                <li *ngFor="let sgroup of subgroups">
+                    <input type="checkbox" [value]="sgroup.id" (change)="onGroupCheckboxChange($event, sgroup.id)">
+                    <span>{{sgroup.name}}</span>
                 </li>
             </ul>
         </section>
         <section class="users-participation" [class.disabled]="allChecked">
             <div>
-                <input [(ngModel)]="added_email" email type="text" placeholder="e-mail"><button [disabled]="!added_email" (click)="addParticipant(added_email)"> + </button>
+                <input [(ngModel)]="added_email" email type="email" placeholder="e-mail"><button [disabled]="!added_email" (click)="addParticipant(added_email)"> + </button>
             </div>
             <ul>
                 <li *ngFor="let email of event.user_emails">{{email}}<button (click)="removeParticipant(email)"> - </button></li>

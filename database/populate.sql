@@ -71,7 +71,7 @@ BEGIN
     VALUES (-1, 'Kumple', 'Szukaj nas', '123');
     -- 1 podgrupa
     INSERT INTO groups (parent_group, name, extra_info, invitation_code)
-    VALUES (group_id1, 'Grajkowie:Strunowe', 'Polub nas na facebooku LINK', 'ABBA')
+    VALUES (group_id1, 'Grajkowie:Strunowe', 'Polub nas na facebooku LINK', Null)
     RETURNING id INTO group_id2;
     -- 4 czlonkow grupy 1 i 2 podgrupy 2
     INSERT INTO members (user_id, group_id, role)
@@ -91,11 +91,11 @@ BEGIN
     RETURNING id INTO member_id4;
 
     INSERT INTO members (user_id, group_id, role)
-    VALUES (user_id4, group_id2, 'Kapelmistrz')
+    VALUES (user_id1, group_id2, Null)
     RETURNING id INTO member_id5;
 
     INSERT INTO members (user_id, group_id, role)
-    VALUES (user_id1, group_id2, 'Muzyk')
+    VALUES (user_id4, group_id2, Null)
     RETURNING id INTO member_id6;
     -- widomosc 1 do grupy 1, wiadomosc 2 do grupy 2
     INSERT INTO recipients (member_id, alert_id)
@@ -121,7 +121,7 @@ BEGIN
     RETURNING id INTO event_id1;
 
     INSERT INTO events (name, date_start, location, date_end, extra_info, parent_group, type)
-    VALUES ('Playing in the pub', tommorow_timestamp, 'Bar', (tommorow_timestamp + INTERVAL '1 hour')::timestamp, 'Zapraszamy', group_id2, 'koncert')
+    VALUES ('Playing in the pub', tommorow_timestamp, 'Bar', (tommorow_timestamp + INTERVAL '1 hour')::timestamp, 'Zapraszamy', group_id1, 'koncert')
     RETURNING id INTO event_id2;
 
     INSERT INTO participations (event_id, user_id)
@@ -154,10 +154,10 @@ BEGIN
     VALUES ('Symphony no. 5 notes 2', 1234, composition_id1)
     RETURNING id INTO file_id2;
 
-    INSERT INTO file_ownerships (group_id, file_id)
-    VALUES (group_id2, file_id1);
+    INSERT INTO file_ownerships (user_id, file_id)
+    VALUES (user_id1, file_id1);
 
-    INSERT INTO file_ownerships (group_id, file_id)
-    VALUES (group_id2, file_id2);
+    INSERT INTO file_ownerships (user_id, file_id)
+    VALUES (user_id2, file_id2);
 END $$;
 
