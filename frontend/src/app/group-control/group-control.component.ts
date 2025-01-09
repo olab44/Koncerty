@@ -114,7 +114,7 @@ export class GroupControlComponent {
 
   addMember(user: UserInfo, group_id: number) {
     const user_id = user.id
-    this.backend.postRequest('addMember', {user_id, group_id}).subscribe({
+    this.backend.postRequest('groups/addMember', {user_id, group_id, parent_group: this.group.group_id}).subscribe({
       next: (res) => { this.subgroup_members.push(user) },
       error: (e) => { console.log(e) },
     });
