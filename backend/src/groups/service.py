@@ -41,7 +41,7 @@ def register_group(db: Session, user_email: User, group: CreateGroupRequest):
 
 
 def get_subgroups_recursive(
-    db: Session, parent_group_id: int, visited_groups: set
+    db: Session, parent_group_id: int, user_id: int, visited_groups: set
 ) -> List[SubgroupSchema]:
     """
     Pobierz wszystkie podgrupy dla grupy nadrzędnej, rekurencyjnie przetwarzając podgrupy,
@@ -50,7 +50,7 @@ def get_subgroups_recursive(
     subgroups = (
         db.query(Group, Member.role)
         .join(Member, Group.id == Member.group_id, isouter=True)
-        .filter(Group.parent_group == parent_group_id)
+        .filter(Group.parent_group == parent_group_id, Member.user_id == user_id)
         .all()
     )
 
@@ -69,7 +69,7 @@ def get_subgroups_recursive(
                 extra_info=subgroup[0].extra_info,
                 role=subgroup[1],
                 inv_code=subgroup[0].invitation_code if subgroup[1] == 'Kapelmistrz' else None,
-                subgroups=get_subgroups_recursive(db, group_id, visited_groups)
+                subgroups=get_subgroups_recursive(db, group_id, user_id, visited_groups)
             )
         )
 
@@ -96,7 +96,7 @@ def get_user_group_structure(db: Session, email: str):
 
         visited_groups.add(group.id)
 
-        subgroups = get_subgroups_recursive(db, group.id, visited_groups)
+        subgroups = get_subgroups_recursive(db, group.id, user.id, visited_groups)
 
         group_structure.append({
             "group_id": group.id,
@@ -235,8 +235,8 @@ def remove_subgroup(db: Session, user_email: str, request: RemoveGroupRequest):
     if not existing_member:
         raise HTTPException(status_code=404, detail="User is not a member of the group")
 
-    if existing_member.role == "Muzyk":
-        raise HTTPException(status_code=403, detail="User must have Kapelmistrz or Koordynator role")
+    if existing_member.role != "Kapelmistrz":
+        raise HTTPException(status_code=403, detail="User must have Kapelmistrz role")
 
     removed_sub = db.query(Group).filter(Group.id == request.group_id).first()
     if not removed_sub:
