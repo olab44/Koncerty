@@ -65,3 +65,8 @@ class DeleteGroupResponse(BaseModel):
     id: int
     name: str
     extra_info: str
+
+class AddMemberRequest(BaseModel):
+    parent_group: int
+    group_id: int
+    user_id: int

@@ -3,7 +3,8 @@ from fastapi import HTTPException
 from typing import List
 from users.models import User, Group, Member
 from .schemas import (SubgroupSchema, CreateGroupRequest, JoinGroupRequest, CreateSubgroupRequest,
-                       EditGroupRequest, GroupInfo, RemoveGroupRequest, DeleteGroupResponse
+                       EditGroupRequest, GroupInfo, RemoveGroupRequest, DeleteGroupResponse,
+                       AddMemberRequest
 )
 import string
 import secrets
@@ -256,3 +257,38 @@ def remove_subgroup(db: Session, user_email: str, request: RemoveGroupRequest):
         name=removed_sub.name,
         extra_info=removed_sub.extra_info
     )
+
+def add_member_to_subgroup(db: Session, user_email: str, request: AddMemberRequest):
+    user = db.query(User).filter(User.email == user_email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    existing_member = db.query(Member).filter(Member.user_id == user.id, Member.group_id == request.parent_group).first()
+
+    if not existing_member:
+        raise HTTPException(status_code=404, detail="User is not a member of the group")
+
+    if existing_member.role != "Kapelmistrz":
+        raise HTTPException(status_code=403, detail="User must have Kapelmistrz role")
+    
+    if not db.query(Group).filter(Group.id == request.group_id).first():
+        raise HTTPException(status_code=404, detail="Subgroup not found")
+    
+    if db.query(Member).filter(Member.group_id == request.group_id, Member.user_id == request.user_id).first() is not None:
+        raise HTTPException(status_code=403, detail="User is already a member of subgroup")
+    
+    new_member = Member(
+        user_id = request.user_id,
+        group_id = request.group_id,
+        role = None
+    )
+
+    db.add(new_member)
+    db.commit()
+    db.refresh(new_member)
+
+    return {
+        "id": new_member.id,
+        "group_id": new_member.group_id,
+        "user_id": new_member.user_id
+    }

@@ -5,10 +5,11 @@ from typing import List
 
 from database import get_session
 from .service import (get_user_group_structure, register_group, user_to_group, register_subgroup,
-                       edit_group, get_subgroups, remove_subgroup
+                       edit_group, get_subgroups, remove_subgroup, add_member_to_subgroup
 )
 from .schemas import (UserGroupStructureSchema, CreateGroupRequest, JoinGroupRequest, CreateSubgroupRequest,
-                       EditGroupRequest, GroupInfo, RemoveGroupRequest, DeleteGroupResponse
+                       EditGroupRequest, GroupInfo, RemoveGroupRequest, DeleteGroupResponse, 
+                       AddMemberRequest
 )
 from users.service import get_user_data
 
@@ -74,3 +75,9 @@ def delete_subgroup(request: RemoveGroupRequest, db: Session = Depends(get_sessi
     user_data = get_user_data(token)
     removed_group = remove_subgroup(db, user_data.get("email"), request)
     return removed_group
+
+@router.post("/addMember", status_code=201)
+def add_member(request: AddMemberRequest, db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
+    user_data = get_user_data(token)
+    edited_group = add_member_to_subgroup(db, user_data.get("email"), request)
+    return edited_group
