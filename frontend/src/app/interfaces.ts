@@ -71,3 +71,11 @@ export interface EventCreate {
     user_emails: string[]
     composition_ids: number[]
 }
+
+export interface ForumMessageCreate {
+    subject: string;
+    content: string;
+    group_ids: number[];
+    subgroup_ids: number[];
+    user_emails: string[];
+}
