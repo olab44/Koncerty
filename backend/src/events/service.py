@@ -8,9 +8,10 @@ from typing import List
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 
-from .schemas import EventInfo, CreateEventRequest, Participant, CompositionInfo
-from users.models import User, Member
-from users.models import Event, Participation, Composition, SetList
+from .schemas import EventInfo, CreateEventRequest, Participant, CompositionInfo, EditEventRequest
+from users.models import (User, Member,
+     Event, Participation, Composition, SetList
+)
 
 def get_calendar_service(token: str):
     try:
@@ -145,3 +146,69 @@ def create_event(db: Session, email: str, request: CreateEventRequest):
     db.commit()
 
     return new_event
+
+
+def edit_event(db: Session, email: str, request: EditEventRequest):
+
+    existing_user = db.query(User).filter(User.email == email).first()
+    if not existing_user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    parent_member = db.query(Member).filter(Member.user_id == existing_user.id, Member.group_id == request.parent_group).first()
+
+    if not parent_member:
+        raise HTTPException(status_code=404, detail="Requesting user not is a member of the group")
+    if parent_member.role == "Muzyk":
+        raise HTTPException(status_code=404, detail="Requesting user must have Kapelmistrz or Koordynator role")
+
+    existing_event = db.query(Event).filter(Event.id == request.event_id).first()
+
+    existing_event.name = request.name
+    existing_event.date_start = request.date_start
+    existing_event.date_end = request.date_end
+    existing_event.location = request.location
+    existing_event.extra_info = request.extra_info
+    existing_event.parent_group = request.parent_group
+    existing_event.type = request.type
+
+    db.commit()
+    db.refresh(existing_event)
+
+    for removed_email in request.removed_participants:
+        to_remove = (db.query(Participation)
+                        .join(User, User.id == Participation.user_id)
+                        .filter(Participation.event_id == request.event_id, User.email == removed_email)
+                        .first())
+        if to_remove:
+            db.delete(to_remove)
+
+    for added_email in request.added_participants:
+        user = db.query(User).filter(User.email == added_email).first()
+        if user:
+            existing_participant = (db.query(Participation)
+                                     .filter(Participation.event_id == request.event_id, Participation.user_id == user.id)
+                                     .first())
+            if not existing_participant:
+                new_participant = Participation(
+                    event_id=request.event_id,
+                    user_id=user.id
+                )
+                db.add(new_participant)
+
+    for id in request.removed_compositions:
+        to_remove = db.query(SetList).filter(SetList.event_id == request.event_id, SetList.composition_id == id).first()
+        if to_remove:
+            db.delete(to_remove)
+
+    for id in request.added_compositions:
+        to_add = db.query(SetList).filter(SetList.event_id == request.event_id, SetList.composition_id == id).first()
+        if not to_add:
+            new_setlist = SetList(
+                event_id = request.event_id,
+                composition_id = id
+            )
+            db.add(new_setlist)
+
+    db.commit()
+    
+    return existing_event

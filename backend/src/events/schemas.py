@@ -35,3 +35,17 @@ class CreateEventRequest(BaseModel):
     user_emails: List[str]
     group_ids: List[int]
     composition_ids: List[int]
+
+class EditEventRequest(BaseModel):
+    event_id: int
+    name: str
+    date_start: datetime
+    date_end: datetime
+    location: str
+    extra_info: Optional[str]
+    parent_group: int
+    type: str
+    removed_participants: List[str]
+    added_participants: List[str]
+    removed_compositions: List[int]
+    added_compositions: List[int]

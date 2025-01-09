@@ -5,8 +5,8 @@ from typing import List
 
 from database import get_session
 from users.models import User
-from .service import get_user_events, create_event
-from .schemas import EventInfo, CreateEventRequest
+from .service import get_user_events, create_event, edit_event
+from .schemas import EventInfo, CreateEventRequest, EditEventRequest
 from users.service import get_user_data
 
 router = APIRouter()
@@ -19,8 +19,16 @@ def get_events_structure(group_id: int, db: Session = Depends(get_session), toke
     return result
 
 @router.post("/createEvent", status_code=201)
-def create_group(request: CreateEventRequest, db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
+def create_ev(request: CreateEventRequest, db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
     user_data = get_user_data(token)
 
     new_event = create_event(db, user_data.get("email"), request)
     return {"created": new_event}
+
+
+@router.post("/editEvent", status_code=201)
+def edit_ev(request: EditEventRequest, db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
+    user_data = get_user_data(token)
+
+    new_event = edit_event(db, user_data.get("email"), request)
+    return {"edited": new_event}
