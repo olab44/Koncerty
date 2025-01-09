@@ -5,3 +5,4 @@ __pycache__/
 backend.egg-info/
 node_modules
 service_account.json
+.vscode
