@@ -1,11 +1,16 @@
 from fastapi import APIRouter
-from fastapi import Depends, HTTPException, Header
+from fastapi import Depends, Header
 from sqlalchemy.orm import Session
+from typing import List
 
 from database import get_session
-from .service import get_user_group_structure, register_group, user_to_group, register_subgroup, edit_group
-from .schemas import UserGroupStructureSchema, CreateGroupRequest, JoinGroupRequest, CreateSubgroupRequest, EditGroupRequest
-from users.models import User
+from .service import (get_user_group_structure, register_group, user_to_group, register_subgroup,
+                       edit_group, get_subgroups, remove_subgroup, add_member_to_subgroup
+)
+from .schemas import (UserGroupStructureSchema, CreateGroupRequest, JoinGroupRequest, CreateSubgroupRequest,
+                       EditGroupRequest, GroupInfo, RemoveGroupRequest, DeleteGroupResponse, 
+                       AddMemberRequest
+)
 from users.service import get_user_data
 
 router = APIRouter()
@@ -57,4 +62,22 @@ def create_subgroup(request: CreateSubgroupRequest, db: Session = Depends(get_se
 def change_group(request: EditGroupRequest, db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
     user_data = get_user_data(token)
     edited_group = edit_group(db, user_data.get("email"), request)
+    return edited_group
+
+@router.get("/findSubgroups", response_model=List[GroupInfo])
+def get_subs(group_id: int, db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
+    user_data = get_user_data(token)
+    result = get_subgroups(db, user_data.get("email"), group_id)
+    return result
+
+@router.post("/deleteSubgroup", status_code=200, response_model=DeleteGroupResponse)
+def delete_subgroup(request: RemoveGroupRequest, db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
+    user_data = get_user_data(token)
+    removed_group = remove_subgroup(db, user_data.get("email"), request)
+    return removed_group
+
+@router.post("/addMember", status_code=201)
+def add_member(request: AddMemberRequest, db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
+    user_data = get_user_data(token)
+    edited_group = add_member_to_subgroup(db, user_data.get("email"), request)
     return edited_group

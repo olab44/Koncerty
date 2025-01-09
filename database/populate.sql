@@ -121,7 +121,7 @@ BEGIN
     RETURNING id INTO event_id1;
 
     INSERT INTO events (name, date_start, location, date_end, extra_info, parent_group, type)
-    VALUES ('Playing in the pub', tommorow_timestamp, 'Bar', (tommorow_timestamp + INTERVAL '1 hour')::timestamp, 'Zapraszamy', group_id2, 'koncert')
+    VALUES ('Playing in the pub', tommorow_timestamp, 'Bar', (tommorow_timestamp + INTERVAL '1 hour')::timestamp, 'Zapraszamy', group_id1, 'koncert')
     RETURNING id INTO event_id2;
 
     INSERT INTO participations (event_id, user_id)

@@ -31,12 +31,11 @@ export class OverlayChooseGroupComponent {
 
   gotoGroup(group: GroupInfo): void {
     this.state.setGroup(group);
-    this.router.navigate(['group'], {state: {group}});
+    this.router.navigate(['group']);
   }
 
   showSubgroupInfo(event: MouseEvent, subgroup: SubgroupInfo): void {
     event.stopPropagation()
-    console.log(subgroup)
   }
 
   closeOverlay() {

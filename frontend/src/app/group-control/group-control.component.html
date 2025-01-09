@@ -12,7 +12,7 @@
                         <option value="Koordynator">{{ "MEMBER.Koordynator" | translate }}</option>
                         <option value="Muzyk">{{ "MEMBER.Muzyk" | translate }}</option>
                     </select>
-                    <button (click)="removeGroupMember(member.id, group.group_id)"> - </button>
+                    <button (click)="removeGroupMember(group.group_id, member.email)"> - </button>
                 </div>
             </li>
         </ul>
@@ -34,10 +34,10 @@
 
     <section class="subgroups-panel">
         <ul>
-            <li *ngFor="let subgroup of group.subgroups" (click)="selectSubgroup(subgroup.subgroup_id)"
-                [ngClass]="{'selected': viewed_subgroup_id === subgroup.subgroup_id}">
-                <p>{{ subgroup.subgroup_name }}</p>
-                <button (click)="deleteSubgroup(subgroup.subgroup_id)"> - </button>
+            <li *ngFor="let sgroup of subgroups" (click)="selectSubgroup(sgroup.id)"
+                [ngClass]="{'selected': viewed_subgroup_id === sgroup.id}">
+                <p>{{ sgroup.name }}</p>
+                <button (click)="deleteSubgroup(sgroup.id)"> - </button>
             </li>
         </ul>
 
@@ -45,7 +45,7 @@
             <ul>
                 <li *ngFor="let smember of subgroup_members">
                     <p>{{ smember.email }}</p>
-                    <button (click)="removeGroupMember(smember.id, viewed_subgroup_id)"> - </button>
+                    <button (click)="removeGroupMember(viewed_subgroup_id, smember.email)"> - </button>
                 </li>
             </ul>
         </div>

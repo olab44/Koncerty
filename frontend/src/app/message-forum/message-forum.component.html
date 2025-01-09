@@ -9,7 +9,7 @@
         <li *ngFor="let message of messages" (click)="viewMessage(message)">{{message.name}}</li>
     </ul>
     <p id="viewed-message">{{viewedMessage.content}}</p>
-    <button class="new-button" [style.visibility]="['admin', 'coord'].includes(group.role) ? 'visible' : 'hidden'" (click)="toggleOverlayMessage()">{{'FORUM.NEW_MESSAGE' | translate}}</button>
+    <button class="new-button" [style.visibility]="['Koordynator', 'Kapelmistrz'].includes(group.role) ? 'visible' : 'hidden'" (click)="toggleOverlayMessage()">{{'FORUM.NEW_MESSAGE' | translate}}</button>
 </main>
 
 <app-overlay-new-message *ngIf="visibleOverlayMessage" (close)="toggleOverlayMessage()"></app-overlay-new-message>

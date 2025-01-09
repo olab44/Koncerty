@@ -34,7 +34,7 @@ export class SideBarComponent {
   saveGroupInfo(name: string, extra_info: string) {
     this.group.group_name = name
     this.group.extra_info = extra_info
-    const request = {group_id: this.group.group_id, name: name, extra_info: extra_info}
+    const request = {group_id: this.group.group_id, name: name, extra_info: extra_info, parent_group: this.group.group_id}
     console.log(request)
     this.backend.postRequest('groups/editGroup', request).subscribe({
       next: res => {

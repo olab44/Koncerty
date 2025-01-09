@@ -19,6 +19,7 @@ import { FilterPipe } from '../pipe/filter.pipe';
 export class GroupControlComponent {
   group!: GroupInfo
   newSubgroup = {parent_group: -1, name: '', extra_info: '', members: []}
+  subgroups: any[] = []
   group_members: UserInfo[] = []
   subgroup_members: UserInfo[] = []
   viewed_subgroup_id: number = 0
@@ -32,19 +33,24 @@ export class GroupControlComponent {
       this.group = group;
       this.newSubgroup.parent_group = group.group_id
     })
+    this.getSubgroups()
     this.getGroupUsers()
   }
 
   getGroupUsers() {
     this.backend.getUsers(this.group.group_id).subscribe({
-      next: (res) => {
-        this.group_members = res
-      },
-      error: (e) => {
-        console.log(e);
-      },
+      next: (res) => { this.group_members = res },
+      error: (e) => { console.log(e) },
     })
   }
+
+  getSubgroups() {
+    this.backend.getSubgroups(this.group.group_id).subscribe({
+      next: (res) => { this.subgroups = res },
+      error: (e) => { console.log(e) },
+    })
+  }
+
   selectSubgroup(group_id: number) {
     if (this.viewed_subgroup_id === group_id) {
       this.viewed_subgroup_id = 0
@@ -53,53 +59,53 @@ export class GroupControlComponent {
     else {
       this.viewed_subgroup_id = group_id
       this.backend.getUsers(group_id).subscribe({
-        next: (res) => {
-          this.subgroup_members = res
-        },
-        error: (e) => {
-          console.log(e);
-        },
+        next: (res) => { this.subgroup_members = res },
+        error: (e) => { console.log(e) },
       })
     }
   }
 
   createSubgroup() {
     this.backend.postRequest('groups/createSubgroup', this.newSubgroup).subscribe({
-      next: (res) => {
-        console.log(res)
+      next: (res: any) => {
+        this.getSubgroups()
       },
-      error: (e) => {
-        console.log(e);
-      },
+      error: (e) => { console.log(e) },
     });
   }
 
   deleteSubgroup(id: number) {
-    this.group.subgroups = this.group.subgroups?.filter((subgroup) => subgroup.subgroup_id !== id)
-    this.backend.postRequest('groups/deleteSubgroup', {group_id: id}).subscribe({
+    this.backend.postRequest('groups/deleteSubgroup', {parent_group: this.group.group_id, group_id: id}).subscribe({
       next: (res) => {
-        console.log(res)
+        this.getSubgroups()
+        this.subgroup_members = []
       },
-      error: (e) => {
-        console.log(e);
-      },
+      error: (e) => { console.log(e) },
     });
   }
 
-  removeGroupMember(user_id: number, group_id: number) {
-    this.backend.postRequest('removeMember', {user_id, group_id}).subscribe({
-      next: (res) => {
-        if (group_id === this.group.group_id) {this.group_members = this.group_members.filter(member => member.id !== user_id)}
-        else {this.subgroup_members = this.group_members.filter(member => member.id !== user_id)}
+  removeGroupMember(group_id: number, user_email: string) {
+    this.backend.deleteRequest('removeMember', {group_id, user_email, parent_group: this.group.group_id}).subscribe({
+      next: (res: any) => {
+        if (!res.failed.includes(group_id)) {
+          if (group_id === this.group.group_id) {
+            this.group_members = this.group_members.filter(member => member.email !== user_email)}
+          else {this.subgroup_members = this.subgroup_members.filter(member => member.email !== user_email)}
+        }
       },
-      error: (e) => {
-        console.log(e);
-      },
+      error: (e) => { console.log(e) },
     });
   }
 
-  updateMemberRole(member: any) {
-    console.log(`Updated role for ${member.email}: ${member.role}`);
+  updateMemberRole(member: UserInfo) {
+    const request = {group_id: this.group.group_id, user_email: member.email, new_role: member.role, parent_group: this.group.group_id}
+    this.backend.postRequest('changeRole', request).subscribe({
+      next: (res) => {},
+      error: (e) => {
+        if (e.error.detail === "group must have enough Kapelmistrz") {member.role = "Kapelmistrz"}
+        console.log(e);
+      },
+    });
   }
 
   inviteMember(email: string) {
@@ -108,14 +114,9 @@ export class GroupControlComponent {
 
   addMember(user: UserInfo, group_id: number) {
     const user_id = user.id
-    this.backend.postRequest('addMember', {user_id, group_id}).subscribe({
-      next: (res) => {
-        if (group_id === this.group.group_id) {this.group_members.push(user)}
-        else {this.subgroup_members.push(user)}
-      },
-      error: (e) => {
-        console.log(e);
-      },
+    this.backend.postRequest('groups/addMember', {user_id, group_id, parent_group: this.group.group_id}).subscribe({
+      next: (res) => { this.subgroup_members.push(user) },
+      error: (e) => { console.log(e) },
     });
   }
 }

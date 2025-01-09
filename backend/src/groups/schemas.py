@@ -45,3 +45,25 @@ class EditGroupRequest(BaseModel):
     group_id: int
     name: str
     extra_info: str
+    parent_group: int
+
+class GroupInfo(BaseModel):
+    id: int
+    parent_group: int
+    name: str
+    extra_info: str
+    inv_code: Optional[str]
+
+class RemoveGroupRequest(BaseModel):
+    parent_group: int
+    group_id: int
+
+class DeleteGroupResponse(BaseModel):
+    id: int
+    name: str
+    extra_info: str
+
+class AddMemberRequest(BaseModel):
+    parent_group: int
+    group_id: int
+    user_id: int
