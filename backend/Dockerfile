@@ -7,11 +7,12 @@ COPY ./pyproject.toml /code/pyproject.toml
 RUN pip install . --no-cache-dir 
 
 COPY ./src /code/src
+COPY ./tests /code/tests
 
 COPY ./service_account.json .
 
-COPY ./files_storage /files_storage
+# ENV PYTHONPATH=/code/src
+ENV PYTHONPATH=/code/src:$PYTHONPATH
 
-ENV PYTHONPATH=/code/src
 
 CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
