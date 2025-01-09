@@ -88,8 +88,9 @@ export class GroupControlComponent {
     this.backend.deleteRequest('removeMember', {group_id, user_email, parent_group: this.group.group_id}).subscribe({
       next: (res: any) => {
         if (!res.failed.includes(group_id)) {
-          if (group_id === this.group.group_id) {this.group_members = this.group_members.filter(member => member.email !== user_email)}
-          else {this.subgroup_members = this.group_members.filter(member => member.email !== user_email)}
+          if (group_id === this.group.group_id) {
+            this.group_members = this.group_members.filter(member => member.email !== user_email)}
+          else {this.subgroup_members = this.subgroup_members.filter(member => member.email !== user_email)}
         }
       },
       error: (e) => { console.log(e) },
@@ -113,7 +114,7 @@ export class GroupControlComponent {
 
   addMember(user: UserInfo, group_id: number) {
     const user_id = user.id
-    this.backend.postRequest('addMember', {user_id, group_id}).subscribe({
+    this.backend.postRequest('groups/addMember', {user_id, group_id, parent_group: this.group.group_id}).subscribe({
       next: (res) => { this.subgroup_members.push(user) },
       error: (e) => { console.log(e) },
     });
