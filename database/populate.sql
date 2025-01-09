@@ -55,12 +55,12 @@ BEGIN
     VALUES ('Wik', 'w@gmail.com')
     RETURNING id INTO user_id4;
     -- 2 alerty
-    INSERT INTO alerts (content, date_sent)
-    VALUES ('Wszyscy jestescie super', (CURRENT_TIMESTAMP - INTERVAL '1 day')::timestamp)
+    INSERT INTO alerts (title, content, date_sent)
+    VALUES ('Pochwała', 'Wszyscy jestescie super', (CURRENT_TIMESTAMP - INTERVAL '1 day')::timestamp)
     RETURNING id INTO alert_id1;
 
-    INSERT INTO alerts (content, date_sent)
-    VALUES ('Super poszlo', (CURRENT_TIMESTAMP - INTERVAL '1 hour')::timestamp)
+    INSERT INTO alerts (title, content, date_sent)
+    VALUES ('Super', 'Super poszlo', (CURRENT_TIMESTAMP - INTERVAL '1 hour')::timestamp)
     RETURNING id INTO alert_id2;
     -- 2 grupy
     INSERT INTO groups (parent_group, name, extra_info, invitation_code)
