@@ -26,7 +26,10 @@
     "CATALOGUE": {
         "CATALOGUE": "KATALOG",
         "DETAILS": "SZCZEGÓŁY UTWORU",
-        "ADD_COMPOSITION": "DODAJ UTWÓR"
+        "ADD_COMPOSITION": "DODAJ UTWÓR",
+        "TITLE": "TYTUŁ",
+        "AUTHOR": "AUTOR",
+        "FILES": "PLIKI"
     },
     "CALENDAR": {
         "CHOSEN_DATE": "WYDARZENIA W DNIU ",

@@ -9,7 +9,7 @@
         <li *ngFor="let composition of compositions" (click)="viewComposition(composition)">{{composition.title}}</li>
     </ul>
     <p id="viewed-composition">{{viewedComposition.title}} {{viewedComposition.author}}</p>
-    <button class="new-button" [style.visibility]="group.role=='admin' ? 'visible' : 'hidden'" (click)="toggleOverlayComposition()">{{'CATALOGUE.ADD_COMPOSITION' | translate}}</button>
+    <button class="new-button" [style.visibility]="group.role=='Kapelmistrz' ? 'visible' : 'hidden'" (click)="toggleOverlayComposition()">{{'CATALOGUE.ADD_COMPOSITION' | translate}}</button>
 </main>
 
 <app-overlay-add-composition *ngIf="visibleOverlayComposition" (close)="toggleOverlayComposition()"></app-overlay-add-composition>

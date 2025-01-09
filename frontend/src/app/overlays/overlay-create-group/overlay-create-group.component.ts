@@ -25,9 +25,7 @@ export class OverlayCreateGroupComponent {
     };
 
     this.backend.postRequest('groups/createGroup', createGroupData).subscribe({
-      next: res => {
-        this.createMessage = `Group ${name} created successfully.`
-      },
+      next: res => { this.createMessage = `Group ${name} created successfully.` },
       error: e => {
         console.log(e)
         this.createMessage = e.detail || "Unexpected error occured."

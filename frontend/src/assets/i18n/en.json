@@ -26,7 +26,10 @@
     "CATALOGUE": {
         "CATALOGUE": "CATALOGUE",
         "DETAILS": "COMPOSITION DETAILS",
-        "ADD_COMPOSITION": "ADD COMPOSITION"
+        "ADD_COMPOSITION": "ADD COMPOSITION",
+        "TITLE": "TITLE",
+        "AUTHOR": "AUTHOR",
+        "FILES": "FILES"
     },
     "CALENDAR": {
         "CHOSEN_DATE": "EVENTS ON ",
