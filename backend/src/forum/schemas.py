@@ -3,18 +3,17 @@ from datetime import datetime
 from typing import Optional
 
 
-class AnnouncementBase(BaseModel):
+class AlertBase(BaseModel):
     title: str
     content: str
     group_id: Optional[int] = None
-    subgroup_id: Optional[int] = None
 
 
-class AnnouncementCreate(AnnouncementBase):
+class AlertCreate(AlertBase):
     pass
 
 
-class AnnouncementInfo(AnnouncementBase):
+class AlertInfo(AlertBase):
     id: int
     creator_id: int
     created_at: datetime
