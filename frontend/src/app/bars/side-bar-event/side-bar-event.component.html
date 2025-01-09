@@ -1,9 +1,10 @@
 <main>
     <p>{{event.name}}</p>
+    <p>{{"EVENT." + event.type | translate}}</p>
     <textarea [(ngModel)]="event.extra_info" readonly></textarea>
     <div>
-        <p>{{event.date_start | date: 'yyyy-MM-dd HH:mm:ss'}}</p>
-        <p>{{event.date_end | date: 'yyyy-MM-dd HH:mm:ss'}}</p>
+        <span><p>{{event.date_start | date: 'dd / MM / yyyy'}}</p><p>{{event.date_start | date: 'HH:mm'}}</p></span>
+        <span><p>{{event.date_end | date: 'dd / MM / yyyy'}}</p><p>{{event.date_start | date: 'HH:mm'}}</p></span>
     </div>
     <p>{{event.location}}</p>
 </main>

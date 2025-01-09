@@ -8,7 +8,7 @@ main {
     padding: 20px;
     background-color: #7EB7E9;
     display: grid;
-    grid-template-rows: 1fr 4fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 4fr 1fr 1fr;
     gap: 20px;
     overflow: hidden;
     border-right: solid 2px #000070;
@@ -36,4 +36,9 @@ textarea {
 input:read-only, textarea:read-only {
     outline: none;
     cursor: default;
+}
+
+span {
+    display: flex;
+    justify-content: space-between;
 }
