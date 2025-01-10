@@ -7,6 +7,7 @@ import { OverlayAddCompositionComponent } from '../overlays/overlay-add-composit
 import { GroupInfo } from '../interfaces';
 import { SessionStateService } from '../services/session-state/session-state.service';
 import { FilterPipe } from '../pipe/filter.pipe';
+import { BackendService } from '../services/backend-connection/backend.service';
 
 @Component({
   selector: 'app-music-catalogue',
@@ -20,15 +21,16 @@ export class MusicCatalogueComponent {
   viewedComposition = {title: "", author: ""}
   visibleOverlayComposition = false
   searchPhrase: string = ""
+  compositions: any[] = []
 
-  compositions = [
-    {title: "We'll be fine", author: "Jorge Rivera-Herrans"}
-  ]
-
-  constructor(private state: SessionStateService) {
+  constructor(private backend: BackendService, private state: SessionStateService) {
     this.state.currentGroup.subscribe((group) => {
       this.group = group;
     });
+    this.backend.getCatalogue(this.group.group_id).subscribe({
+      next: (res) => { this.compositions = res },
+      error: (e) => { console.log(e) }
+    })
   }
 
   viewComposition(composition: any): void {

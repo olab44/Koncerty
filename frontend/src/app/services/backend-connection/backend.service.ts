@@ -60,6 +60,16 @@ export class BackendService {
       )
   }
 
+  getCatalogue(group_id: number) {
+    return this.http
+      .get<EventInfo[]>(`${this.apiURL}/catalogue/findCompositions?group_id=${group_id}`, { headers: this.getHeaders() })
+      .pipe(
+        catchError((error) => {
+        return throwError(() => error)
+        })
+      )
+  }
+
   postToken(token: string): Observable<SignUpResponse> {
     return this.http.post<SignUpResponse>(`${this.apiURL}/google-sign-in`, { token })
       .pipe(
