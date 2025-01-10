@@ -4,7 +4,7 @@ from typing import List
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload, MediaIoBaseUpload
-from users.models import User, Member, File, FileOwnership
+from users.models import User, Member, File, FileOwnership, Composition
 from .schemas import UploadFileRequest, DownloadFileRequest, DeleteFileRequest
 from .schemas import FileToUserRequest, FileToSubgroupRequest, FileToCompositionRequest
 from .schemas import DeleteFileToCompositionRequest
@@ -222,3 +222,25 @@ def deprive_composition_of_file(db: Session, email: str, request: DeleteFileToCo
     db.commit()
 
     return file
+
+def find_composition_group(db: Session, email: str, group_id: int):
+    users = db.query(User).join(Member, User.id == Member.user_id).filter(Member.group_id == group_id)
+    
+    if not users:
+        raise HTTPException(status_code=404, detail="No users in the group")
+
+    composition_list = []
+    composition_ids = set()
+    for user in users:
+        compositions = (db.query(Composition)
+                    .join(File, File.composition_id == Composition.id)
+                    .join(FileOwnership, FileOwnership.file_id == File.id)
+                    .filter(FileOwnership.user_id == user.id).all())
+        if compositions:
+            for composition in compositions:
+                if composition.id not in composition_ids:
+                    composition_ids.add(composition.id)
+                    composition_list.append(composition)
+
+
+    return composition_list
