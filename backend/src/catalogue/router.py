@@ -19,10 +19,9 @@ def find_compositions(group_id: int, db: Session = Depends(get_session), token: 
     return {"found": catalogue}
 
 
-@router.post("/addComposition", response_model=List[CompositionInfo])
-def add_composition(group_id: int = Form(...), name: str = Form(...), author: str = Form(...), files: List[UploadFile] = File(...),
-    db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
+@router.post("/addComposition", status_code=201)
+def add_composition(request: CreateCompositionRequest, db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
     """ Handle request to add a new composition to the group's music catalogue """
     user_data = decode_app_token(token)
-    created = create_composition(db, user_data.get("user_id"), group_id, name, author, files)
-    return {}
+    created = create_composition(db, user_data.get("email"), request)
+    return {"created": created}
