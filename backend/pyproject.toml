@@ -28,5 +28,6 @@ dependencies = [
     "google-api-python-client>=2.157.0",
     "PyJWT>=2.8.0",
     "fastapi-mail>=1.0.0",
-    "python-multipart==0.0.6"
+    "python-multipart==0.0.6",
+    "httpx==0.24.1"
 ]
