@@ -69,3 +69,24 @@ def test_create_event(client):
     assert response.status_code == 201
     info = response.json()
     
+def test_edit_event(client):
+    auth_header = {"Authorization": load_env()}
+
+    date_start = datetime(2025, 12, 26, 10, 0, 0) 
+    date_end = datetime(2025, 12, 26, 12, 0, 0)
+
+    response = client.post(f"{BASE_URL}/events/editEvent", json={
+        "event_id": 3,
+        "name": "Edited",
+        "date_start": date_start.isoformat(),
+        "date_end": date_end.isoformat(),
+        "location": "Edited location",
+        "extra_info": "Edited extra",
+        "parent_group": 1,
+        "type": "koncert",
+        "removed_participants": ["f@gmail.com"],
+        "added_participants": ["w@gmail.com"],
+        "removed_compositions": [1],
+        "added_compositions": [1]
+    }, headers=auth_header,)
+    assert response.status_code == 201
