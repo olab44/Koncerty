@@ -1,18 +1,43 @@
 <div class="backdrop" (click)="closeOverlay()"></div>
 <main>
     <div class="message-info">
-        <label for="subject"> {{"MESSAGE.SUBJECT" | translate}}
-            <input type="text" id="subject" name="subject" [(ngModel)]="message.subject" autocomplete="off" maxlength="50"/>
+        <label for="subject"> {{"FORUM.SUBJECT" | translate}}
+            <input type="text" id="subject" name="title" [(ngModel)]="message.title" autocomplete="off" maxlength="50"/>
         </label>
-        <label for="content"> {{"MESSAGE.CONTENT" | translate}}
-            <textarea id="content" name="content" [(ngModel)]="message.content" autocomplete="off" placeholder="optional" maxlength="200"></textarea>
-        </label>
-        <label for="recipient"> {{"MESSAGE.RECIPIENT" | translate}}
-            <input type="email" id="recipient" name="recipient" [(ngModel)]="message.recipient" autocomplete="off" maxlength="100"/>
+        <label for="content"> {{"FORUM.CONTENT" | translate}}
+            <textarea id="content" name="content" [(ngModel)]="message.content" autocomplete="off" placeholder="optional" maxlength="300"></textarea>
         </label>
     </div>
-    <div class="message-button">
-        <span class="message-status"> {{ messageStatus }} </span>
-        <button (click)="sendMessage()" [disabled]="!message.subject || !message.content || !message.recipient">{{ "MESSAGE.SEND" | translate }}</button>
+    <div class="recipients">
+        <p>{{"FORUM.RECIPIENTS" | translate}}</p>
+        <section>
+            <li>
+                <input type="checkbox" [value]="group.group_id" (change)="onGroupCheckboxChange($event, group.group_id)">
+                <span>{{ "FORUM.ALL" | translate }}</span>
+            </li>
+        </section>
+        <section [class.disabled]="allChecked">
+            <ul>
+                <li *ngFor="let sgroup of subgroups">
+                    <input type="checkbox" [value]="sgroup.id" (change)="onGroupCheckboxChange($event, sgroup.id)">
+                    <span>{{sgroup.name}}</span>
+                </li>
+            </ul>
+        </section>
+        <section class="users-recipients" [class.disabled]="allChecked">
+            <div>
+                <input [(ngModel)]="added_user_id" type="number" placeholder="User ID">
+                <button [disabled]="!added_user_id" (click)="addRecipient(added_user_id)"> + </button>
+            </div>
+            <ul>
+                <li *ngFor="let user_id of message.user_ids">
+                    {{ user_id }}<button (click)="removeRecipient(user_id)"> - </button>
+                </li>
+            </ul>
+        </section>        
+    </div>
+    <div class="message-status">
+        <span class="status-message"> {{ messageStatus }} </span>
+        <button (click)="sendMessage()" [disabled]="!message.title || !message.content">{{ "FORUM.SEND" | translate }}</button>
     </div>
 </main>

@@ -14,14 +14,26 @@ from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
-# from Google import Create_Service
 from forum.sendEmail import send_gmail_email
-
 
 SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
 
 def create_alert(db: Session, email: str, request: CreateAlertRequest) -> Alert:
+    """
+    Creates an alert and sends notifications to recipients.
 
+    Args:
+        db (Session): The database session.
+        email (str): The email of the user creating the alert.
+        request (CreateAlertRequest): Request data for creating the alert.
+
+    Returns:
+        tuple: The created Alert object and a list of Recipient objects.
+
+    Raises:
+        HTTPException: If the user does not exist, is not a member of the group, 
+                       or lacks the required role to create an alert.
+    """
     existing_user = db.query(User).filter(User.email == email).first()
     if not existing_user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -32,6 +44,7 @@ def create_alert(db: Session, email: str, request: CreateAlertRequest) -> Alert:
 
     if existing_member.role not in ["Kapelmistrz", "Koordynator"]:
         raise HTTPException(status_code=403, detail="User must have Kapelmistrz or Koordynator role")
+    
     new_alert = Alert(
         title=request.title,
         content=request.content
@@ -43,10 +56,8 @@ def create_alert(db: Session, email: str, request: CreateAlertRequest) -> Alert:
     recipients_list = []
     # Fetch recipients and send notifications
     if request.group_id:
-        # get users who become recipients
         recipients = get_recipients(db, request.group_id)
         for recipient in recipients:
-            # rec is recipient object
             rec = create_recipient(db, recipient.id, new_alert.id)
             recipients_list.append(rec)
             notify_recipient(recipient.email, new_alert.title, new_alert.content)
@@ -64,6 +75,17 @@ def create_alert(db: Session, email: str, request: CreateAlertRequest) -> Alert:
 
 
 def get_alerts(db: Session, email: str, request: GetAlertsRequest):
+    """
+    Retrieves alerts for a user based on their group membership.
+
+    Args:
+        db (Session): The database session.
+        email (str): The email of the user requesting the alerts.
+        request (GetAlertsRequest): The request data for fetching alerts.
+
+    Returns:
+        list: A list of Alert objects.
+    """
     existing_user = db.query(User).filter(User.email == email).first()
     if not existing_user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -89,9 +111,12 @@ def get_alerts(db: Session, email: str, request: GetAlertsRequest):
 
 
 def create_recipient(db: Session, user_id: int, alert_id: int) -> Recipient:
+    """
+    Creates a recipient record for a given alert.
+    """
     new_recipient = Recipient(
-        alert_id = alert_id,
-        member_id = user_id
+        alert_id=alert_id,
+        member_id=user_id
     )
     db.add(new_recipient)
     db.commit()
@@ -102,72 +127,15 @@ def create_recipient(db: Session, user_id: int, alert_id: int) -> Recipient:
 
 def get_recipients(db: Session, group_id: int) -> List[User]:
     """
-    Fetch id of users in the specified group or subgroup.
+    Fetches the users who are members of a specified group.
     """
     query = db.query(User).join(Member).filter(Member.group_id == group_id)
     return query.all()
 
 
-# def compose_message(recipient_email: str, subject: str, body: str) -> MIMEText:
-#     """
-#     Compose an email message.
-#     """
-#     message = MIMEText(body, "plain")
-#     message["Subject"] = subject
-#     message["From"] = settings.EMAIL_ADDRESS
-#     message["To"] = recipient_email
-#     return message
-
-
-# def send_email(message: MIMEText) -> None:
-#     with SMTP(settings.SMTP_SERVER, settings.SMTP_PORT) as server:
-#         server.starttls()
-#         server.login(settings.EMAIL_ADDRESS, settings.EMAIL_PASSWORD)
-#         server.sendmail(settings.EMAIL_ADDRESS, [message["To"]], message.as_string())
-
-# def get_gmail_service():
-#     """Authenticate with Gmail API and return the service object."""
-#     creds = None
-#     # Load credentials from the token file
-#     if os.path.exists(settings.TOKEN_FILE):
-#         creds = Credentials.from_authorized_user_file(settings.TOKEN_FILE, SCOPES)
-#     # If credentials are invalid or not available, reauthenticate
-#     if not creds or not creds.valid:
-#         if creds and creds.expired and creds.refresh_token:
-#             creds.refresh(Request())
-#         else:
-#             flow = InstalledAppFlow.from_client_secrets_file(settings.GMAIL_CREDENTIALS_FILE, SCOPES)
-#             creds = flow.run_local_server(port=0)
-#         # Save the credentials for the next run
-#         with open(settings.TOKEN_FILE, "w") as token_file:
-#             token_file.write(creds.to_json())
-#     return build("gmail", "v1", credentials=creds)
-
-
-# def send_gmail_email(recipient_email: str, subject: str, body: str):
-#     """Send an email via Gmail API."""
-#     service = get_gmail_service()
-#     message = MIMEText(body)
-#     message["to"] = recipient_email
-#     message["subject"] = subject
-#     raw_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
-#     try:
-#         send_message = (
-#             service.users()
-#             .messages()
-#             .send(userId="me", body={"raw": raw_message})
-#             .execute()
-#         )
-#         print(f"Message sent: {send_message['id']}")
-#     except Exception as error:
-#         print(f"An error occurred: {error}")
-
-
 @dramatiq.actor
 def notify_recipient(recipient_email: str, subject: str, body: str) -> None:
+    """
+    Sends a notification email to a recipient.
+    """
     send_gmail_email(recipient_email, subject, body)
-
-
-# def notify_recipients(recipients: List[str], subject: str, body: str) -> None:
-#     for recipient_email in recipients:
-#         notify_recipient.send(recipient_email, subject, body)

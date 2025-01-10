@@ -86,3 +86,11 @@ interface EditEventRequest {
     removed_compositions: number[]
     added_compositions: number[]
 }
+
+export interface ForumMessageCreate {
+    title: string;
+    content: string;
+    parent_group: number
+    group_ids: number[]
+    user_ids: number[];
+}
