@@ -10,10 +10,16 @@ import string
 import secrets
 
 def generate_invitation_code(length=20):
+    """
+    Generates a random invitation code consisting of ASCII letters and digits.
+    """
     return ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(length))
 
 
 def register_group(db: Session, user_email: User, group: CreateGroupRequest):
+    """
+    Registers a new group and adds the user as a member with the role "Kapelmistrz".
+    """
     existing_user = db.query(User).filter(User.email == user_email).first()
     if not existing_user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -112,6 +118,9 @@ def get_user_group_structure(db: Session, email: str):
 
 
 def user_to_group(db: Session, user_email: User, group: JoinGroupRequest):
+    """
+    Adds a user to a group as a member with the role "Muzyk" using the invitation code.
+    """
     existing_user = db.query(User).filter(User.email == user_email).first()
     if not existing_user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -129,6 +138,9 @@ def user_to_group(db: Session, user_email: User, group: JoinGroupRequest):
     return joined_group
 
 def register_subgroup(db: Session, user_email: User, request: CreateSubgroupRequest):
+    """
+    Registers a new subgroup under an existing group and adds the user as a member.
+    """
     existing_user = db.query(User).filter(User.email == user_email).first()
     if not existing_user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -163,6 +175,9 @@ def register_subgroup(db: Session, user_email: User, request: CreateSubgroupRequ
 
 
 def edit_group(db: Session, user_email: User, request: EditGroupRequest):
+    """
+    Edits the details of an existing group, ensuring the user has "Kapelmistrz" role.
+    """
     existing_user = db.query(User).filter(User.email == user_email).first()
     if not existing_user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -191,6 +206,9 @@ def edit_group(db: Session, user_email: User, request: EditGroupRequest):
 
 
 def get_subgroups(db: Session, user_email: str, group_id: int):
+    """
+    Retrieves a list of subgroups for a given group, ensuring the user has the appropriate role.
+    """
     user = db.query(User).filter(User.email == user_email).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -256,6 +274,9 @@ def remove_subgroup(db: Session, user_email: str, request: RemoveGroupRequest):
     )
 
 def add_member_to_subgroup(db: Session, user_email: str, request: AddMemberRequest):
+    """
+    Adds a new member to an existing subgroup.
+    """
     user = db.query(User).filter(User.email == user_email).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")

@@ -14,6 +14,10 @@ from users.models import (User, Member,
 )
 
 def get_calendar_service(token: str):
+    """
+    Initialize and return a Google Calendar service instance.
+    """
+
     try:
         load_dotenv()
         GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
@@ -26,6 +30,9 @@ def get_calendar_service(token: str):
         raise HTTPException(status_code=500, detail=f"Google Calendar service error: {str(e)}")
 
 def get_setlist_info(db: Session, setlists: List[int]):
+    """
+    Retrieve setlist information for the given setlist IDs.
+    """
     setlist_infos = []
     for setlist in setlists:
         composition = db.query(Composition).filter(Composition.id == setlist.composition_id).first()
@@ -35,6 +42,9 @@ def get_setlist_info(db: Session, setlists: List[int]):
     return setlist_infos
 
 def get_participants_info(db: Session, participants: List[int]):
+    """
+    Retrieve participant information for the given participant IDs.
+    """
     user_infos = []
     for participant in participants:
         user = db.query(User).filter(User.id == participant.user_id).first()
@@ -44,6 +54,9 @@ def get_participants_info(db: Session, participants: List[int]):
     return user_infos
 
 def user_in_parent_group(db: Session, user: User, group_id: int) -> bool:
+    """
+    Check if a user belongs to a specific parent group.
+    """
     member = db.query(Member).filter(
         Member.user_id == user.id,
         Member.group_id == group_id
@@ -52,6 +65,9 @@ def user_in_parent_group(db: Session, user: User, group_id: int) -> bool:
     return member is not None
 
 def get_user_events(db: Session, email: str, group_id: int):
+    """
+    Retrieve events for a specific user and group.
+    """
     existing_user = db.query(User).filter(User.email == email).first()
     if not existing_user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -83,6 +99,9 @@ def get_user_events(db: Session, email: str, group_id: int):
     return event_infos
 
 def create_event(db: Session, email: str, request: CreateEventRequest):
+    """
+    Create a new event and associate participants and setlists.
+    """
 
     existing_user = db.query(User).filter(User.email == email).first()
     if not existing_user:
@@ -149,6 +168,9 @@ def create_event(db: Session, email: str, request: CreateEventRequest):
 
 
 def edit_event(db: Session, email: str, request: EditEventRequest):
+    """
+    Edit an existing event's details, participants, and setlists.
+    """
 
     existing_user = db.query(User).filter(User.email == email).first()
     if not existing_user:

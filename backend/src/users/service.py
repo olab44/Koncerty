@@ -13,6 +13,9 @@ import datetime
 
 
 def manage_loging(db: Session, token: str):
+    """
+    Manages user login using a Google OAuth token.
+    """
     try:
         load_dotenv()
         GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
@@ -48,9 +51,12 @@ def manage_loging(db: Session, token: str):
         raise HTTPException(status_code=400, detail="Invalid Google token")
 
 def decode_app_token(app_token: str):
+    """
+    Decodes the application token to retrieve user data.
+    """
     try:
         if app_token.startswith("Bearer "):
-            app_token = app_token[len("Bearer "):]
+            app_token = app_token[len("Bearer "):]  # Remove Bearer prefix
 
         load_dotenv()
         APP_SECRET = os.getenv("APP_SECRET")
@@ -61,20 +67,29 @@ def decode_app_token(app_token: str):
     except jwt.InvalidTokenError:
         return None
 
+
 def get_user_data(token: str):
+    """
+    Retrieves user data from the decoded app token.
+    """
     user_data = decode_app_token(token)
     if not user_data:
         raise HTTPException(status_code=403, detail="Invalid app_token")
     return user_data
 
 def find_user_by_email(db: Session, user_email: str):
+    """
+    Finds a user by email.
+    """
     user = db.query(User).filter(User.email == user_email).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
-def enough_admins(db, group_id):
-    """zwroc False dla niemozliwego usuniecia"""
+def enough_admins(db: Session, group_id: int):
+    """
+    Checks if there are enough admins (Kapelmistrz role) in the group.
+    """
     kapelmistrz_count = db.query(Member).filter(
         Member.group_id == group_id,
         Member.role == "Kapelmistrz"
@@ -86,6 +101,9 @@ def enough_admins(db, group_id):
 
 
 def register_user(db: Session, user_email: str, username: str):
+    """
+    Registers a new user in the database
+    """
     existing_user = db.query(User).filter(User.email == user_email).first()
     if existing_user:
         raise HTTPException(status_code=400, detail="Email already registered")
@@ -96,7 +114,11 @@ def register_user(db: Session, user_email: str, username: str):
     db.refresh(new_user)
     return new_user
 
+
 def get_user_from_group(db: Session, user_email: str, group_id: int):
+    """
+    Retrieves all users from a group.
+    """
     user = db.query(User).filter(User.email == user_email).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -117,8 +139,10 @@ def get_user_from_group(db: Session, user_email: str, group_id: int):
 
     return user_list
 
-
 def change_user_role(db: Session, user_email: str, request: ChangeUserRoleRequest):
+    """
+    Changes the role of a user within a group.
+    """
     requesting_user = find_user_by_email(db, user_email)
 
     member = db.query(Member).filter(Member.user_id == requesting_user.id, Member.group_id == request.parent_group).first()
@@ -135,7 +159,7 @@ def change_user_role(db: Session, user_email: str, request: ChangeUserRoleReques
 
     if request.new_role != "Kapelmistrz" and changed_member.role == "Kapelmistrz":
         if not enough_admins(db, request.group_id):
-            raise HTTPException(status_code=403, detail="group must have enough Kapelmistrz")
+            raise HTTPException(status_code=403, detail="Group must have enough Kapelmistrz")
 
     changed_member.role = request.new_role
     db.commit()
@@ -147,8 +171,10 @@ def change_user_role(db: Session, user_email: str, request: ChangeUserRoleReques
         "new_role": changed_member.role
     }
 
-
 def remove_member_all_subs(db: Session, user_email: str, request: RemoveMemberRequest):
+    """
+    Removes a user from a group and all its subgroups.
+    """
     requesting_user = find_user_by_email(db, user_email)
 
     member = db.query(Member).filter(
