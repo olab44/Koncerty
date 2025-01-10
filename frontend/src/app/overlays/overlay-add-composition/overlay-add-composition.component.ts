@@ -36,13 +36,14 @@ export class OverlayAddCompositionComponent {
   }
 
   addComposition(): void {
-    const composition = {
-      parent_group: this.group.group_id,
-      title: this.titleInput,
-      author: this.authorInput,
-      files: this.files
-    };
-    this.backend.postRequest('files/addComposition', composition).subscribe({
+    const compositionData = new FormData()
+    compositionData.append('group_id', this.group.group_id.toString())
+    compositionData.append('title', this.titleInput)
+    compositionData.append('author', this.authorInput)
+    this.files.forEach((file) => {
+      compositionData.append('files', file);
+    });
+    this.backend.postRequest('files/addComposition', compositionData).subscribe({
       next: res => {
         this.addMessage = "Composition added"
         this.update.emit()
