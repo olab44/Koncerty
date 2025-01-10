@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from database import get_session
 from .service import upload_to_drive, download_from_drive, delete_from_drive, assign_file_to_user
-from .service import assign_file_to_subgroup, assign_file_to_composition, find_composition_group
+from .service import assign_file_to_subgroup, assign_file_to_composition
 from .service import deprive_user_of_file, deprive_subgroup_of_file, deprive_composition_of_file
 from .schemas import * 
 from users.models import User
@@ -121,11 +121,3 @@ def deprive_composition(request: DeleteFileToCompositionRequest, db: Session = D
     file = deprive_composition_of_file(db, user_data.get("email"), request)
 
     return { "deprived": {"composition_id": file.composition_id, "file_id": request.file_id} }
-
-@router.get("/findGroupCompositions", status_code=200)
-def find_group_compositions(group_id: str, db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
-    user_data = decode_app_token(token)
-
-    compositions = find_composition_group(db, user_data.get("email"), group_id)
-
-    return {"found": compositions}

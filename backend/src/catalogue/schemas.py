@@ -17,3 +17,8 @@ class CompositionInfo(BaseModel):
 
     class Config:
         from_attributes = True
+    
+class CreateCompositionRequest(BaseModel):
+    name: str
+    author: str
+    files: List[int]
