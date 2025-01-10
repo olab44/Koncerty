@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS public.members
 CREATE TABLE IF NOT EXISTS public.alerts
 (
     id bigserial NOT NULL,
+    title character varying(150) NOT NULL,
     content character varying(400),
     date_sent timestamp without time zone,
     PRIMARY KEY (id)

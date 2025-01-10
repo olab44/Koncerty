@@ -12,7 +12,7 @@ app = FastAPI()
 app.include_router(users_router)
 app.include_router(group_router, prefix="/groups")
 app.include_router(events_router, prefix="/events")
-app.include_router(forum_router)
+app.include_router(forum_router, prefix="/forum")
 app.include_router(files_router, prefix="/files")
 
 

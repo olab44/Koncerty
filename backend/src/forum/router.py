@@ -4,55 +4,41 @@ from typing import List
 
 from src.database import get_session
 from users.service import decode_app_token
-from .schemas import AnnouncementCreate, AnnouncementInfo
-from .service import create_announcement, get_announcements
+from .schemas import *
+from .service import create_alert, get_alerts
+from users.models import User, Member, Alert
 
 
 router = APIRouter()
 
 
-@router.post("/announcements/createAnnouncement", status_code=201, response_model=AnnouncementInfo)
-def post_announcement(
-    request: AnnouncementCreate,
+@router.post("/createAlert", status_code=201, response_model=CreateAlertResponse)
+def post_alert(
+    request: CreateAlertRequest,
     db: Session = Depends(get_session),
     token: str = Header(..., alias="Authorization"),
 ):
-    try:
-        # Attempt to decode the token and check for its validity
-        user_data = decode_app_token(token)
-        
-        # If the token is decoded successfully, check if the user has the required role
-        if user_data.get("role") not in ["admin", "moderator"]:
-            raise HTTPException(status_code=403, detail="Access denied: You need admin or moderator role")
-        
-        # Proceed to create the announcement
-        return create_announcement(db, user_data["id"], request)
+    user_data = decode_app_token(token)    
+    alert, recipients =  create_alert(db, user_data.get("email"), request)
+    alert_model = AlertModel.from_orm(alert)
+    recipients_model = [RecipientModel.from_orm(rec) for rec in recipients]
 
-    except ValueError as ve:
-        # In case of token decoding failure (invalid token structure)
-        raise HTTPException(status_code=401, detail="Invalid token: The token format or data is incorrect")
-    
-    except KeyError as ke:
-        # If there is an issue with decoding the token (missing fields)
-        raise HTTPException(status_code=401, detail="Invalid token: Missing required fields in the token")
-    
-    except Exception as ex:
-        # Catch any other unknown errors and specify them
-        raise HTTPException(status_code=401, detail=f"Token validation failed: {str(ex)}")
+    return {
+        "alert": alert_model,
+        "recipients": recipients_model
+    }
 
 
-
-@router.get("/announcements/findAnnouncements", response_model=List[AnnouncementInfo])
-def fetch_announcements(
-    group_id: int = None,
-    subgroup_id: int = None,
+@router.get("/getAlerts", response_model=GetAlertsResponse)
+def fetch_alerts(
+    request: GetAlertsRequest,
     db: Session = Depends(get_session),
     token: str = Header(..., alias="Authorization"),
 ):
-    try:
-        user_data = decode_app_token(token)
-        return get_announcements(db, group_id, subgroup_id)
-    except HTTPException as e:
-        raise e
-    except Exception:
-        raise HTTPException(status_code=401, detail="Invalid or expired token")
+    user_data = decode_app_token(token)
+    alerts = get_alerts(db, user_data.get("email"), request)
+    alerts_model = [AlertModel.from_orm(alert) for alert in alerts]
+
+    return {
+        "alerts": alerts_model
+    }

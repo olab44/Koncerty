@@ -1,6 +1,7 @@
-from sqlalchemy import Column, BigInteger, String, ForeignKey, DateTime
+from sqlalchemy import Column, BigInteger, String, ForeignKey, DateTime, Text
 from sqlalchemy.orm import relationship
 from database import Base
+from datetime import datetime
 
 class User(Base):
     __tablename__ = "users"
@@ -22,12 +23,12 @@ class Group(Base):
     extra_info = Column(String(100))
     invitation_code = Column(String(20), nullable=False)
 
-
     members = relationship("Member", back_populates="group")
     events = relationship(
         "Event",
         back_populates="group",
         primaryjoin="Group.id == Event.parent_group" )
+
 
 class Member(Base):
     __tablename__ = "members"
@@ -39,7 +40,7 @@ class Member(Base):
 
     user = relationship("User", back_populates="members")
     group = relationship("Group", back_populates="members")
-
+    recipients = relationship("Recipient", back_populates="member")
 
 
 class Event(Base):
@@ -113,3 +114,23 @@ class FileOwnership(Base):
 
     user = relationship("User", back_populates="file_ownerships")
     file = relationship("File", back_populates="ownerships")
+
+
+class Alert(Base):
+    __tablename__ = "alerts"
+    id = Column(BigInteger, primary_key=True, index=True)
+    title = Column(String(150), nullable=False)
+    content = Column(String(400), nullable=False)
+    date_sent = Column(DateTime, default=datetime.utcnow)
+
+    recipients = relationship("Recipient", back_populates="alert")
+
+
+class Recipient(Base):
+    __tablename__ = "recipients"
+    id = Column(BigInteger, primary_key=True, index=True)
+    alert_id = Column(BigInteger, ForeignKey("alerts.id"), nullable=False)
+    member_id = Column(BigInteger, ForeignKey("members.id"), nullable=False)
+
+    alert = relationship("Alert", back_populates="recipients")
+    member = relationship("Member", back_populates="recipients")
