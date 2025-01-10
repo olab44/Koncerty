@@ -193,4 +193,8 @@ ALTER TABLE IF EXISTS public.participations
     ON DELETE NO ACTION
     NOT VALID;
 
+ALTER TABLE public.alerts
+ADD COLUMN title character varying(255);
+
+
 END;
