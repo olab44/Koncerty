@@ -22,8 +22,3 @@ class CreateCompositionRequest(BaseModel):
     name: str
     author: str
     files: List[int]
-
-class CreateCompositionRequest(BaseModel):
-    name: str
-    author: str
-    files: List[int]
