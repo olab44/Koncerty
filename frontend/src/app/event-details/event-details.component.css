@@ -1,0 +1,20 @@
+main {
+    margin-top: 5vh;
+    margin-left: 25vw;
+    height: 90vh;
+
+    display: grid;
+    justify-items: center;
+}
+
+p {
+    height: 100%;
+    width: 90%;
+    padding: 10px;
+    background-color: #CCE7FF;
+    border-bottom: solid 5px #000070;
+    border-top: solid 5px #000070;
+
+    word-break: break-all;
+    white-space: pre-wrap;
+}

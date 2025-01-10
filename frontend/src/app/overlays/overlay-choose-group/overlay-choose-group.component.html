@@ -1,0 +1,10 @@
+<div class="backdrop" (click)="closeOverlay()"></div>
+<main>
+    <ul class="group-list">
+        <li *ngFor="let group of userGroups?.group_structure" (click)="gotoGroup(group)">{{group?.group_name}}
+            <ul class="subgroup-list">
+                <li *ngFor="let subgroup of group?.subgroups" (click)="showSubgroupInfo($event, subgroup)">{{subgroup?.subgroup_name}}</li>
+            </ul>
+        </li>
+    </ul>
+</main>

@@ -1,0 +1,10 @@
+<main>
+    <input [(ngModel)]="name" type="text" [readonly]="!isEditAvailable" (input)="onInput()" name="name" autocomplete="off">
+    <textarea [(ngModel)]="extra_info" [readonly]="!isEditAvailable" (input)="onInput()"  name="extra_info"></textarea>
+    <p>{{"GROUP.ROLE" | translate}}<br>&emsp;{{ 'MEMBER.' + group.role | translate }}</p>
+    <p class="inv-code">{{group.inv_code}}</p>
+    <div>
+        <span>{{editMessage}}</span>
+        <button [style.visibility]="(isEditAvailable && name)? 'visible' : 'hidden'" (click)="saveGroupInfo(name, extra_info)" [disabled]="">-- &#x2714; --</button>
+    </div>
+</main>

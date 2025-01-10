@@ -1,0 +1,60 @@
+<div class="backdrop" (click)="closeOverlay()"></div>
+<main>
+    <div class="event-info">
+        <label for="name"> {{"EVENT.NAME" | translate}}
+            <input type="text" id="name" name="name" [(ngModel)]="event.name" autocomplete="off" maxlength="30"/>
+        </label>
+        <label for="type"> {{"EVENT.TYPE" | translate}}
+            <select id="type" [(ngModel)]="event.type">
+                <option value="Koncert"> {{"EVENT.Koncert" | translate}} </option>
+                <option value="Próba"> {{"EVENT.Próba" | translate}} </option>
+              </select>
+        </label>
+        <label for="description"> {{"EVENT.DESCRIPTION" | translate}}
+            <textarea id="description" name="description" [(ngModel)]="event.extra_info" autocomplete="off" placeholder="optional" maxlength="100"></textarea>
+        </label>
+        <div class=dates>
+            <label for="start-date"> {{"EVENT.START" | translate}} <br>
+                <input type="datetime-local" id="start-date" name="start-date" [(ngModel)]="event.date_start" autocomplete="off" (ngModelChange)="validateDates()"/>
+            </label>
+            <label for="end-date"> {{"EVENT.END" | translate}} <br>
+                <input type="datetime-local" id="end-date" name="end-date" [(ngModel)]="event.date_end" autocomplete="off" (ngModelChange)="validateDates()"/>
+            </label>
+        </div>
+        <label for="location"> {{"EVENT.LOCATION" | translate}}
+            <input type="text" id="location" name="location" [(ngModel)]="event.location" autocomplete="off" maxlength="50"/>
+        </label>
+    </div>
+    <div class="participation">
+        <p>{{"EVENT.PARTICIPANTS" | translate}}</p>
+        <section>
+            <li>
+                <input type="checkbox" [value]="group.group_id" (change)="onGroupCheckboxChange($event, group.group_id)">
+                <span>{{ "EVENT.ALL" | translate }}</span>
+            </li>
+        </section>
+        <section [class.disabled]="allChecked">
+            <ul>
+                <li *ngFor="let sgroup of subgroups">
+                    <input type="checkbox" [value]="sgroup.id" (change)="onGroupCheckboxChange($event, sgroup.id)">
+                    <span>{{sgroup.name}}</span>
+                </li>
+            </ul>
+        </section>
+        <section class="users-participation" [class.disabled]="allChecked">
+            <div>
+                <input [(ngModel)]="added_email" email type="email" placeholder="e-mail"><button [disabled]="!added_email" (click)="addParticipant(added_email)"> + </button>
+            </div>
+            <ul>
+                <li *ngFor="let email of event.user_emails">{{email}}<button (click)="removeParticipant(email)"> - </button></li>
+            </ul>
+        </section>
+    </div>
+    <div class="setlist">
+        <p>{{"EVENT.SETLIST" | translate}}</p>
+    </div>
+    <div class="message-button">
+        <span class="event-message"> {{ eventMessage }} </span>
+        <button (click)="createEvent()" [disabled]="!validDates || !event.name || !event.location">{{ "EVENT.NEW" | translate }}</button>
+    </div>
+</main>

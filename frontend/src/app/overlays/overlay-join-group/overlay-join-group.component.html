@@ -1,0 +1,11 @@
+<div class="backdrop" (click)="closeOverlay()"></div>
+<main>
+    <div>
+        <label for="code">{{ "OVERLAYS.INPUT_CODE" | translate }}</label>
+        <input [(ngModel)]="codeInput" type="text" id="code" name="code" autocomplete="off" placeholder="GROUP CODE">
+    </div>
+    <div>
+        <p>{{joinMessage}}</p>
+        <button id="join-button" (click)="joinGroup(codeInput)" [disabled]="!codeInput">{{ "HOME.JOIN" | translate }}</button>
+    </div>
+</main>

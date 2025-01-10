@@ -1,0 +1,85 @@
+{
+    "SIGN_IN": "SIGN IN WITH GOOGLE",
+    "PROMPT_USERNAME": "CHOOSE USERNAME",
+    "WELCOME": "WELCOME",
+    "HOME": {
+        "CHOOSE_GROUP": "CHOOSE THE GROUP",
+        "JOIN": "JOIN",
+        "CREATE": "CREATE"
+    },
+    "OVERLAYS" : {
+        "INPUT_CODE": "INPUT GROUP CODE",
+        "NAME": "NAME",
+        "DESCRIPTION": "DESCRIPTION"
+    },
+    "GROUP_HUB": {
+        "CATALOGUE": "MUSIC<br>CATALOGUE",
+        "CALENDAR": "EVENTS<br>CALENDAR",
+        "FORUM": "MESSAGE<br>FORUM",
+        "CONTROL": "GROUP<br>CONTROL"
+    },
+    "FORUM": {
+        "MESSAGES": "MESSAGES",
+        "CONTENT": "MESSAGE CONTENT",
+        "NEW_MESSAGE": "SEND NEW MESSAGE"
+    },
+    "CATALOGUE": {
+        "CATALOGUE": "CATALOGUE",
+        "DETAILS": "COMPOSITION DETAILS",
+        "ADD_COMPOSITION": "ADD COMPOSITION",
+        "TITLE": "TITLE",
+        "AUTHOR": "AUTHOR",
+        "FILES": "FILES"
+    },
+    "CALENDAR": {
+        "CHOSEN_DATE": "EVENTS ON ",
+        "NEW_EVENT": "ADD NEW EVENT",
+        "I": "JANUARY",
+        "II": "FEBRUARY",
+        "III": "MARCH",
+        "IV": "APRIL",
+        "V": "MAY",
+        "VI": "JUNE",
+        "VII": "JULY",
+        "VIII": "AUGUST",
+        "IX": "SEPTEMBER",
+        "X": "OCTOBER",
+        "XI": "NOVEMBER",
+        "XII": "DECEMBER",
+        "SUN": "SUN",
+        "MON": "MON",
+        "TUE": "TUE",
+        "WED": "WED",
+        "THU": "THU",
+        "FRI": "FRI",
+        "SAT": "SAT"
+    },
+    "GROUP": {
+        "ROLE": "group role",
+        "INVITE": "INVITE",
+        "SCREATE": "CREATE SUBGROUP"
+    },
+    "MEMBER": {
+        "Kapelmistrz": "BANDLEADER",
+        "Koordynator": "COORDINATOR",
+        "Muzyk": "MUSICIAN"
+    },
+    "FILTER": {
+        "EMAIL": "E-MAIL",
+        "ROLE": "ROLE"
+    },
+    "EVENT": {
+        "NEW": "ADD EVENT",
+        "NAME": "EVENT NAME",
+        "TYPE": "EVENT TYPE",
+        "Koncert": "CONCERT",
+        "Próba": "REHEARSAL",
+        "DESCRIPTION": "DESCRIPTION",
+        "START": "START TIME",
+        "END": "END TIME",
+        "LOCATION": "LOCATION",
+        "PARTICIPANTS": "PARTICIPANTS",
+        "ALL": "WHOLE GROUP",
+        "SETLIST": "SETLIST"
+    }
+}

@@ -1,0 +1,85 @@
+{
+    "SIGN_IN": "ZALOGUJ SIĘ PRZEZ GOOGLE",
+    "PROMPT_USERNAME": "WYBIERZ NAZWĘ UŻYTKOWNIKA",
+    "WELCOME": "WITAJ",
+    "HOME": {
+        "CHOOSE_GROUP": "WYBIERZ GRUPĘ",
+        "JOIN": "DOŁĄCZ",
+        "CREATE": "UTWÓRZ"
+    },
+    "OVERLAYS" : {
+        "INPUT_CODE": "PODAJ KOD GRUPY",
+        "NAME": "NAZWA",
+        "DESCRIPTION": "OPIS"
+    },
+    "GROUP_HUB": {
+        "CATALOGUE": "KATALOG<br>UTWORÓW",
+        "CALENDAR": "KALENDARZ<br>WYDARZEŃ",
+        "FORUM": "FORUM<br>WIADOMOŚCI",
+        "CONTROL": "USTAWIENIA<br>GRUPY"
+    },
+    "FORUM": {
+        "MESSAGES": "WIADOMOŚCI",
+        "CONTENT": "TREŚĆ WIADOMOŚCI",
+        "NEW_MESSAGE": "WYŚLIJ NOWĄ WIADOMOŚĆ"
+    },
+    "CATALOGUE": {
+        "CATALOGUE": "KATALOG",
+        "DETAILS": "SZCZEGÓŁY UTWORU",
+        "ADD_COMPOSITION": "DODAJ UTWÓR",
+        "TITLE": "TYTUŁ",
+        "AUTHOR": "AUTOR",
+        "FILES": "PLIKI"
+    },
+    "CALENDAR": {
+        "CHOSEN_DATE": "WYDARZENIA W DNIU ",
+        "NEW_EVENT": "DODAJ NOWE WYDARZENIE",
+        "I": "STYCZEŃ",
+        "II": "LUTY",
+        "III": "MARZEC",
+        "IV": "KWIECIEŃ",
+        "V": "MAJ",
+        "VI": "CZERWIEC",
+        "VII": "LIPIEC",
+        "VIII": "SIERPIEŃ",
+        "IX": "WRZESIEŃ",
+        "X": "PAŹDZIERNIK",
+        "XI": "LISTOPAD",
+        "XII": "GRUDZIEŃ",
+        "SUN": "NIE",
+        "MON": "PON",
+        "TUE": "WTO",
+        "WED": "ŚRO",
+        "THU": "CZW",
+        "FRI": "PIĄ",
+        "SAT": "SOB"
+    },
+    "GROUP": {
+        "ROLE": "rola w grupie",
+        "INVITE": "ZAPROŚ",
+        "SCREATE": "UTWÓRZ PODGRUPĘ"
+    },
+    "MEMBER": {
+        "Kapelmistrz": "KAPELMISTRZ",
+        "Koordynator": "KOORDYNATOR",
+        "Muzyk": "MUZYK"
+    },
+    "FILTER": {
+        "EMAIL": "E-MAIL",
+        "ROLE": "ROLA"
+    },
+    "EVENT": {
+        "NEW": "DODAJ WYDARZENIE",
+        "NAME": "NAZWA WYDARZENIA",
+        "TYPE": "TYP WYDARZENIA",
+        "Koncert": "KONCERT",
+        "Próba": "PRÓBA",
+        "DESCRIPTION": "OPIS",
+        "START": "CZAS ROZPOCZĘCIA",
+        "END": "CZAS ZAKOŃCZENIA",
+        "LOCATION": "MIEJSCE",
+        "PARTICIPANTS": "UCZESTNICY",
+        "ALL": "CAŁA GRUPA",
+        "SETLIST": "UTWORY"
+    }
+}

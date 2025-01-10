@@ -1,0 +1,19 @@
+<div class="backdrop" (click)="closeOverlay()"></div>
+<main>
+    <div>
+        <label for="title">{{ "CATALOGUE.TITLE" | translate }}</label>
+        <input [(ngModel)]="titleInput" type="text" id="title" name="title" autocomplete="off" placeholder="TITLE" maxlength="50">
+        <label for="author">{{ "CATALOGUE.AUTHOR" | translate }}</label>
+        <input [(ngModel)]="authorInput" type="text" id="author" name="author" autocomplete="off" placeholder="AUTHOR" maxlength="40">
+        <label for="files">{{ "CATALOGUE.FILES" | translate }}&emsp;UPLOAD &#10851;</label>
+        <input (change)="onFilesSelected($event)" type="file" id="files" name="files" multiple
+        accept=".mp4,.pdf,.m4a,.mid,.mus,.txt,.png,.musx,.jpg,.zip,.doc,.mp3,.wav,.wma,.tif">
+        <ul>
+            <li *ngFor="let file of files">{{ file.name }}</li>
+        </ul>
+    </div>
+    <div>
+        <p>{{addMessage}}</p>
+        <button id="create-button" (click)="addComposition()" [disabled]="!titleInput || !authorInput">{{ "CATALOGUE.ADD_COMPOSITION" | translate }}</button>
+    </div>
+</main>

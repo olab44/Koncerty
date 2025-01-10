@@ -1,0 +1,31 @@
+main {
+    margin-top: 5vh;
+    margin-left: 25vw;
+    height: 75vh;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    justify-items: center;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.welcome-text {
+    text-align: center;
+    border-bottom: double 20px #000070;
+    font-size: 7.5vw;
+    grid-column-start: 1;
+    grid-column-end: 4;
+}
+
+button {
+    width: 75%;
+    height: 15vh;
+    border-radius: 25px;
+    font-size: xx-large;
+    white-space: pre-line;
+}
+#control-button {
+    grid-column-start: 2;
+}

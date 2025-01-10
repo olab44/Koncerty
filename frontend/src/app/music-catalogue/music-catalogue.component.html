@@ -1,0 +1,17 @@
+<app-top-bar [isReturnAvailable]="true" [groupName]="group.group_name"></app-top-bar>
+<main>
+    <section>
+        <p>{{'CATALOGUE.CATALOGUE' | translate}}</p>
+        <button class="filters-button">&#8801;<div class="popup-options">
+            <input type="text" [(ngModel)]="searchPhrase" id="searchPhrase" autocomplete="off"><label for="searchPhrase">&#8981;</label>
+        </div></button>
+    </section>
+    <p>{{'CATALOGUE.DETAILS' | translate}}</p>
+    <ul>
+        <li *ngFor="let composition of compositions | filterPipe: 'title': searchPhrase" (click)="viewComposition(composition)">{{composition.title}}</li>
+    </ul>
+    <p id="viewed-composition">{{viewedComposition.title}} {{viewedComposition.author}}</p>
+    <button class="new-button" [style.visibility]="group.role=='Kapelmistrz' ? 'visible' : 'hidden'" (click)="toggleOverlayComposition()">{{'CATALOGUE.ADD_COMPOSITION' | translate}}</button>
+</main>
+
+<app-overlay-add-composition *ngIf="visibleOverlayComposition" (close)="toggleOverlayComposition()"></app-overlay-add-composition>

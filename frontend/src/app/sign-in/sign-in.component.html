@@ -1,0 +1,20 @@
+<app-top-bar [isLogoutAvailable]="false"></app-top-bar>
+<main>
+    <img src="../../assets/logo.png" alt="LOGO : MUSIC NOTES" width="512px">
+    <div>
+        <section>
+            <div class="sign-in-text">{{ 'SIGN_IN' | translate }}</div><div class="sign-in-text">&#10148;</div>
+            <div id="sign-in-icon"></div>
+        </section>
+    </div>
+</main>
+
+<div *ngIf="promptUsername" class="backdrop">
+    <div class="username-prompt">
+        <label for="username">{{ 'PROMPT_USERNAME' | translate }}</label>
+        <div>
+            <input [(ngModel)]="username" type="text" id="username-input" id="username" placeholder="username" />
+            <button (click)="setUsername(username)" [disabled]="!username">-- &#x2714; --</button>
+        </div>
+    </div>
+</div>

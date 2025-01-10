@@ -1,0 +1,39 @@
+main {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5vh;
+    z-index: 5;
+    background-color: #7EB7E9;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: center;
+    border-bottom: solid 2px #000070;
+}
+
+.icon {
+    padding-left: 20px;
+}
+
+.group-name {
+    text-align: center;
+}
+
+.interactibles {
+    padding-right: 20px;
+
+    display: inline-flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+select {
+    background-color: transparent;
+    border: none;
+    outline: none;
+
+    color: #000070;
+    font-size: larger;
+    font-weight: bold;
+}

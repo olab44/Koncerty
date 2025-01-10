@@ -1,0 +1,35 @@
+[project]
+name = "backend"
+version = "0.1.0"
+description = "Backend"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "flake8==7.1.1",
+    "black==24.10.0",
+    "fastapi==0.115.3",
+    "redis==5.2.0",
+    "dramatiq==1.17.1",
+    "pytest==8.3.3",
+    "tox==4.23.2",
+    "locust==2.32.0",
+    "sqlalchemy==2.0.36",
+    "pymysql==1.1.1",
+    "uvicorn==0.32.0",
+    "bcrypt==4.0.1",
+    "passlib==1.7.4",
+    "python-jose==3.3.0",
+    "python-dotenv==1.0.0",
+    "cryptography>=43.0.3",
+    "psycopg2-binary==2.9.9",
+    "google-auth>=2.20.0",
+    "google-auth-oauthlib>=0.8.0",
+    "google-auth-httplib2>=0.1.0",
+    "google-api-python-client>=2.157.0",
+    "PyJWT>=2.8.0",
+    "fastapi-mail>=1.0.0",
+    "python-multipart==0.0.6",
+    "httpx==0.24.1",
+    "coverage",
+    "pytest-cov"
+]

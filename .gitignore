@@ -1,0 +1,9 @@
+.venv
+build/
+__pycache__/
+.env
+backend.egg-info/
+node_modules
+service_account.json
+.vscode
+.coverage

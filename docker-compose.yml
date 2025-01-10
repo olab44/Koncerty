@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+    depends_on:
+      - db
+    environment:
+      - DATABASE_HOST=postgresql_db
+      - DATABASE_PORT=5432
+      - DATABASE_USER=${DB_USER}
+      - DATABASE_PASSWORD=${DB_PASSWORD}
+      - DATABASE_NAME=${DB_NAME}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - APP_SECRET=${APP_SECRET}
+      - TEST_TOKEN=${TEST_TOKEN}
+      # - EMAIL_ADDRESS=${EMAIL_ADDRESS}
+
+    ports:
+      - "8000:8000"
+    networks:
+      - megalodony_network
+
+  db:
+    image: postgres:13
+    container_name: postgresql_db
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    ports:
+      - "5432:5432"
+    networks:
+      - megalodony_network
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "4200:4200"
+    networks:
+      - megalodony_network
+
+networks:
+  megalodony_network:
+    driver: bridge

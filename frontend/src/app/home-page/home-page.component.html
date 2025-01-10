@@ -1,0 +1,14 @@
+<app-top-bar></app-top-bar>
+
+<main>
+    <div class="welcome-text">{{ "WELCOME" | translate }}</div>
+    <button (click)="toggleOverlayChoose()">{{ "HOME.CHOOSE_GROUP" | translate }}</button>
+    <section>
+        <p (click)="toggleOverlayJoin()">{{ "HOME.JOIN" | translate }}</p>
+        <p (click)="toggleOverlayCreate()">{{ "HOME.CREATE" | translate }}</p>
+    </section>
+</main>
+
+<app-overlay-choose-group *ngIf="visibleOverlayChoose" (close)="toggleOverlayChoose()"></app-overlay-choose-group>
+<app-overlay-join-group *ngIf="visibleOverlayJoin" (close)="toggleOverlayJoin()"></app-overlay-join-group>
+<app-overlay-create-group *ngIf="visibleOverlayCreate" (close)="toggleOverlayCreate()"></app-overlay-create-group>
