@@ -41,8 +41,11 @@ def test_get_alerts(client):
     Test retrieving alerts for a specific parent group.
     """
     auth_header = {"Authorization": load_env()}
-    response = client.get(
-        f"{BASE_URL}/forum/getAlerts?parent_group=1&parent_id=1",
+    response = client.post(
+        f"{BASE_URL}/forum/getAlerts", json={
+            "user_id": 1,
+            "parent_group": 1
+        },
         headers=auth_header
     )
     assert response.status_code == 200
@@ -71,8 +74,11 @@ def test_get_alerts_no_data(client):
     Test retrieving alerts for a non-existent parent group.
     """
     auth_header = {"Authorization": load_env()}
-    response = client.get(
-        f"{BASE_URL}/forum/getAlerts?parent_group=999&user_id=1",
+    response = client.post(
+        f"{BASE_URL}/forum/getAlerts", json={
+            "user_id": 1,
+            "parent_group": 990
+        },
         headers=auth_header
     )
 

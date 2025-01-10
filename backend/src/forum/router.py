@@ -29,7 +29,7 @@ def post_alert(
     }
 
 
-@router.get("/getAlerts", response_model=GetAlertsResponse)
+@router.post("/getAlerts", response_model=GetAlertsResponse)
 def fetch_alerts(
     request: GetAlertsRequest,
     db: Session = Depends(get_session),
