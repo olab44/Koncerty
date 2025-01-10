@@ -17,6 +17,7 @@ services:
       - EMAIL_ADDRESS=${EMAIL_ADDRESS}
       - EMAIL_PASSWORD=${EMAIL_PASSWORD}
       - SMTP_SERVER=${SMTP_SERVER}
+      - TEST_TOKEN=${TEST_TOKEN}
 
     ports:
       - "8000:8000"
