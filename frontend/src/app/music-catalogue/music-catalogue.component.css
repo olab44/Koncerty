@@ -53,8 +53,6 @@ ul {
 }
 
 .popup-options {
-    height: 150px;
-    width: 150px;
     display: none;
     position: absolute;
     top: 100%;

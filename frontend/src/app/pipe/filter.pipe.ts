@@ -18,6 +18,9 @@ export class FilterPipe implements PipeTransform {
       case 'role':
           if (!searchPhrase) return items;
           return items.filter(item => this.translatation.translate.instant(`MEMBER.${item.role}`).toLowerCase().includes(searchPhrase.toLowerCase()));
+      case 'title':
+        if (!searchPhrase) return items;
+        return items.filter(item => item.title.toLowerCase().includes(searchPhrase.toLowerCase()));
       default:
         return items;
     }

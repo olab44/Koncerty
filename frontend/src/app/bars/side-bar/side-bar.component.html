@@ -1,6 +1,6 @@
 <main>
-    <input [(ngModel)]="name" type="text" [readonly]="!isEditAvailable" (input)="onInput()">
-    <textarea [(ngModel)]="extra_info" [readonly]="!isEditAvailable" (input)="onInput()"></textarea>
+    <input [(ngModel)]="name" type="text" [readonly]="!isEditAvailable" (input)="onInput()" name="name" autocomplete="off">
+    <textarea [(ngModel)]="extra_info" [readonly]="!isEditAvailable" (input)="onInput()"  name="extra_info"></textarea>
     <p>{{"GROUP.ROLE" | translate}}<br>&emsp;{{ 'MEMBER.' + group.role | translate }}</p>
     <p class="inv-code">{{group.inv_code}}</p>
     <div>
