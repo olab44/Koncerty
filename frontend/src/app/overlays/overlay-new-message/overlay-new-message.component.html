@@ -2,7 +2,7 @@
 <main>
     <div class="message-info">
         <label for="subject"> {{"FORUM.SUBJECT" | translate}}
-            <input type="text" id="subject" name="subject" [(ngModel)]="message.subject" autocomplete="off" maxlength="50"/>
+            <input type="text" id="subject" name="title" [(ngModel)]="message.title" autocomplete="off" maxlength="50"/>
         </label>
         <label for="content"> {{"FORUM.CONTENT" | translate}}
             <textarea id="content" name="content" [(ngModel)]="message.content" autocomplete="off" placeholder="optional" maxlength="300"></textarea>
@@ -26,15 +26,18 @@
         </section>
         <section class="users-recipients" [class.disabled]="allChecked">
             <div>
-                <input [(ngModel)]="added_email" email type="email" placeholder="e-mail"><button [disabled]="!added_email" (click)="addRecipient(added_email)"> + </button>
+                <input [(ngModel)]="added_user_id" type="number" placeholder="User ID">
+                <button [disabled]="!added_user_id" (click)="addRecipient(added_user_id)"> + </button>
             </div>
             <ul>
-                <li *ngFor="let email of message.user_emails">{{email}}<button (click)="removeRecipient(email)"> - </button></li>
+                <li *ngFor="let user_id of message.user_ids">
+                    {{ user_id }}<button (click)="removeRecipient(user_id)"> - </button>
+                </li>
             </ul>
-        </section>
+        </section>        
     </div>
     <div class="message-status">
         <span class="status-message"> {{ messageStatus }} </span>
-        <button (click)="sendMessage()" [disabled]="!message.subject || !message.content">{{ "FORUM.SEND" | translate }}</button>
+        <button (click)="sendMessage()" [disabled]="!message.title || !message.content">{{ "FORUM.SEND" | translate }}</button>
     </div>
 </main>

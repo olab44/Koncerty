@@ -11,74 +11,95 @@ import { SessionStateService } from '../../services/session-state/session-state.
   standalone: true,
   imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './overlay-new-message.component.html',
-  styleUrl: './overlay-new-message.component.css'
+  styleUrls: ['./overlay-new-message.component.css']
 })
 export class OverlayNewMessageComponent {
-  @Output() close = new EventEmitter<void>()
-  @Output() refresh = new EventEmitter<void>()
-  group!: GroupInfo
-  subgroups: any[] = []
+  @Output() close = new EventEmitter<void>();
+  @Output() refresh = new EventEmitter<void>();
+  group!: GroupInfo;
+  subgroups: any[] = [];
 
   message: ForumMessageCreate = {
-    subject: '',
+    title: '',
     content: '',
+    parent_group: -1,
     group_ids: [],
-    subgroup_ids: [],
-    user_emails: []
-  }
+    user_ids: []
+  };
 
   constructor(private backend: BackendService, private state: SessionStateService) {
     this.state.currentGroup.subscribe((group) => {
       this.group = group;
     });
+
     this.backend.getSubgroups(this.group.group_id).subscribe({
-        next: (res) => { this.subgroups = res },
-        error: (e) => { console.log(e) },
-    })
+      next: (res) => {
+        this.subgroups = res;
+      },
+      error: (e) => {
+        console.log(e);
+      }
+    });
   }
 
-  added_email = ""
-  allChecked = false
-  messageStatus: string = '...'
+  added_user_id: number | null = null;
+  allChecked = false;
+  messageStatus: string = '...';
 
   onGroupCheckboxChange(event: Event, groupId: number): void {
     const checkbox = event.target as HTMLInputElement;
     if (checkbox.checked) {
-      if (groupId == this.group.group_id) {this.allChecked = true}
+      if (groupId === this.group.group_id) { this.allChecked = true; }
       this.message.group_ids.push(groupId);
     } else {
-      if (groupId == this.group.group_id) {this.allChecked = false}
-      this.message.group_ids = this.message.group_ids.filter(
-        id => id !== groupId
-      );
+      if (groupId === this.group.group_id) { this.allChecked = false; }
+      this.message.group_ids = this.message.group_ids.filter(id => id !== groupId);
     }
   }
 
-  addRecipient(email: string) {
-    if (!this.message.user_emails.includes(email)) {
-      this.message.user_emails.push(email);
+  addRecipient(user_id: number | null) {
+    if (user_id !== null && !this.message.user_ids.includes(user_id)) {
+      this.message.user_ids.push(user_id);
     }
   }
-  
-  removeRecipient(email: string) {
-    this.message.user_emails = this.message.user_emails.filter(mail => mail !== email)
+
+  removeRecipient(user_id: number) {
+    this.message.user_ids = this.message.user_ids.filter(id => id !== user_id);
   }
 
+  // Send the message (create alert) to the backend
   sendMessage() {
-    this.backend.postRequest('forum/createAnnouncement', this.message)
-    .subscribe({
-        next: res => {
-          this.messageStatus = "Message sent!"
-          this.refresh.emit()
-        },
-        error: e => {
-          this.messageStatus = e.message
-          console.log(e)
-        }
-    })
+    const alertPayload = {
+      title: this.message.title,
+      content: this.message.content,
+      parent_group: this.group.group_id,
+      group_id: this.message.group_ids.length > 0 ? this.message.group_ids[0] : null,
+      user_id: null, // Optional: Set this as per your requirement
+      user_ids: this.message.user_ids.length > 0 ? this.message.user_ids : null // Send user_ids if present
+    };
+
+    this.backend.postRequest('createAlert', alertPayload).subscribe({
+      next: (res: any) => {
+        const createdAlert = {
+          id: res.id,
+          title: res.title,
+          content: res.content,
+          group_ids: res.group_ids,
+          subgroup_ids: res.subgroup_ids,
+        };
+
+        this.messageStatus = `Alert created! ID: ${createdAlert.id}`;
+        this.refresh.emit();
+      },
+      error: (e) => {
+        this.messageStatus = e.message;
+        console.log(e);
+      }
+    });
   }
 
+  // Close the overlay
   closeOverlay() {
-    this.close.emit()
+    this.close.emit();
   }
 }

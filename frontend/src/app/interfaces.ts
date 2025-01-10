@@ -73,9 +73,9 @@ export interface EventCreate {
 }
 
 export interface ForumMessageCreate {
-    subject: string;
+    title: string;
     content: string;
-    group_ids: number[];
-    subgroup_ids: number[];
-    user_emails: string[];
+    parent_group: number
+    group_ids: number[]
+    user_ids: number[];
 }

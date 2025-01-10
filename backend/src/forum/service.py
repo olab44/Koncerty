@@ -2,81 +2,172 @@ from sqlalchemy.orm import Session
 from typing import List
 import dramatiq
 from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 from smtplib import SMTP
 from .config import settings
-from users.models import Member, User
-from .models import Announcement
-from .schemas import AnnouncementCreate, AnnouncementInfo
+from users.models import Member, User, Alert, Recipient, Group
+from .schemas import CreateAlertRequest, GetAlertsRequest
+import os
+import base64
+from fastapi import HTTPException
+from google.oauth2.credentials import Credentials
+from google.auth.transport.requests import Request
+from googleapiclient.discovery import build
+from google_auth_oauthlib.flow import InstalledAppFlow
+# from Google import Create_Service
+from forum.sendEmail import send_gmail_email
 
 
-def create_announcement(db: Session, creator_id: int, data: AnnouncementCreate) -> Announcement:
-    new_announcement = Announcement(
-        title=data.title,
-        content=data.content,
-        creator_id=creator_id,
-        group_id=data.group_id,
-        subgroup_id=data.subgroup_id,
+SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
+
+def create_alert(db: Session, email: str, request: CreateAlertRequest) -> Alert:
+
+    existing_user = db.query(User).filter(User.email == email).first()
+    if not existing_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    existing_member = db.query(Member).filter(Member.user_id == existing_user.id, Member.group_id == request.parent_group).first()
+    if not existing_member:
+        raise HTTPException(status_code=404, detail="User is not a member of the group")
+
+    if existing_member.role not in ["Kapelmistrz", "Koordynator"]:
+        raise HTTPException(status_code=403, detail="User must have Kapelmistrz or Koordynator role")
+    new_alert = Alert(
+        title=request.title,
+        content=request.content
     )
-    db.add(new_announcement)
+    db.add(new_alert)
     db.commit()
-    db.refresh(new_announcement)
+    db.refresh(new_alert)
 
+    recipients_list = []
     # Fetch recipients and send notifications
-    recipients = get_recipients(db, data.group_id, data.subgroup_id)
-    notify_recipients(
-        recipients=recipients,
-        subject=f"New Announcement: {data.title}",
-        body=data.content,
+    if request.group_id:
+        # get users who become recipients
+        recipients = get_recipients(db, request.group_id)
+        for recipient in recipients:
+            # rec is recipient object
+            rec = create_recipient(db, recipient.id, new_alert.id)
+            recipients_list.append(rec)
+            notify_recipient(recipient.email, new_alert.title, new_alert.content)
+    elif request.user_id:
+        recipient = db.query(User).filter(User.id == request.user_id).first()
+        if not recipient:
+            raise HTTPException(status_code=404, detail=f"There is no user with id: {request.user_id}")
+        rec = create_recipient(db, request.user_id, new_alert.id)
+        recipients_list.append(rec)
+        notify_recipient(recipient.email, new_alert.title, new_alert.content)
+    else:
+        raise HTTPException(status_code=404, detail="You must provide user_id or group_id to address the alert")
+
+    return new_alert, recipients_list
+
+
+def get_alerts(db: Session, email: str, request: GetAlertsRequest):
+    existing_user = db.query(User).filter(User.email == email).first()
+    if not existing_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    existing_member = db.query(Member).filter(Member.user_id == existing_user.id, Member.group_id == request.parent_group).first()
+    if not existing_member:
+        raise HTTPException(status_code=404, detail="User is not a member of the group")
+    
+    members = db.query(Member.id).join(
+        Group, Member.group_id == Group.id
+    ).filter(
+        Member.user_id == request.user_id,
+        Group.parent_group == request.parent_group
+    ).subquery()
+    
+    alerts = db.query(Alert).join(
+        Recipient, Recipient.alert_id == Alert.id
+    ).filter(
+        (Recipient.member_id == existing_member.id) | 
+        (Recipient.member_id.in_(members))
+    ).all()
+    return alerts
+
+
+def create_recipient(db: Session, user_id: int, alert_id: int) -> Recipient:
+    new_recipient = Recipient(
+        alert_id = alert_id,
+        member_id = user_id
     )
+    db.add(new_recipient)
+    db.commit()
+    db.refresh(new_recipient)
 
-    return new_announcement
+    return new_recipient
 
 
-def get_announcements(db: Session, group_id: int = None, subgroup_id: int = None) -> List[AnnouncementInfo]:
-    query = db.query(Announcement)
-    if group_id:
-        query = query.filter(Announcement.group_id == group_id)
-    if subgroup_id:
-        query = query.filter(Announcement.subgroup_id == subgroup_id)
+def get_recipients(db: Session, group_id: int) -> List[User]:
+    """
+    Fetch id of users in the specified group or subgroup.
+    """
+    query = db.query(User).join(Member).filter(Member.group_id == group_id)
     return query.all()
 
 
-def get_recipients(db: Session, group_id: int = None, subgroup_id: int = None) -> List[str]:
-    """
-    Fetch email addresses of users in the specified group or subgroup.
-    """
-    query = db.query(User).join(Member)
-    if group_id:
-        query = query.filter(Member.group_id == group_id)
-    if subgroup_id:
-        query = query.filter(Member.subgroup_id == subgroup_id)
-    return [user.email for user in query.all()]
+# def compose_message(recipient_email: str, subject: str, body: str) -> MIMEText:
+#     """
+#     Compose an email message.
+#     """
+#     message = MIMEText(body, "plain")
+#     message["Subject"] = subject
+#     message["From"] = settings.EMAIL_ADDRESS
+#     message["To"] = recipient_email
+#     return message
 
 
-def compose_message(recipient_email: str, subject: str, body: str) -> MIMEText:
-    """
-    Compose an email message.
-    """
-    message = MIMEText(body, "plain")
-    message["Subject"] = subject
-    message["From"] = settings.EMAIL_ADDRESS
-    message["To"] = recipient_email
-    return message
+# def send_email(message: MIMEText) -> None:
+#     with SMTP(settings.SMTP_SERVER, settings.SMTP_PORT) as server:
+#         server.starttls()
+#         server.login(settings.EMAIL_ADDRESS, settings.EMAIL_PASSWORD)
+#         server.sendmail(settings.EMAIL_ADDRESS, [message["To"]], message.as_string())
+
+# def get_gmail_service():
+#     """Authenticate with Gmail API and return the service object."""
+#     creds = None
+#     # Load credentials from the token file
+#     if os.path.exists(settings.TOKEN_FILE):
+#         creds = Credentials.from_authorized_user_file(settings.TOKEN_FILE, SCOPES)
+#     # If credentials are invalid or not available, reauthenticate
+#     if not creds or not creds.valid:
+#         if creds and creds.expired and creds.refresh_token:
+#             creds.refresh(Request())
+#         else:
+#             flow = InstalledAppFlow.from_client_secrets_file(settings.GMAIL_CREDENTIALS_FILE, SCOPES)
+#             creds = flow.run_local_server(port=0)
+#         # Save the credentials for the next run
+#         with open(settings.TOKEN_FILE, "w") as token_file:
+#             token_file.write(creds.to_json())
+#     return build("gmail", "v1", credentials=creds)
 
 
-def send_email(message: MIMEText) -> None:
-    with SMTP(settings.SMTP_SERVER, settings.SMTP_PORT) as server:
-        server.starttls()
-        server.login(settings.EMAIL_ADDRESS, settings.EMAIL_PASSWORD)
-        server.sendmail(settings.EMAIL_ADDRESS, [message["To"]], message.as_string())
+# def send_gmail_email(recipient_email: str, subject: str, body: str):
+#     """Send an email via Gmail API."""
+#     service = get_gmail_service()
+#     message = MIMEText(body)
+#     message["to"] = recipient_email
+#     message["subject"] = subject
+#     raw_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
+#     try:
+#         send_message = (
+#             service.users()
+#             .messages()
+#             .send(userId="me", body={"raw": raw_message})
+#             .execute()
+#         )
+#         print(f"Message sent: {send_message['id']}")
+#     except Exception as error:
+#         print(f"An error occurred: {error}")
 
 
 @dramatiq.actor
 def notify_recipient(recipient_email: str, subject: str, body: str) -> None:
-    message = compose_message(recipient_email, subject, body)
-    send_email(message)
+    send_gmail_email(recipient_email, subject, body)
 
 
-def notify_recipients(recipients: List[str], subject: str, body: str) -> None:
-    for recipient_email in recipients:
-        notify_recipient.send(recipient_email, subject, body)
+# def notify_recipients(recipients: List[str], subject: str, body: str) -> None:
+#     for recipient_email in recipients:
+#         notify_recipient.send(recipient_email, subject, body)
