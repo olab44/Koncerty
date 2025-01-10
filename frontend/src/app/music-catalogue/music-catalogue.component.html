@@ -8,9 +8,9 @@
     </section>
     <p>{{'CATALOGUE.DETAILS' | translate}}</p>
     <ul>
-        <li *ngFor="let composition of compositions | filterPipe: 'title': searchPhrase" (click)="viewComposition(composition)">{{composition.title}}</li>
+        <li *ngFor="let composition of compositions | filterPipe: 'name': searchPhrase" (click)="viewComposition(composition)">{{composition.name}}</li>
     </ul>
-    <p id="viewed-composition">{{viewedComposition.title}} {{viewedComposition.author}}</p>
+    <p id="viewed-composition">{{viewedComposition?.name}} {{viewedComposition?.author}}</p>
     <button class="new-button" [style.visibility]="group.role=='Kapelmistrz' ? 'visible' : 'hidden'" (click)="toggleOverlayComposition()">{{'CATALOGUE.ADD_COMPOSITION' | translate}}</button>
 </main>
 
