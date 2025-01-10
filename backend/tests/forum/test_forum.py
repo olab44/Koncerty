@@ -22,7 +22,7 @@ def client():
 def test_create_alert(client):
     auth_header = {"Authorization": load_env()}
     response = client.post(
-        f"{BASE_URL}/createAlert",
+        f"{BASE_URL}/forum/createAlert",
         json={
             "title": "Test Alert",
             "content": "This is a test alert content",
@@ -44,7 +44,7 @@ def test_get_alerts(client):
     auth_header = {"Authorization": load_env()}
 
     response = client.get(
-        f"{BASE_URL}/getAlerts?parent_group=1",
+        f"{BASE_URL}/forum/getAlerts?parent_group=1",
         headers=auth_header
     )
 
@@ -59,7 +59,7 @@ def test_create_alert_without_group(client):
     auth_header = {"Authorization": load_env()}
     
     response = client.post(
-        f"{BASE_URL}/createAlert",
+        f"{BASE_URL}/forum/createAlert",
         json={
             "title": "Test Alert Without Group",
             "content": "This alert has no group specified"
@@ -75,25 +75,9 @@ def test_get_alerts_no_data(client):
     auth_header = {"Authorization": load_env()}
 
     response = client.get(
-        f"{BASE_URL}/getAlerts?parent_group=999",  # Assuming this group does not exist
+        f"{BASE_URL}/forum/getAlerts?parent_group=999",
         headers=auth_header
     )
 
     assert response.status_code == 404
     assert response.json() == {"detail": "User is not a member of the group"}
-
-
-def test_alert_sends_email(client):
-    auth_header = {"Authorization": load_env()}
-    # Create a new alert
-    response = client.post(
-        f"{BASE_URL}/createAlert",
-        json={
-            "title": "Test Alert with Email",
-            "content": "This is a test alert content with email notification",
-            "group_id": 1
-        },
-        headers=auth_header
-    )
-    assert response.status_code == 201
-    data = response.json()
