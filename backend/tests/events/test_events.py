@@ -1,12 +1,19 @@
 import requests
 from datetime import datetime
-
+from src.main import app 
+from fastapi.testclient import TestClient
+import pytest
 from users.test_users import BASE_URL, load_env
 
-def test_find_events():
+
+@pytest.fixture
+def client():
+    return TestClient(app)
+
+def test_find_events(client):
     auth_header = {"Authorization": load_env()}
 
-    response = requests.get(f"{BASE_URL}/events/findEvents?group_id=1",
+    response = client.get(f"{BASE_URL}/events/findEvents?group_id=1",
                               headers=auth_header)
     assert response.status_code == 200
     info = response.json()
@@ -41,13 +48,13 @@ def test_find_events():
             }
         ]
     
-def test_create_event():
+def test_create_event(client):
     auth_header = {"Authorization": load_env()}
 
     date_start = datetime(2025, 12, 25, 10, 0, 0) 
     date_end = datetime(2025, 12, 25, 12, 0, 0)
 
-    response = requests.post(f"{BASE_URL}/events/createEvent", json={
+    response = client.post(f"{BASE_URL}/events/createEvent", json={
         "name": "Testing",
         "date_start": date_start.isoformat(),
         "date_end": date_end.isoformat(),

@@ -1,10 +1,17 @@
 import requests
+import pytest
+from src.main import app 
+from fastapi.testclient import TestClient
 from users.test_users import BASE_URL, load_env
 
-def test_find_groups():
+@pytest.fixture
+def client():
+    return TestClient(app)
+
+def test_find_groups(client):
     auth_header = {"Authorization": load_env()}
 
-    response = requests.get(f"{BASE_URL}/groups/findGroups", headers=auth_header)
+    response = client.get(f"{BASE_URL}/groups/findGroups", headers=auth_header)
     assert response.status_code == 200
     info = response.json()
     assert info["username"] == "Bilb"
@@ -25,9 +32,9 @@ def test_find_groups():
         }
     ]
 
-def test_find_groups():
+def test_find_groups(client):
     auth_header = {"Authorization": load_env()}
 
-    response = requests.get(f"{BASE_URL}/groups/findGroups", headers=auth_header)
+    response = client.get(f"{BASE_URL}/groups/findGroups", headers=auth_header)
     assert response.status_code == 200
     info = response.json()
