@@ -138,4 +138,5 @@ def notify_recipient(recipient_email: str, subject: str, body: str) -> None:
     """
     Sends a notification email to a recipient.
     """
-    send_gmail_email(recipient_email, subject, body)
+    # send_gmail_email(recipient_email, subject, body)
+    pass
