@@ -33,18 +33,20 @@ def test_change_role():
     response = requests.post(f"{BASE_URL}/changeRole", json={
         "group_id": 1,
         "user_email": "k@gmail.com",
-        "new_role": "Kapelmistrz"
+        "new_role": "Kapelmistrz",
+        "parent_group": 1
     }, headers=auth_header)
     assert response.status_code == 201
     response = requests.get(f"{BASE_URL}/findUsers?group_id=1", headers=auth_header)
     assert response.status_code == 200
 
-def test_remove_role():
+def test_remove_member():
     auth_header = {"Authorization": load_env()}
 
     response = requests.delete(f"{BASE_URL}/removeMember", json={
         "group_id": 1,
-        "user_email": "w@gmail.com"
+        "user_email": "w@gmail.com",
+        "parent_group": 1
     }, headers=auth_header)
     assert response.status_code == 200
     response = requests.get(f"{BASE_URL}/findUsers?group_id=1", headers=auth_header)

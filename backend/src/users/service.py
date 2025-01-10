@@ -4,7 +4,7 @@ from google.oauth2 import id_token
 from google.auth.transport import requests
 from dotenv import load_dotenv
 
-from .models import User, Member, Group
+from .models import User, Member, Group, Recipient
 from .schemas import UserInfo, ChangeUserRoleRequest, RemoveMemberRequest
 
 import os

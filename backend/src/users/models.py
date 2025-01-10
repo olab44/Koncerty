@@ -40,7 +40,7 @@ class Member(Base):
 
     user = relationship("User", back_populates="members")
     group = relationship("Group", back_populates="members")
-    recipients = relationship("Recipient", back_populates="member")
+    recipients = relationship("Recipient", back_populates="member", cascade="all, delete", passive_deletes=True)
 
 
 class Event(Base):
@@ -130,7 +130,6 @@ class Recipient(Base):
     __tablename__ = "recipients"
     id = Column(BigInteger, primary_key=True, index=True)
     alert_id = Column(BigInteger, ForeignKey("alerts.id"), nullable=False)
-    member_id = Column(BigInteger, ForeignKey("members.id"), nullable=False)
-
+    member_id = Column(BigInteger, ForeignKey("members.id", ondelete="CASCADE"), nullable=False)
     alert = relationship("Alert", back_populates="recipients")
     member = relationship("Member", back_populates="recipients")
