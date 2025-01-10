@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 import { AuthService } from '../authorization/auth.service';
-import { GroupInfoStructure, SignUpResponse, UserInfo, GroupInfo, EventInfo } from "../../interfaces"
+import { GroupInfoStructure, SignUpResponse, UserInfo, GroupInfo, EventInfo, CompositionInfo } from "../../interfaces"
 
 @Injectable({
   providedIn: 'root'
@@ -62,7 +62,7 @@ export class BackendService {
 
   getCatalogue(group_id: number) {
     return this.http
-      .get<EventInfo[]>(`${this.apiURL}/catalogue/findCompositions?group_id=${group_id}`, { headers: this.getHeaders() })
+      .get<any>(`${this.apiURL}/catalogue/findCompositions?group_id=${group_id}`, { headers: this.getHeaders() })
       .pipe(
         catchError((error) => {
         return throwError(() => error)
