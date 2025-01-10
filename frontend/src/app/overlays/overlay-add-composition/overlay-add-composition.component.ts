@@ -38,7 +38,7 @@ export class OverlayAddCompositionComponent {
   addComposition(): void {
     const compositionData = new FormData()
     compositionData.append('group_id', this.group.group_id.toString())
-    compositionData.append('title', this.titleInput)
+    compositionData.append('name', this.titleInput)
     compositionData.append('author', this.authorInput)
     this.files.forEach((file) => {
       compositionData.append('files', file);

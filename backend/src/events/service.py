@@ -1,29 +1,12 @@
-import os
-from datetime import datetime
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from dotenv import load_dotenv
 from typing import List
 
-from google.oauth2.credentials import Credentials
-from googleapiclient.discovery import build
-
-from .schemas import EventInfo, CreateEventRequest, Participant, CompositionInfo, EditEventRequest
+from .schemas import EventInfo, CreateEventRequest, Participant, EditEventRequest
+from catalogue.schemas import CompositionInfo
 from users.models import (User, Member,
      Event, Participation, Composition, SetList
 )
-
-def get_calendar_service(token: str):
-    try:
-        load_dotenv()
-        GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
-        GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
-        credentials = Credentials(token)
-        service = build('calendar', 'v3', credentials=credentials)
-
-        return service
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Google Calendar service error: {str(e)}")
 
 def get_setlist_info(db: Session, setlists: List[int]):
     setlist_infos = []
@@ -210,5 +193,5 @@ def edit_event(db: Session, email: str, request: EditEventRequest):
             db.add(new_setlist)
 
     db.commit()
-    
+
     return existing_event
