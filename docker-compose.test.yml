@@ -16,8 +16,9 @@ services:
       - APP_SECRET=${APP_SECRET}
       - TEST_TOKEN=${TEST_TOKEN}
       - APP_ENV="test"
-      # - EMAIL_ADDRESS=${EMAIL_ADDRESS}
-
+      - CLIENT_ID=${CLIENT_ID}
+      - CLIENT_SECRET=${CLIENT_SECRET}
+      - REFRESH_TOKEN=${REFRESH_TOKEN}
     ports:
       - "8000:8000"
     networks:
