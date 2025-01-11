@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from database import get_session
-from .service import get_compositions, create_composition
+from .service import get_compositions, create_composition, get_compositions_extra
 from .schemas import *
 from users.service import decode_app_token
 
@@ -25,3 +25,10 @@ def add_composition(request: CreateCompositionRequest, db: Session = Depends(get
     user_data = decode_app_token(token)
     created = create_composition(db, user_data.get("email"), request)
     return {"created": created}
+
+@router.get("/findCompositionsExtra", status_code=200)
+def find_compositions_extra(group_id: int, db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
+    """ Handle frontend request for the group's music catalogue """
+    user_data = decode_app_token(token)
+    catalogue = get_compositions_extra(db, user_data.get("email"), group_id)
+    return {"found": catalogue}

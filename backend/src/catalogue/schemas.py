@@ -23,3 +23,18 @@ class CreateCompositionRequest(BaseModel):
     author: str
     files: List[int]
     parent_group: int
+
+class FileInfoExtra(BaseModel):
+    id: int
+    name: str
+    access: bool
+
+    class Config:
+        from_attributes = True
+
+
+class CreateCompositionResponse(BaseModel):
+    name: str
+    author: str
+    files: List[FileInfoExtra]
+
