@@ -4,7 +4,6 @@ import dramatiq
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from smtplib import SMTP
-from .config import settings
 from users.models import Member, User, Alert, Recipient, Group
 from .schemas import CreateAlertRequest, GetAlertsRequest
 import os
@@ -14,7 +13,7 @@ from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
-from forum.sendEmail import send_gmail_email
+from forum.gmail import send_mail
 
 SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
 
@@ -138,5 +137,4 @@ def notify_recipient(recipient_email: str, subject: str, body: str) -> None:
     """
     Sends a notification email to a recipient.
     """
-    # send_gmail_email(recipient_email, subject, body)
-    pass
+    send_mail(subject, body, recipient_email)
