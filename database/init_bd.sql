@@ -151,7 +151,7 @@ ALTER TABLE IF EXISTS public.set_lists
     ADD CONSTRAINT composition_to_set_list_fk FOREIGN KEY (composition_id)
     REFERENCES public.compositions (id) MATCH SIMPLE
     ON UPDATE NO ACTION
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     NOT VALID;
 
 

@@ -38,3 +38,6 @@ class CreateCompositionResponse(BaseModel):
     author: str
     files: List[FileInfoExtra]
 
+class RemoveCompositionRequest(BaseModel):
+    composition_id: int
+    parent_group: int

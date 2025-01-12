@@ -89,7 +89,7 @@ class Composition(Base):
     name = Column(String(50), nullable=False)
     author = Column(String(40), nullable=True)
 
-    set_lists = relationship("SetList", back_populates="composition")
+    set_lists = relationship("SetList", back_populates="composition", cascade="all, delete")
     files = relationship("File", back_populates="composition")
 
 

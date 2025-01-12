@@ -3,9 +3,10 @@ from fastapi import HTTPException
 from typing import List
 
 from users.models import Member, Composition, File, FileOwnership, User
-from .schemas import CompositionInfo, FileInfo, CreateCompositionRequest, CreateCompositionResponse, FileInfoExtra
-from files.service import assign_file_to_composition
-from files.schemas import FileToCompositionRequest
+from .schemas import (CompositionInfo, FileInfo, CreateCompositionRequest, 
+                      CreateCompositionResponse, FileInfoExtra, RemoveCompositionRequest)
+from files.service import assign_file_to_composition, delete_from_drive
+from files.schemas import FileToCompositionRequest, DeleteFileRequest
 
 def get_composition_files_info(db: Session, composition_id: int) -> List[FileInfo]:
     """ Get basic info (id, name) about the composition's files """
@@ -48,7 +49,7 @@ def create_composition(db: Session, user_email: str, request: CreateCompositionR
     if not member:
         raise HTTPException(status_code=404, detail="Requesting member not found.")
     if member.role != "Kapelmistrz":
-        raise HTTPException(status_code=404, detail="Requesting member does not have permision.")
+        raise HTTPException(status_code=403, detail="Requesting member does not have permision.")
     
     new_composition = Composition(
         name = request.name,
@@ -116,3 +117,34 @@ def get_compositions_extra(db: Session, user_email: str, group_id: int):
 
 
     return composition_list
+
+
+def remove_composition(db: Session, user_email: str, request: RemoveCompositionRequest):
+    reqesting_user = db.query(User).filter(User.email == user_email).first()
+
+    if not reqesting_user:
+        raise HTTPException(status_code=404, detail="Requesting user not found.")
+
+    member = db.query(Member).filter(Member.user_id == reqesting_user.id, Member.group_id == request.parent_group).first()
+    if not member:
+        raise HTTPException(status_code=404, detail="Requesting member not found.")
+    if member.role != "Kapelmistrz":
+        raise HTTPException(status_code=403, detail="Requesting member does not have permision.")
+    
+    to_remove = db.query(Composition).filter(Composition.id == request.composition_id).first()
+    if not to_remove:
+        raise HTTPException(status_code=404, detail="Composition not found.")
+        
+    removed_files = []
+    files = db.query(File).filter(File.composition_id == request.composition_id).all()
+    for file in files:
+        file_remove_request = DeleteFileRequest(file_id=file.id, parent_group=request.parent_group)
+        removed_file = delete_from_drive(db, user_email, file_remove_request)
+        removed_files.append(removed_file)
+    db.delete(to_remove)
+    db.commit()
+
+    return {
+        "composition_id": to_remove.id,
+        "files": removed_files
+    }
