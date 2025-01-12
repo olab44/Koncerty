@@ -55,8 +55,8 @@ class Event(Base):
     parent_group = Column(BigInteger, ForeignKey('groups.id'), nullable=False)
     type = Column(String(8), nullable=False)
 
-    participations = relationship("Participation", back_populates="event")
-    set_lists = relationship("SetList", back_populates="event")
+    participations = relationship("Participation", back_populates="event", cascade="all, delete")
+    set_lists = relationship("SetList", back_populates="event", cascade="all, delete")
 
     group = relationship("Group", back_populates="events")
 

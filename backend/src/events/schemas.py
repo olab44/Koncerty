@@ -46,3 +46,7 @@ class EditEventRequest(BaseModel):
     added_participants: List[str]
     removed_compositions: List[int]
     added_compositions: List[int]
+
+class RemoveEventRequest(BaseModel):
+    event_id: int
+    owner_group_id: int

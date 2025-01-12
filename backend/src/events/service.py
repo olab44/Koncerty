@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from typing import List
 
-from .schemas import EventInfo, CreateEventRequest, Participant, EditEventRequest
+from .schemas import EventInfo, CreateEventRequest, Participant, EditEventRequest, RemoveEventRequest
 from catalogue.schemas import CompositionInfo
 from users.models import (User, Member,
      Event, Participation, Composition, SetList
@@ -195,3 +195,26 @@ def edit_event(db: Session, email: str, request: EditEventRequest):
     db.commit()
 
     return existing_event
+
+def remove_event(db: Session, email: str, request: RemoveEventRequest):
+
+    existing_user = db.query(User).filter(User.email == email).first()
+    if not existing_user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    parent_member = db.query(Member).filter(Member.user_id == existing_user.id, Member.group_id == request.owner_group_id).first()
+
+    if not parent_member:
+        raise HTTPException(status_code=404, detail="Requesting user not is a member of the group")
+    if parent_member.role == "Muzyk":
+        raise HTTPException(status_code=404, detail="Requesting user must have Kapelmistrz or Koordynator role")
+
+    to_delete = db.query(Event).filter(Event.id == request.event_id).first()
+
+    if not to_delete:
+        raise HTTPException(status_code=404, detail=f"Event with id {request.event_id} not found")
+
+    db.delete(to_delete)
+    db.commit()
+
+    return {"deleted": to_delete.id}
