@@ -6,23 +6,17 @@ from google.auth.transport.requests import Request
 from google.auth import exceptions
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
 
-# load_dotenv()
+load_dotenv()
 
-
-CLIENT_SECRET_FILE = 'credentials.json'
 SCOPES = ['https://www.googleapis.com/auth/gmail.send']
 
 CLIENT_ID = os.getenv("CLIENT_ID")
 CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 REFRESH_TOKEN = os.getenv("REFRESH_TOKEN")
-# CLIENT_ID = '67926087995-4g20kdb33tsb3hi9giebgbs42urp0se0.apps.googleusercontent.com'
-# CLIENT_SECRET = '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'
-# REFRESH_TOKEN = '1//04G1N7D_kUjteCgYIARAAGAQSNwF-L9IrtfFsmKmQOtExsDvSFxqn0iu1f9fsFE3m6RoeM8Btu_dqq6QD-_uci1BFrF1tGNzTC1A'
 
 def get_access_token():
-    """Uzyskanie tokenu dostępu za pomocą refresh token."""
     
     creds = Credentials.from_authorized_user_info(
         {
@@ -39,7 +33,6 @@ def get_access_token():
 
 
 def send_mail(subject, body, to_email):
-    """Wyślij e-mail za pomocą Gmail API."""
     try:
         creds = get_access_token()
 

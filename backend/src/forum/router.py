@@ -6,8 +6,6 @@ from src.database import get_session
 from users.service import decode_app_token
 from .schemas import *
 from .service import create_alert, get_alerts
-from users.models import User, Member, Alert
-
 
 router = APIRouter()
 
