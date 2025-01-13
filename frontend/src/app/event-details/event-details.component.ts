@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { TopBarComponent } from '../bars/top-bar/top-bar.component';
 import { SideBarEventComponent } from '../bars/side-bar-event/side-bar-event.component';
@@ -8,7 +9,7 @@ import { SessionStateService } from '../services/session-state/session-state.ser
 @Component({
   selector: 'app-event-details',
   standalone: true,
-  imports: [TranslateModule, TopBarComponent, SideBarEventComponent],
+  imports: [CommonModule, TranslateModule, TopBarComponent, SideBarEventComponent],
   templateUrl: './event-details.component.html',
   styleUrl: './event-details.component.css'
 })

@@ -71,18 +71,3 @@ export interface EventCreate {
     user_emails: string[]
     composition_ids: number[]
 }
-
-interface EditEventRequest {
-    event_id: number
-    name: string
-    date_start: string
-    date_end: string
-    location: string
-    extra_info?: string
-    parent_group: number
-    type: string
-    removed_participants: string[]
-    added_participants: string[]
-    removed_compositions: number[]
-    added_compositions: number[]
-}

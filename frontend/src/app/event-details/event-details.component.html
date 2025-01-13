@@ -1,5 +1,14 @@
 <app-top-bar [isReturnAvailable]="true" [groupName]="group.group_name"></app-top-bar>
 <app-side-bar-event></app-side-bar-event>
 <main>
-    <p></p>
+    <div>
+        <ul>
+            <li *ngFor="let part of event.participants">{{part.email}}</li>
+        </ul>
+    </div>
+    <div>
+        <ul>
+            <li *ngFor="let comp of event.set_list">{{comp.name}}</li>
+        </ul>
+    </div>
 </main>

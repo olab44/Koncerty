@@ -55,7 +55,7 @@ ul {
 .users-participation ul {
     max-height: 135px;
 }
-li {
+.participation li {
     height: 3vh;
     display: grid;
     grid-template-columns: 1fr 2fr;
@@ -124,7 +124,10 @@ section + section {
     padding: 0px 15px;
     border-radius: 25px;
 }
-
 .disabled {
     pointer-events: none;
+}
+div.setlist {
+    display: grid;
+    grid-template-rows: auto 1fr 1fr;
 }

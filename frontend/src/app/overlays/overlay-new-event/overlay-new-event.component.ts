@@ -18,6 +18,8 @@ export class OverlayNewEventComponent {
   @Output() refresh = new EventEmitter<void>()
   group!: GroupInfo
   subgroups: any[] = []
+  catalogue: any[] = []
+  chosen_compositions: any[] = []
 
   event: EventCreate = {
     name: '',
@@ -41,6 +43,10 @@ export class OverlayNewEventComponent {
         next: (res) => { this.subgroups = res },
         error: (e) => { console.log(e) },
     })
+    this.backend.getCatalogue(this.group.group_id).subscribe({
+      next: (res) => { this.catalogue = res.found; console.log(res) },
+      error: (e) => { console.log(e) },
+  })
   }
 
   compositions = []
@@ -85,6 +91,15 @@ export class OverlayNewEventComponent {
   }
   removeParticipant(email: string) {
     this.event.user_emails = this.event.user_emails.filter(mail => mail !== email)
+  }
+
+  addComposition(composition: any) {
+    this.event.composition_ids.push(composition.id)
+    this.chosen_compositions.push(composition)
+  }
+  removeComposition(index: number) {
+    this.event.composition_ids.splice(index, 1)
+    this.chosen_compositions.splice(index, 1)
   }
 
   createEvent() {
