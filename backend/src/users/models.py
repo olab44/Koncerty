@@ -113,7 +113,7 @@ class FileOwnership(Base):
     file_id = Column(BigInteger, ForeignKey("files.id"), nullable=False)
 
     user = relationship("User", back_populates="file_ownerships")
-    file = relationship("File", back_populates="ownerships")
+    file = relationship("File", back_populates="ownerships", cascade="all, delete")
 
 
 class Alert(Base):

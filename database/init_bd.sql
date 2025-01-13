@@ -175,7 +175,7 @@ ALTER TABLE IF EXISTS public.file_ownerships
     ADD CONSTRAINT file_to_file_ownership_fk FOREIGN KEY (file_id)
     REFERENCES public.files (id) MATCH SIMPLE
     ON UPDATE NO ACTION
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     NOT VALID;
 
 
