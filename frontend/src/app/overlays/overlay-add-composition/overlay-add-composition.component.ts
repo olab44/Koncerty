@@ -43,7 +43,7 @@ export class OverlayAddCompositionComponent {
     this.files.forEach((file) => {
       compositionData.append('files', file);
     });
-    this.backend.postRequest('files/addComposition', compositionData).subscribe({
+    this.backend.postRequest('catalogue/addComposition', compositionData).subscribe({
       next: res => {
         this.addMessage = "Composition added"
         this.update.emit()

@@ -44,6 +44,7 @@ export interface CompositionInfo {
     id: number
     name: string
     author: string
+    files: any[]
 }
 
 export interface EventInfo {
