@@ -116,6 +116,11 @@ def delete_from_drive(db: Session, email: str, request: DeleteFileRequest):
     service = establish_drive_connection()
     service.files().delete(fileId=file.google_drive_id).execute()
 
+    compositions = db.query(FileOwnership).filter(FileOwnership.file_id == request.file_id).all()
+    for comp in compositions:
+        db.delete(comp)
+    db.commit()
+
     db.delete(file)
     db.commit()
 

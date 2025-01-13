@@ -33,7 +33,7 @@ def find_compositions_extra(group_id: int, db: Session = Depends(get_session), t
     catalogue = get_compositions_extra(db, user_data.get("email"), group_id)
     return {"found": catalogue}
 
-@router.post("/removeComposition", status_code=201)
+@router.delete("/removeComposition", status_code=204)
 def rm_event(request: RemoveCompositionRequest, db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
     user_data = get_user_data(token)
 
