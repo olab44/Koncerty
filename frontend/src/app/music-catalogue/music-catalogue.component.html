@@ -8,7 +8,10 @@
     </section>
     <p>{{'CATALOGUE.DETAILS' | translate}}</p>
     <ul>
-        <li *ngFor="let composition of compositions | filterPipe: 'name': searchPhrase" (click)="viewComposition(composition)">{{composition.name}}</li>
+        <li *ngFor="let composition of compositions | filterPipe: 'name': searchPhrase" (click)="viewComposition(composition)">
+            <span>{{composition.name}}</span>
+            <button (click)="removeComposition($event, composition.id)">   -   </button>
+        </li>
     </ul>
     <div id="viewed-composition">
         <p>{{viewedComposition?.name}} {{viewedComposition?.author}}</p>

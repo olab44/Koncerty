@@ -7,7 +7,7 @@ from typing import List
 from database import get_session
 from .service import get_compositions, create_composition, get_compositions_extra, remove_composition
 from .schemas import *
-from users.service import get_user_data 
+from users.service import get_user_data
 
 router = APIRouter()
 

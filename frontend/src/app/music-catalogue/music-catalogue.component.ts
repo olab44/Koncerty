@@ -41,6 +41,13 @@ export class MusicCatalogueComponent {
   viewComposition(composition: any): void {
     this.viewedComposition = composition
   }
+  removeComposition(event: MouseEvent, id: number): void {
+    event.stopPropagation()
+    this.backend.deleteRequest('catalogue/removeComposition', {composition_id: id, parent_group: this.group.group_id}).subscribe({
+      next: (res) => { console.log(res); this.getCatalogue() },
+      error: (e) => { console.log(e) }
+    })
+  }
 
   downloadFile(file_id: number): void {
     this.backend.postRequest('files/downloadFile', {file_id, parent_group: this.group.group_id}).subscribe({

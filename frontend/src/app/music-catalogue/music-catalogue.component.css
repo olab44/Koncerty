@@ -33,6 +33,10 @@ section {
 ul {
     height: 100%;
 }
+li {
+    padding: 0px 10px;
+    justify-content: space-between;
+}
 
 .new-button {
     width: 75%;
@@ -53,9 +57,6 @@ ul {
 }
 #viewed-composition ul {
     max-height: 400px;
-}
-#viewed-composition li {
-    justify-content: space-between;
 }
 #viewed-composition li div {
     display: flex;

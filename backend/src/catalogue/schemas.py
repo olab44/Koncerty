@@ -8,7 +8,6 @@ class FileInfo(BaseModel):
     class Config:
         from_attributes = True
 
-
 class CompositionInfo(BaseModel):
     id: int
     name: str
@@ -17,7 +16,7 @@ class CompositionInfo(BaseModel):
 
     class Config:
         from_attributes = True
-    
+
 class CreateCompositionRequest(BaseModel):
     name: str
     author: str
