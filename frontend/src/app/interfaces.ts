@@ -91,6 +91,17 @@ export interface ForumMessageCreate {
     title: string;
     content: string;
     parent_group: number
-    group_ids: number[]
+    group_id: number
     user_ids: number[];
 }
+
+
+export interface Alert {
+    id: number;
+    title: string;
+    content: string;
+    parent_group: number;
+    group_ids: number[];
+    recipients: number[];
+  }
+  

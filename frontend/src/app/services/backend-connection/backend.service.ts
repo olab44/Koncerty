@@ -9,10 +9,9 @@ import { GroupInfoStructure, SignUpResponse, UserInfo, GroupInfo, EventInfo } fr
   providedIn: 'root'
 })
 export class BackendService {
-  private readonly apiURL = "http://localhost:8000"
+  private readonly apiURL = "http://localhost:8000";
 
-  constructor(private http: HttpClient, private auth: AuthService) {
-  }
+  constructor(private http: HttpClient, private auth: AuthService) {}
 
   private getHeaders(): HttpHeaders {
     return new HttpHeaders({
@@ -22,32 +21,32 @@ export class BackendService {
 
   getUsers(group_id: number) {
     return this.http
-      .get<UserInfo[]>(`${this.apiURL}/findUsers?group_id=${group_id}`,  { headers: this.getHeaders() })
+      .get<UserInfo[]>(`${this.apiURL}/findUsers?group_id=${group_id}`, { headers: this.getHeaders() })
       .pipe(
         catchError((error) => {
-        return throwError(() => error)
+          return throwError(() => error);
         })
-      )
+      );
   }
 
   getGroups() {
     return this.http
-      .get<GroupInfoStructure>(`${this.apiURL}/groups/findGroups`,  { headers: this.getHeaders() })
+      .get<GroupInfoStructure>(`${this.apiURL}/groups/findGroups`, { headers: this.getHeaders() })
       .pipe(
         catchError((error) => {
-        return throwError(() => error)
+          return throwError(() => error);
         })
-      )
+      );
   }
 
   getSubgroups(group_id: number) {
     return this.http
-      .get<GroupInfo[]>(`${this.apiURL}/groups/findSubgroups?group_id=${group_id}`,  { headers: this.getHeaders() })
+      .get<GroupInfo[]>(`${this.apiURL}/groups/findSubgroups?group_id=${group_id}`, { headers: this.getHeaders() })
       .pipe(
         catchError((error) => {
-        return throwError(() => error)
+          return throwError(() => error);
         })
-      )
+      );
   }
 
   getEvents(group_id: number) {
@@ -55,18 +54,36 @@ export class BackendService {
       .get<EventInfo[]>(`${this.apiURL}/events/findEvents?group_id=${group_id}`, { headers: this.getHeaders() })
       .pipe(
         catchError((error) => {
-        return throwError(() => error)
+          return throwError(() => error);
         })
-      )
+      );
   }
+
+  getAlerts(parentGroup: number) {
+    return this.http
+      .get<any>(`${this.apiURL}/forum/getAlerts`, {
+        params: {
+          parent_group: parentGroup.toString(),  // Only include parent_group as a query parameter
+        },
+        headers: this.getHeaders() // Assuming getHeaders() includes the Authorization header with the token
+      })
+      .pipe(
+        catchError((error) => {
+          return throwError(() => error);
+        })
+      );
+  }
+  
+  
+  
 
   postToken(token: string): Observable<SignUpResponse> {
     return this.http.post<SignUpResponse>(`${this.apiURL}/google-sign-in`, { token })
       .pipe(
         catchError((error) => {
-          return throwError(() => error)
+          return throwError(() => error);
         })
-      )
+      );
   }
 
   postRequest<T>(endpoint: string, body: any) {
@@ -75,7 +92,7 @@ export class BackendService {
         catchError((error) => {
           return throwError(() => error);
         })
-      )
+      );
   }
 
   deleteRequest(endpoint: string, body: any) {
@@ -84,6 +101,6 @@ export class BackendService {
         catchError((error) => {
           return throwError(() => error);
         })
-      )
+      );
   }
 }

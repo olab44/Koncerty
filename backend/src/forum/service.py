@@ -17,6 +17,7 @@ from forum.gmail import send_mail
 
 SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
 
+
 def create_alert(db: Session, email: str, request: CreateAlertRequest) -> Alert:
     """
     Creates an alert and sends notifications to recipients.
@@ -73,39 +74,115 @@ def create_alert(db: Session, email: str, request: CreateAlertRequest) -> Alert:
     return new_alert, recipients_list
 
 
-def get_alerts(db: Session, email: str, request: GetAlertsRequest):
+# def get_alerts(db: Session, email: str, request: GetAlertsRequest):
+#     """
+#     Retrieves alerts for a user based on their group membership.
+
+#     Args:
+#         db (Session): The database session.
+#         email (str): The email of the user requesting the alerts.
+#         request (GetAlertsRequest): The request data for fetching alerts.
+
+#     Returns:
+#         list: A list of Alert objects.
+#     """
+#     existing_user = db.query(User).filter(User.email == email).first()
+#     if not existing_user:
+#         raise HTTPException(status_code=404, detail="User not found")
+    
+#     existing_member = db.query(Member).filter(Member.user_id == existing_user.id, Member.group_id == request.parent_group).first()
+#     if not existing_member:
+#         raise HTTPException(status_code=404, detail="User is not a member of the group")
+    
+#     members = db.query(Member.id).join(
+#         Group, Member.group_id == Group.id
+#     ).filter(
+#         Member.user_id == request.user_id,
+#         Group.parent_group == request.parent_group
+#     ).subquery()
+    
+#     alerts = db.query(Alert).join(
+#         Recipient, Recipient.alert_id == Alert.id
+#     ).filter(
+#         (Recipient.member_id == existing_member.id) | 
+#         (Recipient.member_id.in_(members))
+#     ).all()
+#     return alerts
+
+# def get_alerts(db: Session, email: str, request: GetAlertsRequest):
+#     """
+#     Retrieves alerts for a user based on their group membership.
+
+#     Args:
+#         db (Session): The database session.
+#         email (str): The email of the user requesting the alerts.
+#         request (GetAlertsRequest): The request data for fetching alerts.
+
+#     Returns:
+#         list: A list of Alert objects.
+#     """
+#     existing_user = db.query(User).filter(User.email == email).first()
+#     if not existing_user:
+#         raise HTTPException(status_code=404, detail="User not found")
+    
+#     # Check if the user is part of the parent group
+#     existing_member = db.query(Member).filter(Member.user_id == existing_user.id, Member.group_id == request.parent_group).first()
+#     if not existing_member:
+#         raise HTTPException(status_code=404, detail="User is not a member of the group")
+    
+#     # Find other members who belong to the same parent group
+#     members = db.query(Member.id).join(
+#         Group, Member.group_id == Group.id
+#     ).filter(
+#         Member.user_id == request.user_id,
+#         Group.parent_group == request.parent_group
+#     ).subquery()
+    
+#     # Retrieve alerts for the user and the related group members
+#     alerts = db.query(Alert).join(
+#         Recipient, Recipient.alert_id == Alert.id
+#     ).filter(
+#         (Recipient.member_id == existing_member.id) | 
+#         (Recipient.member_id.in_(members))
+#     ).all()
+#     return alerts
+
+def get_alerts(db: Session, user_id: int, parent_group: int):
     """
     Retrieves alerts for a user based on their group membership.
 
     Args:
         db (Session): The database session.
-        email (str): The email of the user requesting the alerts.
-        request (GetAlertsRequest): The request data for fetching alerts.
+        user_id (int): The user ID extracted from the token.
+        parent_group (int): The parent group ID.
 
     Returns:
         list: A list of Alert objects.
     """
-    existing_user = db.query(User).filter(User.email == email).first()
-    if not existing_user:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    existing_member = db.query(Member).filter(Member.user_id == existing_user.id, Member.group_id == request.parent_group).first()
+    # Check if the user is part of the parent group
+    existing_member = db.query(Member).filter(
+        Member.user_id == user_id,
+        Member.group_id == parent_group
+    ).first()
+
     if not existing_member:
         raise HTTPException(status_code=404, detail="User is not a member of the group")
     
+    # Find other members who belong to the same parent group
     members = db.query(Member.id).join(
         Group, Member.group_id == Group.id
     ).filter(
-        Member.user_id == request.user_id,
-        Group.parent_group == request.parent_group
+        Group.parent_group == parent_group
     ).subquery()
     
+    # Retrieve alerts for the user and the related group members
     alerts = db.query(Alert).join(
         Recipient, Recipient.alert_id == Alert.id
     ).filter(
         (Recipient.member_id == existing_member.id) | 
         (Recipient.member_id.in_(members))
     ).all()
+
     return alerts
 
 

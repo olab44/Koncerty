@@ -23,7 +23,7 @@ export class OverlayNewMessageComponent {
     title: '',
     content: '',
     parent_group: -1,
-    group_ids: [],
+    group_id: 0,
     user_ids: []
   };
 
@@ -49,13 +49,18 @@ export class OverlayNewMessageComponent {
   onGroupCheckboxChange(event: Event, groupId: number): void {
     const checkbox = event.target as HTMLInputElement;
     if (checkbox.checked) {
-      if (groupId === this.group.group_id) { this.allChecked = true; }
-      this.message.group_ids.push(groupId);
+        if (groupId === this.group.group_id) { this.allChecked = true; }
+        this.message.group_id = groupId;  // Set group_id to the checked groupId
     } else {
-      if (groupId === this.group.group_id) { this.allChecked = false; }
-      this.message.group_ids = this.message.group_ids.filter(id => id !== groupId);
+        if (groupId === this.group.group_id) { this.allChecked = false; }
+        // Reset group_id if unchecked
+        if (this.message.group_id === groupId) {
+            this.message.group_id = 0;  // Reset to default value
+        }
     }
-  }
+}
+
+
 
   addRecipient(user_id: number | null) {
     if (user_id !== null && !this.message.user_ids.includes(user_id)) {
@@ -69,33 +74,32 @@ export class OverlayNewMessageComponent {
 
   sendMessage() {
     const alertPayload = {
-      title: this.message.title,
-      content: this.message.content,
-      parent_group: this.group.group_id,
-      group_id: this.message.group_ids.length > 0 ? this.message.group_ids[0] : null,
-      user_id: null,
-      user_ids: this.message.user_ids.length > 0 ? this.message.user_ids : null
+        title: this.message.title,
+        content: this.message.content,
+        parent_group: this.group.group_id,
+        group_id: this.message.group_id > 0 ? this.message.group_id : null,  // Send group_id as a single number
+        user_ids: this.message.user_ids.length > 0 ? this.message.user_ids : null  // Send user_ids if provided
     };
 
     this.backend.postRequest('forum/createAlert', alertPayload).subscribe({
-      next: (res: any) => {
-        const createdAlert = {
-          id: res.id,
-          title: res.title,
-          content: res.content,
-          group_ids: res.group_ids,
-          subgroup_ids: res.subgroup_ids,
-        };
+        next: (res: any) => {
+            const createdAlert = {
+                id: res.alert.id,
+                title: res.alert.title,
+                content: res.alert.content,
+                group_id: res.alert.group_id,
+                recipients: res.recipients,
+            };
 
-        this.messageStatus = `Alert created! ID: ${createdAlert.id}`;
-        this.refresh.emit();
-      },
-      error: (e) => {
-        this.messageStatus = e.message;
-        console.log(e);
-      }
+            this.messageStatus = `Alert created! ID: ${createdAlert.id}`;
+            this.refresh.emit();
+        },
+        error: (e) => {
+            this.messageStatus = e.message;
+            console.log(e);
+        }
     });
-  }
+}
 
   closeOverlay() {
     this.close.emit();
