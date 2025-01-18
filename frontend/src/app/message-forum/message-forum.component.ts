@@ -20,10 +20,9 @@ export class MessageForumComponent implements OnInit {
   user!: UserInfo; // User info added
   viewedMessage = {name: "", content: ""};
   visibleOverlayMessage = false;
-  messages: any[] = [];  // Adjust type as per the backend response
+  messages: any[] = [];
 
   constructor(private router: Router, private backend: BackendService, private state: SessionStateService) {
-    // Fetch group from the service as before
     this.state.currentGroup.subscribe((group) => {
       this.group = group;
     });
@@ -35,13 +34,13 @@ export class MessageForumComponent implements OnInit {
 
   fetchMessages(): void {
     const request = {
-        parent_group: this.group.group_id,  // Use group_id for parent_group
+        parent_group: this.group.group_id,
     };
 
-    this.backend.getAlerts(request.parent_group)  // Only send parent_group
+    this.backend.getAlerts(request.parent_group)
       .subscribe((response) => {
         console.log('Fetched alerts:', response);
-        this.messages = response.alerts || [];  // Assign fetched data to messages array
+        this.messages = response.alerts || [];
       }, (error) => {
         console.error('Error fetching alerts', error);
       });
