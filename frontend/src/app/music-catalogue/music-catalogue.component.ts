@@ -4,9 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { TopBarComponent } from '../bars/top-bar/top-bar.component';
 import { OverlayAddCompositionComponent } from '../overlays/overlay-add-composition/overlay-add-composition.component';
-import { GroupInfo } from '../interfaces';
+import { CompositionInfo, GroupInfo } from '../interfaces';
 import { SessionStateService } from '../services/session-state/session-state.service';
 import { FilterPipe } from '../pipe/filter.pipe';
+import { BackendService } from '../services/backend-connection/backend.service';
 
 @Component({
   selector: 'app-music-catalogue',
@@ -17,22 +18,65 @@ import { FilterPipe } from '../pipe/filter.pipe';
 })
 export class MusicCatalogueComponent {
   group!: GroupInfo
-  viewedComposition = {title: "", author: ""}
+  viewedComposition: CompositionInfo | null = null
   visibleOverlayComposition = false
   searchPhrase: string = ""
+  compositions: CompositionInfo[] = []
+  new_file: File | null = null
 
-  compositions = [
-    {title: "We'll be fine", author: "Jorge Rivera-Herrans"}
-  ]
-
-  constructor(private state: SessionStateService) {
+  constructor(private backend: BackendService, private state: SessionStateService) {
     this.state.currentGroup.subscribe((group) => {
       this.group = group;
     });
+    this.getCatalogue()
+  }
+
+  getCatalogue() {
+    this.backend.getCatalogueExtra(this.group.group_id).subscribe({
+      next: (res) => {this.compositions = res.found},
+      error: (e) => { console.log(e) }
+    })
   }
 
   viewComposition(composition: any): void {
     this.viewedComposition = composition
+  }
+  removeComposition(event: MouseEvent, id: number): void {
+    event.stopPropagation()
+    this.backend.deleteRequest('catalogue/removeComposition', {composition_id: id, parent_group: this.group.group_id}).subscribe({
+      next: (res) => { console.log(res); this.getCatalogue() },
+      error: (e) => { console.log(e) }
+    })
+  }
+
+  downloadFile(file_id: number): void {
+    this.backend.postRequest('files/downloadFile', {file_id, parent_group: this.group.group_id}).subscribe({
+      next: (res) => { console.log(res) },
+      error: (e) => { console.log(e) }
+    })
+  }
+
+  deleteFile(file_id: number): void {
+    this.backend.deleteRequest('files/deleteFile', {file_id, parent_group: this.group.group_id}).subscribe({
+      next: (res) => {
+        if (this.viewedComposition) {
+          this.viewedComposition.files = this.viewedComposition?.files.filter(file => file.id !== file_id)
+        }
+      },
+      error: (e) => { console.log(e) }
+    })
+  }
+
+  onFileChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.new_file = input.files[0]
+    }
+  }
+  uploadFile(): void {
+    //
+    console.log(this.new_file)
+    this.new_file = null
   }
 
   toggleOverlayComposition(): void {

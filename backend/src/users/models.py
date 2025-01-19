@@ -47,17 +47,17 @@ class Event(Base):
     __tablename__ = 'events'
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
-    name = Column(String(100), nullable=False)  
+    name = Column(String(100), nullable=False)
     date_start = Column(DateTime, nullable=False)
     date_end = Column(DateTime, nullable=False)
-    location = Column(String(100), nullable=False)  
-    extra_info = Column(String(100), nullable=True)  
-    parent_group = Column(BigInteger, ForeignKey('groups.id'), nullable=False)  
+    location = Column(String(100), nullable=False)
+    extra_info = Column(String(100), nullable=True)
+    parent_group = Column(BigInteger, ForeignKey('groups.id'), nullable=False)
     type = Column(String(8), nullable=False)
 
-    participations = relationship("Participation", back_populates="event")
-    set_lists = relationship("SetList", back_populates="event")
-    
+    participations = relationship("Participation", back_populates="event", cascade="all, delete")
+    set_lists = relationship("SetList", back_populates="event", cascade="all, delete")
+
     group = relationship("Group", back_populates="events")
 
 
@@ -65,8 +65,8 @@ class Participation(Base):
     __tablename__ = 'participations'
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
-    event_id = Column(BigInteger, ForeignKey('events.id'), nullable=False)  
-    user_id = Column(BigInteger, ForeignKey('users.id'), nullable=False)  
+    event_id = Column(BigInteger, ForeignKey('events.id'), nullable=False)
+    user_id = Column(BigInteger, ForeignKey('users.id'), nullable=False)
 
     event = relationship("Event", back_populates="participations")
 
@@ -89,7 +89,7 @@ class Composition(Base):
     name = Column(String(50), nullable=False)
     author = Column(String(40), nullable=True)
 
-    set_lists = relationship("SetList", back_populates="composition")
+    set_lists = relationship("SetList", back_populates="composition", cascade="all, delete")
     files = relationship("File", back_populates="composition")
 
 
@@ -113,7 +113,7 @@ class FileOwnership(Base):
     file_id = Column(BigInteger, ForeignKey("files.id"), nullable=False)
 
     user = relationship("User", back_populates="file_ownerships")
-    file = relationship("File", back_populates="ownerships")
+    file = relationship("File", back_populates="ownerships", cascade="all, delete")
 
 
 class Alert(Base):

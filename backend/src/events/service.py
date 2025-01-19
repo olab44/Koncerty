@@ -1,33 +1,12 @@
-import os
-from datetime import datetime
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from dotenv import load_dotenv
 from typing import List
 
-from google.oauth2.credentials import Credentials
-from googleapiclient.discovery import build
-
-from .schemas import EventInfo, CreateEventRequest, Participant, CompositionInfo, EditEventRequest
+from .schemas import EventInfo, CreateEventRequest, Participant, EditEventRequest, RemoveEventRequest
+from catalogue.schemas import CompositionInfo
 from users.models import (User, Member,
      Event, Participation, Composition, SetList
 )
-
-def get_calendar_service(token: str):
-    """
-    Initialize and return a Google Calendar service instance.
-    """
-
-    try:
-        load_dotenv()
-        GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
-        GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
-        credentials = Credentials(token)
-        service = build('calendar', 'v3', credentials=credentials)
-
-        return service
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Google Calendar service error: {str(e)}")
 
 def get_setlist_info(db: Session, setlists: List[int]):
     """
@@ -232,5 +211,28 @@ def edit_event(db: Session, email: str, request: EditEventRequest):
             db.add(new_setlist)
 
     db.commit()
-    
+
     return existing_event
+
+def remove_event(db: Session, email: str, request: RemoveEventRequest):
+
+    existing_user = db.query(User).filter(User.email == email).first()
+    if not existing_user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    parent_member = db.query(Member).filter(Member.user_id == existing_user.id, Member.group_id == request.owner_group_id).first()
+
+    if not parent_member:
+        raise HTTPException(status_code=404, detail="Requesting user not is a member of the group")
+    if parent_member.role == "Muzyk":
+        raise HTTPException(status_code=404, detail="Requesting user must have Kapelmistrz or Koordynator role")
+
+    to_delete = db.query(Event).filter(Event.id == request.event_id).first()
+
+    if not to_delete:
+        raise HTTPException(status_code=404, detail=f"Event with id {request.event_id} not found")
+
+    db.delete(to_delete)
+    db.commit()
+
+    return {"deleted": to_delete.id}

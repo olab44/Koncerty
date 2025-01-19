@@ -4,7 +4,7 @@ from typing import List
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload, MediaIoBaseUpload
-from users.models import User, Member, File, FileOwnership
+from users.models import User, Member, File, FileOwnership, Composition
 from .schemas import UploadFileRequest, DownloadFileRequest, DeleteFileRequest
 from .schemas import FileToUserRequest, FileToSubgroupRequest, FileToCompositionRequest
 from .schemas import DeleteFileToCompositionRequest
@@ -89,6 +89,12 @@ def delete_from_drive(db: Session, email: str, request: DeleteFileRequest):
         raise HTTPException(status_code=404, detail=f"File {request.file_id} not found")
     service = establish_drive_connection()
     service.files().delete(fileId=file.google_drive_id).execute()
+
+    compositions = db.query(FileOwnership).filter(FileOwnership.file_id == request.file_id).all()
+    for comp in compositions:
+        db.delete(comp)
+    db.commit()
+
     db.delete(file)
     db.commit()
 

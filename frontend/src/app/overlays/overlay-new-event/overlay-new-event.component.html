@@ -52,6 +52,12 @@
     </div>
     <div class="setlist">
         <p>{{"EVENT.SETLIST" | translate}}</p>
+        <ul>
+            <li *ngFor="let comp of catalogue" (click)="addComposition(comp)">{{comp.name}}</li>
+        </ul>
+        <ul>
+            <li *ngFor="let comp of chosen_compositions; let i = index" (click)="removeComposition(i)">{{i}}: {{comp.name}}</li>
+        </ul>
     </div>
     <div class="message-button">
         <span class="event-message"> {{ eventMessage }} </span>

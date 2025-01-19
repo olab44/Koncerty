@@ -5,8 +5,8 @@ from typing import List
 
 from database import get_session
 from users.models import User
-from .service import get_user_events, create_event, edit_event
-from .schemas import EventInfo, CreateEventRequest, EditEventRequest
+from .service import get_user_events, create_event, edit_event, remove_event
+from .schemas import EventInfo, CreateEventRequest, EditEventRequest, RemoveEventRequest
 from users.service import get_user_data
 
 router = APIRouter()
@@ -32,3 +32,11 @@ def edit_ev(request: EditEventRequest, db: Session = Depends(get_session), token
 
     new_event = edit_event(db, user_data.get("email"), request)
     return {"edited": new_event}
+
+@router.post("/removeEvent", status_code=201)
+def rm_event(request: RemoveEventRequest, db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
+    user_data = get_user_data(token)
+
+    deleted_event = remove_event(db, user_data.get("email"), request)
+    return {"removed": deleted_event}
+

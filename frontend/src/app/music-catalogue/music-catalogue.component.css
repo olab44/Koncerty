@@ -33,6 +33,11 @@ section {
 ul {
     height: 100%;
 }
+li {
+    padding: 0px 10px;
+    justify-content: space-between;
+}
+
 .new-button {
     width: 75%;
     height: 5vh;
@@ -46,12 +51,17 @@ ul {
     background-color: #CCE7FF;
     border-bottom: solid 5px #000070;
     border-top: solid 5px #000070;
-
-    word-break: break-all;
-    white-space: pre-wrap;
-    overflow-y: scroll;
+    overflow-y: clip;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
 }
-
+#viewed-composition ul {
+    max-height: 400px;
+}
+#viewed-composition li div {
+    display: flex;
+    gap: 5px
+}
 .popup-options {
     display: none;
     position: absolute;
@@ -65,4 +75,11 @@ ul {
 }
 .filters-button:hover .popup-options {
     display: block;
+}
+input[type="file"] {
+    display: none;
+}
+.add-file {
+    display: flex;
+    gap: 5px;
 }

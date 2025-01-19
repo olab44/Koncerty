@@ -2,15 +2,12 @@ from datetime import datetime
 from pydantic import BaseModel
 from typing import List, Optional
 
+from catalogue.schemas import CompositionInfo
+
 class Participant(BaseModel):
     id: int
     username: str
     email: str
-
-class CompositionInfo(BaseModel):
-    id: int
-    name: str
-    author: str
 
 class EventInfo(BaseModel):
     event_id: int
@@ -49,3 +46,7 @@ class EditEventRequest(BaseModel):
     added_participants: List[str]
     removed_compositions: List[int]
     added_compositions: List[int]
+
+class RemoveEventRequest(BaseModel):
+    event_id: int
+    owner_group_id: int

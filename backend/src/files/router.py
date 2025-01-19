@@ -6,7 +6,7 @@ from database import get_session
 from .service import upload_to_drive, download_from_drive, delete_from_drive, assign_file_to_user
 from .service import assign_file_to_subgroup, assign_file_to_composition
 from .service import deprive_user_of_file, deprive_subgroup_of_file, deprive_composition_of_file
-from .schemas import * 
+from .schemas import *
 from users.models import User
 from users.service import decode_app_token
 
@@ -21,7 +21,7 @@ def upload_file_to_drive(
     token: str = Header(..., alias="Authorization")
 ):
     user_data = decode_app_token(token)
-    
+
     # file_path = "/files_storage/test_photo.jpg"
 
     uploaded_file = upload_to_drive(
@@ -36,14 +36,14 @@ def upload_file_to_drive(
     return { "created_file": uploaded_file }
 
 
-@router.get("/downloadFile", response_model=DownloadFileResponse)
+@router.post("/downloadFile", response_model=DownloadFileResponse)
 def get_file_from_drive(request: DownloadFileRequest, db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
     user_data = decode_app_token(token)
 
     file, file_path = download_from_drive(db, user_data.get("email"), request)
     if not file_path:
         raise HTTPException(status_code=404, detail=f"Error downloading file {request.file_id}")
-    
+
     file_model = FileModel.from_orm(file)
 
     return {
@@ -55,7 +55,7 @@ def get_file_from_drive(request: DownloadFileRequest, db: Session = Depends(get_
 @router.delete("/deleteFile", status_code=204)
 def delete_file_from_drive(request: DeleteFileRequest, db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
     user_data = decode_app_token(token)
-    
+
     delete_from_drive(db, user_data.get("email"), request)
 
     return { "deleted_file": request.file_id }

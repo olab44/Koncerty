@@ -38,12 +38,12 @@ export class OverlayAddCompositionComponent {
   addComposition(): void {
     const compositionData = new FormData()
     compositionData.append('group_id', this.group.group_id.toString())
-    compositionData.append('title', this.titleInput)
+    compositionData.append('name', this.titleInput)
     compositionData.append('author', this.authorInput)
     this.files.forEach((file) => {
       compositionData.append('files', file);
     });
-    this.backend.postRequest('files/addComposition', compositionData).subscribe({
+    this.backend.postRequest('catalogue/addComposition', compositionData).subscribe({
       next: res => {
         this.addMessage = "Composition added"
         this.update.emit()

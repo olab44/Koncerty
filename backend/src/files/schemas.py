@@ -64,3 +64,16 @@ class FileToCompositionRequest(BaseModel):
 class DeleteFileToCompositionRequest(BaseModel):
     file_id: int
     parent_group: int
+
+class CompositionSchema(BaseModel):
+    composition_id: int
+    name: str
+    author: str
+
+class FindCompositionResponse(BaseModel):
+    found: List[CompositionSchema]
+
+class CreateCompositionRequest(BaseModel):
+    name: str
+    author: str
+    files: List[int]

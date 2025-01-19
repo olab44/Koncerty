@@ -143,7 +143,7 @@ ALTER TABLE IF EXISTS public.set_lists
     ADD CONSTRAINT event_set_list_fk FOREIGN KEY (event_id)
     REFERENCES public.events (id) MATCH SIMPLE
     ON UPDATE NO ACTION
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     NOT VALID;
 
 
@@ -151,7 +151,7 @@ ALTER TABLE IF EXISTS public.set_lists
     ADD CONSTRAINT composition_to_set_list_fk FOREIGN KEY (composition_id)
     REFERENCES public.compositions (id) MATCH SIMPLE
     ON UPDATE NO ACTION
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     NOT VALID;
 
 
@@ -175,7 +175,7 @@ ALTER TABLE IF EXISTS public.file_ownerships
     ADD CONSTRAINT file_to_file_ownership_fk FOREIGN KEY (file_id)
     REFERENCES public.files (id) MATCH SIMPLE
     ON UPDATE NO ACTION
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     NOT VALID;
 
 
@@ -183,7 +183,7 @@ ALTER TABLE IF EXISTS public.participations
     ADD CONSTRAINT event_participation_fk FOREIGN KEY (event_id)
     REFERENCES public.events (id) MATCH SIMPLE
     ON UPDATE NO ACTION
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     NOT VALID;
 
 
