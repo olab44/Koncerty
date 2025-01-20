@@ -146,12 +146,19 @@ BEGIN
     INSERT INTO set_lists (event_id, composition_id)
     VALUES (event_id2, composition_id1);
     -- 2 pliki
+    -- INSERT INTO files (name, google_drive_id, composition_id)
+    -- VALUES ('Symphony no. 5 notes 1', 123, composition_id1)
+    -- RETURNING id INTO file_id1;
+
+    -- INSERT INTO files (name, google_drive_id, composition_id)
+    -- VALUES ('Symphony no. 5 notes 2', 1234, composition_id1)
+    -- RETURNING id INTO file_id2;
     INSERT INTO files (name, google_drive_id, composition_id)
-    VALUES ('Symphony no. 5 notes 1', 123, composition_id1)
+    VALUES ('Symphony no. 5 notes 1', '1xuMV6wj7jv1B7fplDMGMVDrTbrVSY3fK', composition_id1)
     RETURNING id INTO file_id1;
 
     INSERT INTO files (name, google_drive_id, composition_id)
-    VALUES ('Symphony no. 5 notes 2', 1234, composition_id1)
+    VALUES ('Symphony no. 5 notes 2', '1BzDX3xEvU1nXk-Ww3Haf-hFA7nlGtUPF', composition_id1)
     RETURNING id INTO file_id2;
 
     INSERT INTO file_ownerships (user_id, file_id)
