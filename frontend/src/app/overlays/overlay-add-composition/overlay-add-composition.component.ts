@@ -15,7 +15,7 @@ import { CommonModule } from '@angular/common';
 })
 export class OverlayAddCompositionComponent {
   @Output() close = new EventEmitter<void>()
-  @Output() update = new EventEmitter<void>()
+  @Output() refresh = new EventEmitter<void>();
   group!: GroupInfo
   addMessage = "..."
   titleInput: string = ""
@@ -36,24 +36,46 @@ export class OverlayAddCompositionComponent {
   }
 
   addComposition(): void {
-    const compositionData = new FormData()
-    compositionData.append('group_id', this.group.group_id.toString())
-    compositionData.append('name', this.titleInput)
-    compositionData.append('author', this.authorInput)
-    this.files.forEach((file) => {
-      compositionData.append('files', file);
-    });
+    const compositionData: any = {
+      parent_group: this.group.group_id,
+      name: this.titleInput,
+      author: this.authorInput,
+      files: []
+    };
+    if (this.files && this.files.length > 0) {
+      this.files.forEach((file: File) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const base64File = reader.result as string;
+  
+          compositionData.files.push({
+            name: file.name,
+            content: base64File.split(',')[1]
+          });
+          if (compositionData.files.length === this.files.length) {
+            this.sendCompositionData(compositionData);
+          }
+        };
+        reader.readAsDataURL(file);
+      });
+    } else {
+      this.sendCompositionData(compositionData);
+    }
+  }
+  
+  sendCompositionData(compositionData: any): void {
     this.backend.postRequest('catalogue/addComposition', compositionData).subscribe({
       next: res => {
-        this.addMessage = "Composition added"
-        this.update.emit()
-       },
+        this.addMessage = "Composition added";
+        this.refresh.emit();
+      },
       error: e => {
-        console.log(e)
-        this.addMessage = e.detail || "Unexpected error occured."
+        console.log(e);
+        this.addMessage = e.detail || "Unexpected error occurred.";
       }
-    })
+    });
   }
+  
 
   closeOverlay() {
     this.close.emit()
