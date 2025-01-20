@@ -10,7 +10,6 @@ COPY ./src /code/src
 COPY ./tests /code/tests
 
 COPY ./service_account.json .
-COPY ./credentials.json .
 
 # ENV PYTHONPATH=/code/src
 ENV PYTHONPATH=/code/src:$PYTHONPATH

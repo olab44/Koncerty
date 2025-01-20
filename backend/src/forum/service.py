@@ -1,18 +1,9 @@
 from sqlalchemy.orm import Session
 from typing import List
 import dramatiq
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-from smtplib import SMTP
 from users.models import Member, User, Alert, Recipient, Group
 from .schemas import CreateAlertRequest, GetAlertsRequest
-import os
-import base64
 from fastapi import HTTPException
-from google.oauth2.credentials import Credentials
-from google.auth.transport.requests import Request
-from googleapiclient.discovery import build
-from google_auth_oauthlib.flow import InstalledAppFlow
 from forum.gmail import send_mail
 
 SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
