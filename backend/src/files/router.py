@@ -12,6 +12,29 @@ from users.service import decode_app_token
 
 router = APIRouter()
 
+# @router.post("/uploadFile", status_code=201)
+# def upload_file_to_drive(
+#     file_name: str = Form(...),
+#     parent_group: int = Form(...),
+#     file: UploadFile = File(...),
+#     db: Session = Depends(get_session),
+#     token: str = Header(..., alias="Authorization")
+# ):
+#     user_data = decode_app_token(token)
+
+#     # file_path = "/files_storage/test_photo.jpg"
+
+#     uploaded_file = upload_to_drive(
+#         db,
+#         user_data.get("email"),
+#         file.file,  # Strumień pliku
+#         file_name,
+#         parent_group
+#     )
+#     if not uploaded_file:
+#         raise HTTPException(status_code=404, detail="Error uploading file")
+#     return { "created_file": uploaded_file }
+
 @router.post("/uploadFile", status_code=201)
 def upload_file_to_drive(
     file_name: str = Form(...),
@@ -22,18 +45,26 @@ def upload_file_to_drive(
 ):
     user_data = decode_app_token(token)
 
-    # file_path = "/files_storage/test_photo.jpg"
-
     uploaded_file = upload_to_drive(
         db,
         user_data.get("email"),
-        file.file,  # Strumień pliku
+        file.file,
         file_name,
         parent_group
     )
+
+    print("File uploaded:", uploaded_file)
+
     if not uploaded_file:
         raise HTTPException(status_code=404, detail="Error uploading file")
-    return { "created_file": uploaded_file }
+    
+    return { 
+        "created_file": {
+            "file_id": uploaded_file.id,
+            "file_name": uploaded_file.name,
+            "google_drive_id": uploaded_file.google_drive_id
+        }
+    }
 
 
 @router.post("/downloadFile", response_model=DownloadFileResponse)

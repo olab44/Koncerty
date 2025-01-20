@@ -38,9 +38,11 @@ export class MusicCatalogueComponent {
     })
   }
 
-  viewComposition(composition: any): void {
-    this.viewedComposition = composition
+  viewComposition(composition: CompositionInfo): void {
+    this.viewedComposition = composition;
+    console.log('Viewed Composition ID:', this.viewedComposition?.id);
   }
+  
   removeComposition(event: MouseEvent, id: number): void {
     event.stopPropagation()
     this.backend.deleteRequest('catalogue/removeComposition', {composition_id: id, parent_group: this.group.group_id}).subscribe({
@@ -73,10 +75,52 @@ export class MusicCatalogueComponent {
       this.new_file = input.files[0]
     }
   }
+
+
   uploadFile(): void {
-    //
-    console.log(this.new_file)
-    this.new_file = null
+    if (!this.new_file) {
+      console.log('No file selected');
+      return;
+    }
+  
+    const formData = new FormData();
+    formData.append('file', this.new_file, this.new_file.name);
+    formData.append('file_name', this.new_file.name);
+    formData.append('parent_group', this.group.group_id.toString());
+  
+    this.backend.postRequest('files/uploadFile', formData).subscribe({
+      next: (res: any) => {
+        const createdFile = res.created_file;
+        if (!createdFile || !createdFile.file_id) {
+          console.error('File ID missing from response');
+          return;
+        }
+
+        if (this.viewedComposition?.id) {
+          const fileData = {
+            file_id: createdFile.file_id,
+            composition_id: this.viewedComposition.id,
+            parent_group: this.group.group_id
+          };
+          this.backend.postRequest('files/assignFileToComposition', fileData).subscribe({
+            next: (assignRes: any) => {
+              console.log('File assigned to composition:', assignRes);
+              this.getCatalogue();
+            },
+            error: (assignError) => {
+              console.error('Error assigning file to composition:', assignError);
+            }
+          });
+        } else {
+          console.error('No composition selected or composition ID is missing');
+        }
+      },
+      error: (uploadError) => {
+        console.log('Error uploading file:', uploadError);
+      }
+    });
+  
+    this.new_file = null;
   }
 
   toggleOverlayComposition(): void {

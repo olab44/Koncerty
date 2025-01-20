@@ -9,30 +9,29 @@
     <p>{{'CATALOGUE.DETAILS' | translate}}</p>
     <ul>
         <li *ngFor="let composition of compositions | filterPipe: 'name': searchPhrase" (click)="viewComposition(composition)">
-            <span>{{composition.name}}</span>
-            <button (click)="removeComposition($event, composition.id)">   -   </button>
+          <span>{{composition.name}}</span>
+          <button (click)="removeComposition($event, composition.id)">   -   </button>
         </li>
-    </ul>
-    <div id="viewed-composition">
+      </ul>
+      <div id="viewed-composition" *ngIf="viewedComposition">
         <p>{{viewedComposition?.name}} {{viewedComposition?.author}}</p>
         <ul>
-            <li *ngFor="let file of viewedComposition?.files">
-                <span>{{file.name}}</span>
-                <div>
-                    <button *ngIf="file.access" (click)="downloadFile(file.id)">&#10515;</button>
-                    <button *ngIf="group.role === 'Kapelmistrz'" (click)="deleteFile(file.id)">  -  </button>
-                </div>
-            </li>
+          <li *ngFor="let file of viewedComposition?.files">
+            <span>{{file.name}}</span>
+            <div>
+              <button *ngIf="file.access" (click)="downloadFile(file.id)">&#10515;</button>
+              <button *ngIf="group.role === 'Kapelmistrz'" (click)="deleteFile(file.id)">  -  </button>
+            </div>
+          </li>
         </ul>
-        <div class="add-file" *ngIf="viewedComposition">
-            <label for="file">UPLOAD</label>
-            <span>{{new_file?.name || "..."}}</span>
-            <input type="file" id="file" (change)="onFileChange($event)"
-            accept=".mp4,.pdf,.m4a,.mid,.mus,.txt,.png,.musx,.jpg,.zip,.doc,.mp3,.wav,.wma,.tif">
-            <button (click)="uploadFile()">&#10851;</button>
+        <div class="add-file">
+          <label for="file">UPLOAD</label>
+          <span>{{new_file?.name || "..."}}</span>
+          <input type="file" id="file" (change)="onFileChange($event)"
+          accept=".mp4,.pdf,.m4a,.mid,.mus,.txt,.png,.musx,.jpg,.zip,.doc,.mp3,.wav,.wma,.tif">
+          <button (click)="uploadFile()">&#10851;</button>
         </div>
-
-    </div>
+      </div>      
     <button class="new-button" [style.visibility]="group.role=='Kapelmistrz' ? 'visible' : 'hidden'" (click)="toggleOverlayComposition()">{{'CATALOGUE.ADD_COMPOSITION' | translate}}</button>
 </main>
 

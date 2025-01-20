@@ -35,11 +35,38 @@ def verify_user(db: Session, email: str, parent_group: int) -> User:
         raise HTTPException(status_code=403, detail="User must have Kapelmistrz role")
     return existing_user
 
+# def upload_to_drive(db: Session, email: str, file_stream, file_name, parent_group):
+#     """Upload a file to Google Drive and associate it with a user."""
+#     user = verify_user(db, email, parent_group)
+#     if db.query(File).filter(File.name == file_name).first():
+#         raise HTTPException(status_code=404, detail=f"File {file_name} already exists")
+#     service = establish_drive_connection()
+#     file_metadata = {
+#         'name': file_name,
+#         'parents': [FOLDER_ID]
+#     }
+#     media = MediaIoBaseUpload(file_stream, mimetype="application/octet-stream")
+#     file = service.files().create(
+#         body=file_metadata,
+#         media_body=media,
+#         fields='id'
+#     ).execute()
+#     new_file = File(
+#         name=file_name,
+#         google_drive_id=file['id']
+#     )
+#     db.add(new_file)
+#     db.commit()
+#     db.refresh(new_file)
+#     assign_file_to_user(db, email, FileToUserRequest(file_id=new_file.id, user_id=user.id, parent_group=parent_group))
+#     return new_file
+
 def upload_to_drive(db: Session, email: str, file_stream, file_name, parent_group):
     """Upload a file to Google Drive and associate it with a user."""
     user = verify_user(db, email, parent_group)
     if db.query(File).filter(File.name == file_name).first():
         raise HTTPException(status_code=404, detail=f"File {file_name} already exists")
+
     service = establish_drive_connection()
     file_metadata = {
         'name': file_name,
@@ -51,14 +78,22 @@ def upload_to_drive(db: Session, email: str, file_stream, file_name, parent_grou
         media_body=media,
         fields='id'
     ).execute()
+
+    print("Google Drive file creation response:", file)
+
     new_file = File(
         name=file_name,
         google_drive_id=file['id']
     )
+
     db.add(new_file)
     db.commit()
     db.refresh(new_file)
+
+    print("New file saved to database:", new_file)
+
     assign_file_to_user(db, email, FileToUserRequest(file_id=new_file.id, user_id=user.id, parent_group=parent_group))
+
     return new_file
 
 def download_from_drive(db: Session, email: str, request: DownloadFileRequest):
