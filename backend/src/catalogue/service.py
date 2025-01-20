@@ -101,6 +101,7 @@ def get_compositions_extra(db: Session, user_email: str, group_id: int):
                 if composition.id not in composition_ids:
                     composition_ids.add(composition.id)
                     found = CreateCompositionResponse(
+                        composition_id=composition.id,  # Include composition id
                         name=composition.name,
                         author=composition.author,
                         files=[]
@@ -109,14 +110,13 @@ def get_compositions_extra(db: Session, user_email: str, group_id: int):
                         file_info = FileInfoExtra(
                             id=file.id,
                             name=file.name,
-                            access=db.query(FileOwnership).filter(FileOwnership.user_id == requesting_user.id, FileOwnership.file_id==file.id).first() is not None
+                            access=db.query(FileOwnership).filter(FileOwnership.user_id == requesting_user.id, FileOwnership.file_id == file.id).first() is not None
                         )
                         found.files.append(file_info)
                     composition_list.append(found)
-                    
-
 
     return composition_list
+
 
 
 def remove_composition(db: Session, user_email: str, request: RemoveCompositionRequest):

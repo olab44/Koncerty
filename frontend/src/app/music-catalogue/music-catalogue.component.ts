@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { TopBarComponent } from '../bars/top-bar/top-bar.component';
 import { OverlayAddCompositionComponent } from '../overlays/overlay-add-composition/overlay-add-composition.component';
-import { CompositionInfo, GroupInfo } from '../interfaces';
+import { CompositionInfo, GroupInfo, Composition } from '../interfaces';
 import { SessionStateService } from '../services/session-state/session-state.service';
 import { FilterPipe } from '../pipe/filter.pipe';
 import { BackendService } from '../services/backend-connection/backend.service';
@@ -33,14 +33,22 @@ export class MusicCatalogueComponent {
 
   getCatalogue() {
     this.backend.getCatalogueExtra(this.group.group_id).subscribe({
-      next: (res) => {this.compositions = res.found},
-      error: (e) => { console.log(e) }
-    })
+      next: (res: any) => {
+        this.compositions = res.found.map((composition: Composition) => ({
+          composition_id: composition.composition_id,
+          name: composition.name,
+          author: composition.author
+        }));
+      },
+      error: (e) => {
+        console.log(e);
+      }
+    });
   }
+  
 
   viewComposition(composition: CompositionInfo): void {
     this.viewedComposition = composition;
-    console.log('Viewed Composition ID:', this.viewedComposition?.id);
   }
   
   removeComposition(event: MouseEvent, id: number): void {
@@ -76,10 +84,14 @@ export class MusicCatalogueComponent {
     }
   }
 
-
   uploadFile(): void {
     if (!this.new_file) {
       console.log('No file selected');
+      return;
+    }
+  
+    if (!this.viewedComposition?.composition_id) {
+      console.error('No composition selected');
       return;
     }
   
@@ -87,6 +99,7 @@ export class MusicCatalogueComponent {
     formData.append('file', this.new_file, this.new_file.name);
     formData.append('file_name', this.new_file.name);
     formData.append('parent_group', this.group.group_id.toString());
+    formData.append('composition_id', this.viewedComposition.composition_id.toString());
   
     this.backend.postRequest('files/uploadFile', formData).subscribe({
       next: (res: any) => {
@@ -95,25 +108,21 @@ export class MusicCatalogueComponent {
           console.error('File ID missing from response');
           return;
         }
-
-        if (this.viewedComposition?.id) {
-          const fileData = {
-            file_id: createdFile.file_id,
-            composition_id: this.viewedComposition.id,
-            parent_group: this.group.group_id
-          };
-          this.backend.postRequest('files/assignFileToComposition', fileData).subscribe({
-            next: (assignRes: any) => {
-              console.log('File assigned to composition:', assignRes);
-              this.getCatalogue();
-            },
-            error: (assignError) => {
-              console.error('Error assigning file to composition:', assignError);
-            }
-          });
-        } else {
-          console.error('No composition selected or composition ID is missing');
-        }
+        const fileData = {
+          file_id: createdFile.file_id,
+          composition_id: this.viewedComposition?.composition_id,
+          parent_group: this.group.group_id
+        };
+  
+        this.backend.postRequest('files/assignFileToComposition', fileData).subscribe({
+          next: (assignRes: any) => {
+            console.log('File assigned to composition:', assignRes);
+            this.getCatalogue();
+          },
+          error: (assignError) => {
+            console.error('Error assigning file to composition:', assignError);
+          }
+        });
       },
       error: (uploadError) => {
         console.log('Error uploading file:', uploadError);
@@ -122,6 +131,7 @@ export class MusicCatalogueComponent {
   
     this.new_file = null;
   }
+  
 
   toggleOverlayComposition(): void {
     this.visibleOverlayComposition = !this.visibleOverlayComposition

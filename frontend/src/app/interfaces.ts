@@ -41,7 +41,7 @@ export interface Participant {
 }
 
 export interface CompositionInfo {
-    id: number
+    composition_id: number
     name: string
     author: string
     files: any[]
@@ -89,5 +89,11 @@ export interface Alert {
     parent_group: number;
     group_ids: number[];
     recipients: number[];
+  }
+  
+export interface Composition {
+    composition_id: number;
+    name: string;
+    author: string;
   }
   

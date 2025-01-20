@@ -11,12 +11,20 @@ from users.service import get_user_data
 
 router = APIRouter()
 
+# @router.get("/findCompositions", status_code=200)
+# def find_compositions(group_id: int, db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
+#     """ Handle frontend request for the group's music catalogue """
+#     user_data = get_user_data(token)
+#     catalogue = get_compositions(db, user_data.get("user_id"), group_id)
+#     return {"found": catalogue}
 @router.get("/findCompositions", status_code=200)
 def find_compositions(group_id: int, db: Session = Depends(get_session), token: str = Header(..., alias="Authorization")):
     """ Handle frontend request for the group's music catalogue """
     user_data = get_user_data(token)
     catalogue = get_compositions(db, user_data.get("user_id"), group_id)
-    return {"found": catalogue}
+    compositions_with_id = [{"composition_id": composition.id, "name": composition.name, "author": composition.author} for composition in catalogue]
+    return {"found": compositions_with_id}
+
 
 
 @router.post("/addComposition", status_code=201)

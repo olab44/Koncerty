@@ -33,6 +33,7 @@ class FileInfoExtra(BaseModel):
 
 
 class CreateCompositionResponse(BaseModel):
+    composition_id: int
     name: str
     author: str
     files: List[FileInfoExtra]

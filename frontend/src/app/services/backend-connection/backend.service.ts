@@ -78,6 +78,7 @@ export class BackendService {
         })
       )
   }
+  
 
   getAlerts(parentGroup: number) {
     return this.http
